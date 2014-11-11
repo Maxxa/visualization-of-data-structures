@@ -1,7 +1,7 @@
 package cz.upce.fei.common.gui.animation;
 
 import cz.upce.fei.common.events.EventListenersList;
-import cz.upce.fei.common.gui.toolBar.DefaultToolBarControlsBuilder;
+import cz.upce.fei.common.gui.builders.DefaultToolBarControlsBuilder;
 import cz.upce.fei.common.resources.CommonResources;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -67,7 +67,7 @@ public final class AnimationControls implements IAnimationsControls {
         });
     }
 
-    public HBox getToolbarHBox(){
+    public HBox getToolBarHBox(){
         return DefaultToolBarControlsBuilder.getAnimationControls(speedSlider, playPauseButton);
     }
 

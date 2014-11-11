@@ -1,7 +1,7 @@
 package cz.upce.fei.common.gui;
 
 import cz.upce.fei.common.core.Controller;
-import cz.upce.fei.common.core.UIControl;
+import cz.upce.fei.common.gui.utils.SceneInfo;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -21,7 +21,7 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
 
     private T animationController;
 
-    private SceneInfo sceneInfo;
+    protected SceneInfo sceneInfo;
 
     private final BorderPane layout = new BorderPane();
     private final ScrollPane scrollPane = new ScrollPane();
@@ -31,18 +31,14 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
     @Override
     public void start(Stage stage) throws Exception {
         beforeStart(stage);
-
         sceneInfo = initSceneInfo();
-
         animationController = getController();
 
         toolbar= initToolbar();
         layout.setTop(toolbar);
-
         initScrollPane();
 
         startStage(stage);
-
         onShow();
     }
 
@@ -57,7 +53,7 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
         Scene scene = new Scene(layout, sceneInfo.getHeight()*PLATFORM_SCALE, sceneInfo.getWidth()*PLATFORM_SCALE);
         addShortcuts(scene);
         stage.setTitle(sceneInfo.getTitle());
-        stage.setMinWidth(sceneInfo.getMinSceneWith()*PLATFORM_SCALE);
+        stage.setMinWidth(sceneInfo.getMinSceneWith() * PLATFORM_SCALE);
         stage.setScene(scene);
         stage.show();
     }

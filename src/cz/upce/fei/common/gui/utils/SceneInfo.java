@@ -1,4 +1,4 @@
-package cz.upce.fei.common.gui;
+package cz.upce.fei.common.gui.utils;
 
 /**
  * @author Vojtěch Müller
