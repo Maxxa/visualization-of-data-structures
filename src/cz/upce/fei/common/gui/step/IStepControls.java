@@ -9,4 +9,5 @@ public interface IStepControls {
 
     HBox getToolbarHBox();
 
+    void addStepListener(IStepListener listener);
 }

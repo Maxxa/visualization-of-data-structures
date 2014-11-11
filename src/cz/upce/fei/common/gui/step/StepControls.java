@@ -84,6 +84,11 @@ public class StepControls implements IStepControls {
         return DefaultToolBarControlsBuilder.getStepControls(stepCheckBox,nextBtn,previousBtn);
     }
 
+    @Override
+    public void addStepListener(IStepListener listener) {
+        listenersList.addListener(listener);
+    }
+
     private void setEnableBtn(boolean disable){
         nextBtn.setDisable(disable);
         previousBtn.setDisable(disable);
