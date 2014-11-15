@@ -27,6 +27,7 @@ public class BinaryHeapController extends Controller<BinaryHeapGraphics, Huffman
 
 
 
+
 //        this.huffmanTree = new HuffmanTreeImpl();
 //        this.huffmanTree.addEventListener(queue);
     }
