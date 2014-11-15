@@ -25,6 +25,7 @@ public class PatternsResetHelpControls implements IPatternsResetHelpControls {
 
     @Override
     public HBox getToolBarHBox() {
+
         return DefaultToolBarControlsBuilder.getResetHelpControls(reset,pattern,helpButton);
     }
 
