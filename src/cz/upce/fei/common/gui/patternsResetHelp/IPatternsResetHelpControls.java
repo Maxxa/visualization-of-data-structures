@@ -1,6 +1,6 @@
 package cz.upce.fei.common.gui.patternsResetHelp;
 
-import cz.upce.fei.common.gui.toolBar.IToolBarControl;
+import cz.upce.fei.common.gui.toolBars.IToolBarControl;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 

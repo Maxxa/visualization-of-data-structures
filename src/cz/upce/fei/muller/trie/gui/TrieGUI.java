@@ -1,7 +1,7 @@
 package cz.upce.fei.muller.trie.gui;
 
 import cz.upce.fei.common.gui.AbstractApplication;
-import cz.upce.fei.common.gui.toolBar.ToolBarControlsContainer;
+import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.common.gui.utils.SceneInfo;
 import cz.upce.fei.muller.trie.core.TrieController;
 import javafx.scene.Scene;

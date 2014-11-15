@@ -1,6 +1,6 @@
 package cz.upce.fei.common.gui.structure;
 
-import cz.upce.fei.common.gui.toolBar.IToolBarControl;
+import cz.upce.fei.common.gui.toolBars.IToolBarControl;
 import javafx.scene.layout.HBox;
 
 /**
