@@ -11,8 +11,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import static cz.upce.fei.common.graphics.Graphics.PLATFORM_SCALE;
-
 /**
  * This abstract class build default app GUI.
  * @author Vojtěch Müller
@@ -50,10 +48,10 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
     }
 
     private void startStage(Stage stage) {
-        Scene scene = new Scene(layout, sceneInfo.getHeight()*PLATFORM_SCALE, sceneInfo.getWidth()*PLATFORM_SCALE);
+        Scene scene = new Scene(layout, sceneInfo.getHeight(), sceneInfo.getWidth());
         addShortcuts(scene);
         stage.setTitle(sceneInfo.getTitle());
-        stage.setMinWidth(sceneInfo.getMinSceneWith() * PLATFORM_SCALE);
+        stage.setMinWidth(sceneInfo.getMinSceneWith());
         stage.setScene(scene);
         stage.show();
     }
