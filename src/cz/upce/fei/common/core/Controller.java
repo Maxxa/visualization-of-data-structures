@@ -1,6 +1,5 @@
 package cz.upce.fei.common.core;
 
-import cz.commons.graphics.Graphics;
 import cz.commons.utils.dialogs.ProgressDialog;
 import cz.upce.fei.common.events.EventQueue;
 
