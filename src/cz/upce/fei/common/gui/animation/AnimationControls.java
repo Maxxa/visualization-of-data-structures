@@ -1,8 +1,8 @@
 package cz.upce.fei.common.gui.animation;
 
+import cz.commons.resources.CommonResources;
 import cz.upce.fei.common.events.EventListenersList;
 import cz.upce.fei.common.gui.builders.DefaultToolBarControlsBuilder;
-import cz.upce.fei.common.resources.CommonResources;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.*;
@@ -10,8 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-
-import static cz.upce.fei.common.graphics.Graphics.PLATFORM_SCALE;
 
 /**
  * @author Vojtěch Müller
@@ -40,7 +38,7 @@ public final class AnimationControls implements IAnimationsControls {
         speedSlider.setMin(0.1);
         speedSlider.setMax(5);
         speedSlider.setValue(1);
-        speedSlider.setPrefWidth(120*PLATFORM_SCALE);
+        speedSlider.setPrefWidth(120);
 
         initListeners();
     }

@@ -1,7 +1,7 @@
 package cz.upce.fei.common.gui.patternsResetHelp;
 
+import cz.commons.resources.CommonResources;
 import cz.upce.fei.common.gui.builders.DefaultToolBarControlsBuilder;
-import cz.upce.fei.common.resources.CommonResources;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

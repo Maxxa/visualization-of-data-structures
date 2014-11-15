@@ -7,8 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 
-import static cz.upce.fei.common.graphics.Graphics.*;
-
 /**
  * @author Vojtěch Müller
  */
@@ -17,7 +15,7 @@ public final class DefaultToolBarControlsBuilder {
     public static HBox getStepControls(CheckBox stepCheckBox, Button nextStepButton, Button previousStepButton){
         HBox stepHBox = new HBox();
         stepHBox.setAlignment(Pos.CENTER);
-        stepHBox.setSpacing(5* PLATFORM_SCALE);
+        stepHBox.setSpacing(5);
         stepHBox.getChildren().addAll(stepCheckBox, previousStepButton, nextStepButton);
         return stepHBox;
     }
@@ -27,7 +25,7 @@ public final class DefaultToolBarControlsBuilder {
         animationControlsHBox.setAlignment(Pos.CENTER);
         Label speedLabel = new Label("Rychlost:");
         speedLabel.setLabelFor(speedSlider);
-        animationControlsHBox.setSpacing(5* PLATFORM_SCALE);
+        animationControlsHBox.setSpacing(5);
         animationControlsHBox.getChildren().addAll(speedLabel, speedSlider,startStop);
         return animationControlsHBox;
     }
@@ -35,7 +33,7 @@ public final class DefaultToolBarControlsBuilder {
     public static HBox getResetHelpControls(Button reset, Button patterns, Button help){
         HBox helpHBox = new HBox();
         helpHBox.setAlignment(Pos.CENTER);
-        helpHBox.setSpacing(5* PLATFORM_SCALE);
+        helpHBox.setSpacing(5);
         helpHBox.getChildren().addAll(reset, patterns, help);
         return helpHBox;
     }
