@@ -6,7 +6,8 @@ import cz.upce.fei.common.gui.AbstractApplication;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.common.gui.utils.SceneInfo;
 import cz.upce.fei.muller.binaryHeap.core.BinaryHeapController;
-import cz.upce.fei.muller.binaryHeap.graphics.NodeElement;
+import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
+import cz.upce.fei.muller.binaryHeap.graphics.BinarySearchNode;
 import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
 import javafx.stage.Stage;
@@ -45,12 +46,10 @@ public class BinaryHeapGUI extends AbstractApplication<BinaryHeapController> {
 
     @Override
     protected void onShow() {
-        NodeElement n = new NodeElement(1,10,50,50);
-        NodeElement n1 = new NodeElement(2,100,500,150);
+        BinarySearchNode node = new BinarySearchNode(1,50,50,"ss");
+        BinaryHeapNode show = new BinaryHeapNode(1,150,50,"val");
 
-        LineElement l= LineBuilder.getBlueLine(n, n1);
-        getCanvas().getChildren().addAll(n,n1,l);
-
+        getCanvas().getChildren().addAll(node,show);
     }
 
     public static void main(String[] args) {launch(args);}

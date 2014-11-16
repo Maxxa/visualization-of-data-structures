@@ -44,7 +44,7 @@ public class TrieGUI extends AbstractApplication<TrieController> {
 
     @Override
     protected void onShow() {
-
+        
     }
 
     public static void main(String[] args) {launch(args);}
