@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$//Visualization of data structures.iml" filepath="$PROJECT_DIR$//Visualization of data structures.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/GitHub/MT-common/MT-common.iml" filepath="$USER_HOME$/Documents/GitHub/MT-common/MT-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Visualization of data structures.iml" filepath="$PROJECT_DIR$/Visualization of data structures.iml" />
     </modules>
   </component>
 </project>
