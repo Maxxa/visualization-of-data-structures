@@ -34,11 +34,11 @@ public class BinaryNode<T extends IStructureElement> {
         return value;
     }
 
-    public boolean isLeftChild(){
+    public boolean isLeftPosition(){
         return position ==NodePosition.LEFT;
     }
 
-    public boolean isRightChild(){
+    public boolean isRightPosition(){
         return position ==NodePosition.RIGHT;
     }
     public boolean isRoot(){

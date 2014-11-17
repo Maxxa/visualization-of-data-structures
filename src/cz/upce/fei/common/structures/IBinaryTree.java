@@ -5,27 +5,33 @@ import cz.upce.fei.common.core.IStructureElement;
 /**
  * @author Vojtěch Müller
  */
-public interface IBinaryTree<T extends IStructureElement> {
+public interface IBinaryTree<T extends IStructureElement,N> {
 
     void clear();
 
     boolean isEmpty();
 
-    void insertRoot(T value);
+    int countItems();
 
-    void insertLeftChild(BinaryNode<T> parent,T value);
-    void insertRightChild(BinaryNode<T> parent,T value);
+    void insertRoot(T item);
 
-    boolean isLeaf(BinaryNode<T> binaryNode);
+    void insertLeftChild(N parent, T item);
 
-    T removeLeftChild(BinaryNode<T> element);
-    T removeRightChild(BinaryNode<T> element);
+    void insertRightChild(N parent, T item);
 
-    BinaryNode<T> getRoot();
+    boolean isLeaf(N item);
 
-    BinaryNode<T> getLeftChild(BinaryNode<T> parent);
-    BinaryNode<T> getRightChild(BinaryNode<T> parent);
+    T removeLeftLeaf(N parent);
 
-    void swapNodes(BinaryNode<T> firstNode,BinaryNode<T> secondNode);
+    T removeRightLeaf(N parent);
 
+    T getRoot();
+
+    T getParent(N son);
+
+    T getLeft(N parent);
+
+    T getRight(N parent);
+
+    void swapNode(N index1, N index2);
 }

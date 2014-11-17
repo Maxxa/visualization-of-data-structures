@@ -3,7 +3,7 @@ package cz.muller;
 import cz.commons.utils.GeneratorElementsNumbers;
 import cz.upce.fei.common.core.IStructureElement;
 import cz.upce.fei.common.structures.BinaryNode;
-import cz.upce.fei.common.structures.BinaryTree;
+import cz.upce.fei.common.structures.BinaryTreeDyn;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,11 +13,11 @@ import org.junit.Test;
  */
 public class TestBinaryTree {
 
-    BinaryTree<Ele> tree;
+    BinaryTreeDyn<Ele> tree;
 
     @Before
     public void initTree(){
-        tree = new BinaryTree<>();
+        tree = new BinaryTreeDyn<>();
         Ele[] elements = new Ele[]{
                 new Ele(0),
                 new Ele(1),
@@ -29,13 +29,13 @@ public class TestBinaryTree {
         };
         tree.insertRoot(elements[0]);
 
-        BinaryNode<Ele> root=tree.getRoot();
+        BinaryNode<Ele> root=tree.getRootNode();
 
         tree.insertLeftChild(root,elements[1]);
         tree.insertRightChild(root,elements[2]);
 
-        BinaryNode<Ele> n11=tree.getLeftChild(root);
-        BinaryNode<Ele> n12=tree.getRightChild(root);
+        BinaryNode<Ele> n11=tree.getLeftNode(root);
+        BinaryNode<Ele> n12=tree.getRightNode(root);
 
         tree.insertLeftChild(n11,elements[3]);
         tree.insertRightChild(n11,elements[4]);
@@ -51,19 +51,19 @@ public class TestBinaryTree {
     @Test
     public void controlElements(){
 
-        BinaryNode<Ele> root = tree.getRoot();
+        BinaryNode<Ele> root = tree.getRootNode();
         Assert.assertEquals(root.getValue().getVal(),0);
 
-        BinaryNode<Ele> n11 = tree.getLeftChild(root);
-        BinaryNode<Ele> n12 = tree.getRightChild(root);
+        BinaryNode<Ele> n11 = tree.getLeftNode(root);
+        BinaryNode<Ele> n12 = tree.getRightNode(root);
 
         Assert.assertEquals(n11.getValue().getVal(),1);
         Assert.assertEquals(n12.getValue().getVal(),2);
 
-        BinaryNode<Ele> n21 = tree.getLeftChild(n11);
-        BinaryNode<Ele> n22 = tree.getRightChild(n11);
-        BinaryNode<Ele> n23 = tree.getLeftChild(n12);
-        BinaryNode<Ele> n24 = tree.getRightChild(n12);
+        BinaryNode<Ele> n21 = tree.getLeftNode(n11);
+        BinaryNode<Ele> n22 = tree.getRightNode(n11);
+        BinaryNode<Ele> n23 = tree.getLeftNode(n12);
+        BinaryNode<Ele> n24 = tree.getRightNode(n12);
 
         Assert.assertEquals(n21.getValue().getVal(),3);
         Assert.assertEquals(n22.getValue().getVal(),4);
@@ -71,19 +71,16 @@ public class TestBinaryTree {
         Assert.assertEquals(n24.getValue().getVal(),6);
 
 
-        tree.swapNodes(n11,n22);
+        tree.swapNode(n11, n22);
         Assert.assertEquals(n11.getValue().getVal(),4);
         Assert.assertEquals(n22.getValue().getVal(),1);
-
-
-
     }
 
     @Test
     public void testRemove() throws Exception {
-        BinaryNode<Ele> root = tree.getRoot();
-        tree.removeLeftChild(root);
-        Assert.assertEquals(null,tree.getLeftChild(root));
+        BinaryNode<Ele> root = tree.getRootNode();
+        tree.removeLeftLeaf(root);
+        Assert.assertEquals(null,tree.getLeft(root));
     }
 }
 

@@ -14,4 +14,22 @@ public final class HeapType {
     private HeapType(Integer compareValue) {
         this.compareValue = compareValue;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HeapType heapType = (HeapType) o;
+
+        if (compareValue != null ? !compareValue.equals(heapType.compareValue) : heapType.compareValue != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return compareValue != null ? compareValue.hashCode() : 0;
+    }
 }
