@@ -26,12 +26,6 @@ public interface IBinaryTree<T extends IStructureElement> {
     BinaryNode<T> getLeftChild(BinaryNode<T> parent);
     BinaryNode<T> getRightChild(BinaryNode<T> parent);
 
-
-
-
-
-
-
-
+    void swapNodes(BinaryNode<T> firstNode,BinaryNode<T> secondNode);
 
 }

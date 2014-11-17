@@ -26,7 +26,7 @@ public class BinaryTree<T extends IStructureElement> implements IBinaryTree<T> {
     @Override
     public void insertRoot(T value) {
         if(isEmpty()){
-            root = new BinaryNode<>(value);
+            root = new BinaryNode<>(value, BinaryNode.NodePosition.ROOT);
         }
     }
 
@@ -36,7 +36,7 @@ public class BinaryTree<T extends IStructureElement> implements IBinaryTree<T> {
 
         removeLeftChild(parent); // clear left sub tree
 
-        parent.leftChild = new BinaryNode<>(value);
+        parent.leftChild = new BinaryNode<>(value,BinaryNode.NodePosition.LEFT);
         parent.leftChild.parent = parent;
     }
 
@@ -46,20 +46,20 @@ public class BinaryTree<T extends IStructureElement> implements IBinaryTree<T> {
 
         removeRightChild(parent); // clear right sub tree
 
-        parent.rightChild = new BinaryNode<>(value);
+        parent.rightChild = new BinaryNode<>(value,BinaryNode.NodePosition.RIGHT);
         parent.rightChild.parent = parent;
     }
 
     @Override
     public boolean isLeaf(BinaryNode<T> binaryNode) {
-        return binaryNode.isLeftChild() && binaryNode.isRightChild();
+        return binaryNode.existLeftChild() && binaryNode.existRightChild();
     }
 
     @Override
     public T removeLeftChild(BinaryNode<T> element) {
         T result = null;
         if(existElement(element)) {
-            if(element.isLeftChild()){
+            if(element.existLeftChild()){
                 result = element.value;
                 element.leftChild.parent = element.leftChild = null;
             }
@@ -71,7 +71,7 @@ public class BinaryTree<T extends IStructureElement> implements IBinaryTree<T> {
     public T removeRightChild(BinaryNode<T> element) {
         if(element==null) return null;
         T result = null;
-        if(element.isRightChild()){
+        if(element.existRightChild()){
             result = element.value;
             element.rightChild.parent = element.rightChild = null;
         }
@@ -91,6 +91,15 @@ public class BinaryTree<T extends IStructureElement> implements IBinaryTree<T> {
     @Override
     public BinaryNode getRightChild(BinaryNode<T> parent) {
         return existElement(parent)?parent.rightChild:null;
+    }
+
+    @Override
+    public void swapNodes(BinaryNode<T> firstParentNode, BinaryNode<T> secondChildNode) {
+        if(existElement(firstParentNode)&&existElement(secondChildNode)){
+            T temp = firstParentNode.value;
+            firstParentNode.value = secondChildNode.value;
+            secondChildNode.value = temp;
+        }
     }
 
     private boolean existElement(BinaryNode<T> element) {

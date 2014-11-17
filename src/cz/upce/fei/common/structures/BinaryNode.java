@@ -15,19 +15,38 @@ public class BinaryNode<T extends IStructureElement> {
 
     BinaryNode parent = null;
 
-    BinaryNode(T value) {
+    NodePosition position;
+
+    BinaryNode(T value,NodePosition position) {
         this.value = value;
+        this.position = position;
     }
 
-    boolean isLeftChild(){
+    boolean existLeftChild(){
         return leftChild!=null;
     }
-    boolean isRightChild(){
+
+    boolean existRightChild(){
         return rightChild!=null;
     }
 
     public T getValue() {
         return value;
+    }
+
+    public boolean isLeftChild(){
+        return position ==NodePosition.LEFT;
+    }
+
+    public boolean isRightChild(){
+        return position ==NodePosition.RIGHT;
+    }
+    public boolean isRoot(){
+        return position ==NodePosition.ROOT;
+    }
+
+    enum NodePosition{
+        LEFT,RIGHT,ROOT
     }
 
 }
