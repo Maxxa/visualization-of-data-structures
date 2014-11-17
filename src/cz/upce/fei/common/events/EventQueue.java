@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * @param <T> typ udalosti
  * @param <C> typ controlleru
  */
-public abstract class EventQueue<T extends Event, C extends Controller> implements EventListener<T> {
+public abstract class EventQueue<T extends AbstractEvent, C extends Controller> implements EventListener<T> {
     
     /**
      * Fronta.
