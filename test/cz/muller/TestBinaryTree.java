@@ -1,7 +1,6 @@
 package cz.muller;
 
-import cz.commons.utils.GeneratorElementsNumbers;
-import cz.upce.fei.common.core.IStructureElement;
+import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.common.structures.BinaryNode;
 import cz.upce.fei.common.structures.BinaryTreeDyn;
 import org.junit.Assert;
@@ -85,11 +84,9 @@ public class TestBinaryTree {
 }
 
 
-class Ele implements IStructureElement {
+class Ele extends AbstractStructureElement {
 
     public final Integer value;
-
-    public final Integer id = GeneratorElementsNumbers.getNextId();
 
     public Ele(Integer value) {
         this.value = value;
@@ -106,7 +103,7 @@ class Ele implements IStructureElement {
 
     @Override
     public String toString() {
-        return "Element:"+id;
+        return "Element:"+getId();
     }
 
     @Override
@@ -121,8 +118,8 @@ class Ele implements IStructureElement {
         if (o == null || getClass() != o.getClass()) return false;
 
         Ele ele = (Ele) o;
-
-        if (id != null ? !id.equals(ele.id) : ele.id != null) return false;
+        int id =getId();
+//        if (id != null ? !id.equals(ele.id) : ele.id != null) return false;
         if (value != null ? !value.equals(ele.value) : ele.value != null) return false;
 
         return true;
@@ -131,7 +128,7 @@ class Ele implements IStructureElement {
     @Override
     public int hashCode() {
         int result = value != null ? value.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
+//        result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
     }
 }
