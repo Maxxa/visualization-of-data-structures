@@ -1,12 +1,12 @@
 package cz.upce.fei.common.structures;
 
-import cz.upce.fei.common.core.IStructureElement;
+import java.util.ArrayList;
 
 /**
  *
  * @author Vojtěch Müller
  */
-public class BinaryTreeToArray<T extends IStructureElement> implements IBinaryTreeToArray<T> {
+public class BinaryTreeToArray<T> implements IBinaryTreeToArray<T> {
 
     T[] tree;
     private int count;
@@ -17,7 +17,7 @@ public class BinaryTreeToArray<T extends IStructureElement> implements IBinaryTr
 
     @Override
     public void clear() {
-        tree = (T[]) new Object[3]; // one level at the beginning
+        tree = (T[]) new Object[3];
         count = 0;
     }
 
@@ -133,7 +133,12 @@ public class BinaryTreeToArray<T extends IStructureElement> implements IBinaryTr
         return d;
     }
 
-    private T get(Integer index) {
+    @Override
+    public T getLast(){
+        return get(count-1);
+    }
+
+    public T get(Integer index) {
         if (existData(index)) {
             return tree[index];
         } else {

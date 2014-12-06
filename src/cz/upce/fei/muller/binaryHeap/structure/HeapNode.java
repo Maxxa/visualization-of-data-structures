@@ -1,28 +1,24 @@
 package cz.upce.fei.muller.binaryHeap.structure;
 
-import cz.commons.utils.GeneratorElementsNumbers;
-import cz.upce.fei.common.core.IStructureElement;
+import cz.upce.fei.common.core.AbstractStructureElement;
 
 /**
  * @author Vojtěch Müller
  */
-public class HeapNode implements IStructureElement {
+public class HeapNode extends AbstractStructureElement {
 
     private Integer value;
-
-    private final Integer id = GeneratorElementsNumbers.getNextId();
 
     public HeapNode(Integer value) {
         this.value = value;
     }
 
     @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
     public int compareTo(Object o) {
         return Integer.compare(value,((HeapNode)o).value);
+    }
+
+    public Integer getValue() {
+        return value;
     }
 }

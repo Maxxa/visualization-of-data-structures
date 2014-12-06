@@ -1,11 +1,11 @@
 package cz.upce.fei.common.structures;
 
-import cz.upce.fei.common.core.IStructureElement;
+import cz.upce.fei.common.core.AbstractStructureElement;
 
 /**
  * @author Vojtěch Müller
  */
-public interface IBinaryTree<T extends IStructureElement,N> {
+public interface IBinaryTree<T,N> {
 
     void clear();
 

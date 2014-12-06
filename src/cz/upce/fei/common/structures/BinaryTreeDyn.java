@@ -1,11 +1,11 @@
 package cz.upce.fei.common.structures;
 
-import cz.upce.fei.common.core.IStructureElement;
+import cz.upce.fei.common.core.AbstractStructureElement;
 
 /**
  * @author Vojtěch Müller
  */
-public class BinaryTreeDyn<T extends IStructureElement> implements IBinaryTreeDyn<T> {
+public class BinaryTreeDyn<T extends AbstractStructureElement> implements IBinaryTreeDyn<T> {
 
     private BinaryNode<T> root;
 
