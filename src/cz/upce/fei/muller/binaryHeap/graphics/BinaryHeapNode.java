@@ -1,6 +1,7 @@
 package cz.upce.fei.muller.binaryHeap.graphics;
 
 import cz.commons.graphics.BinaryNodeElement;
+import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import javafx.beans.binding.Bindings;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -11,11 +12,12 @@ import javafx.scene.shape.StrokeType;
  */
 public class BinaryHeapNode extends BinaryNodeElement implements IBinaryNodesElements{
 
+    private final HeapNode node;
     private Rectangle backgroundRectangle;
 
-    public BinaryHeapNode(int id, int x, int y, String val) {
-        super(id, WIDTH, HEIGHT);
-
+    public BinaryHeapNode(HeapNode node, int x, int y) {
+        super(node.getId(), WIDTH, HEIGHT);
+        this.node = node;
         setTranslateX(x);
         setTranslateY(y);
 
