@@ -14,4 +14,6 @@ public interface IAnimationsControls extends IToolBarControl {
 
     void addChangesListener(IAnimationListener listener);
 
+    void removeChangesListener(IAnimationListener listener);
+
 }

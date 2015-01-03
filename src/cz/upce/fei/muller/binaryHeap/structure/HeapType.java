@@ -32,4 +32,9 @@ public final class HeapType {
     public int hashCode() {
         return compareValue != null ? compareValue.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return compareValue==-1?"MIN-halda":"MAX-halda";
+    }
 }

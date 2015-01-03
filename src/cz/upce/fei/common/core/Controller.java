@@ -8,6 +8,7 @@ import cz.upce.fei.common.events.EventQueue;
  * @author Martin Šára
  * @param <G> typ grafiky
  * @param <Q> typ fronty
+ * @deprecated
  */
 public abstract class Controller<G /*extends Graphics*/, Q extends EventQueue> {
     
@@ -44,7 +45,7 @@ public abstract class Controller<G /*extends Graphics*/, Q extends EventQueue> {
     /**
      * Vybere prvni udalosti z fronty a prislusne je zpracuje.
      */
-    protected abstract void processEvent();    
+//    protected abstract void processEvent();
     
     
     
@@ -67,7 +68,7 @@ public abstract class Controller<G /*extends Graphics*/, Q extends EventQueue> {
         uiControls.disableControls(true);
         uiControls.disableStepping(true);        
         
-        processEvent();                
+//        processEvent();
     }
     
     /**

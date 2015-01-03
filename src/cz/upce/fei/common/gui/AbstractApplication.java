@@ -1,6 +1,7 @@
 package cz.upce.fei.common.gui;
 
 import cz.upce.fei.common.core.Controller;
+import cz.upce.fei.common.core.MyController;
 import cz.upce.fei.common.gui.utils.SceneInfo;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -15,7 +16,7 @@ import javafx.stage.Stage;
  * This abstract class build default app GUI.
  * @author Vojtěch Müller
  */
-public abstract class AbstractApplication<T extends Controller> extends Application {
+public abstract class AbstractApplication<T extends MyController> extends Application {
 
     private T animationController;
 
@@ -30,11 +31,11 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
     public void start(Stage stage) throws Exception {
         beforeStart(stage);
         sceneInfo = initSceneInfo();
-        animationController = getController();
 
         toolbar= initToolbar();
         layout.setTop(toolbar);
         initScrollPane();
+        animationController = getController();
 
         startStage(stage);
         onShow();

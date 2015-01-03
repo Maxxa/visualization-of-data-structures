@@ -38,4 +38,21 @@ public class ToolBarControlsContainer {
                 new Separator(Orientation.VERTICAL),paternControls.getToolBarHBox()
         );
     }
+
+    public IStructureControls getStructureControls() {
+        return structureControls;
+    }
+
+    public IStepControls getStepControls() {
+        return stepControls;
+    }
+
+    public IPatternsResetHelpControls getPaternControls() {
+        return paternControls;
+    }
+
+    public IAnimationsControls getAnimationsControls() {
+        return animationsControls;
+    }
+
 }

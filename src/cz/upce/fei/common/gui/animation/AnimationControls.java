@@ -84,6 +84,11 @@ public final class AnimationControls implements IAnimationsControls {
         listenerList.addListener(listener);
     }
 
+    @Override
+    public void removeChangesListener(IAnimationListener listener) {
+        listenerList.removeListener(listener);
+    }
+
     private void fireStart(){
         if(playPauseButton.isDisable()){
             for(IAnimationListener listener : listenerList.getListeners()){

@@ -3,6 +3,7 @@ package cz.upce.fei.common.core;
 /**
  * Rozhrani pro ovladani animaci.
  * @author Martin Šára
+ * @deprecated
  */
 public interface UIControl {
 

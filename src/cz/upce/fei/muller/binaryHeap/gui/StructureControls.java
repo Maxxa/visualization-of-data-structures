@@ -1,6 +1,8 @@
 package cz.upce.fei.muller.binaryHeap.gui;
 
 import cz.upce.fei.common.gui.structure.IStructureControls;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -21,8 +23,6 @@ public class StructureControls implements IStructureControls {
 
     Button removeRoot = new Button("Odebrat kořen");
 
-    Button clear  = new Button("Vyčistit");;
-
     public StructureControls() {
         text.setAlignment(Pos.CENTER);
         text.setMaxWidth(50);
@@ -33,23 +33,19 @@ public class StructureControls implements IStructureControls {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(5);
-        hBox.getChildren().addAll(nodeLabel,text,add,new Separator(Orientation.VERTICAL),removeRoot,clear);
+        hBox.getChildren().addAll(nodeLabel,text,add,new Separator(Orientation.VERTICAL),removeRoot);
         return hBox;
     }
 
-    public TextField getText() {
-        return text;
+    public void addInsertHandler(EventHandler<ActionEvent> handler) {
+        add.setOnAction(handler);
     }
 
-    public Button getAdd() {
-        return add;
+    public void addRemoveRootHandler(EventHandler<ActionEvent> handler) {
+        removeRoot.setOnAction(handler);
     }
 
-    public Button getRemoveRoot() {
-        return removeRoot;
-    }
-
-    public Button getClear() {
-        return clear;
+    public String getTextValue() {
+        return text.getText();
     }
 }
