@@ -8,14 +8,14 @@ import cz.upce.fei.muller.binaryHeap.graphics.IBinaryNodesElements;
  */
 final class TreeLayoutSettingBuilder {
 
-    static final Integer PADING_TOP = 10;
+    static final Integer PADDING_TOP = 10;
 
     static final Integer HORIZONTAL_SPACE = 10;
 
     static final Integer VERTICAL_SPACE = 10;
 
     static TreeLayoutSettings getSetting(){
-        return new TreeLayoutSettings(PADING_TOP,HORIZONTAL_SPACE,VERTICAL_SPACE, IBinaryNodesElements.WIDTH,IBinaryNodesElements.HEIGHT);
+        return new TreeLayoutSettings(PADDING_TOP,HORIZONTAL_SPACE,VERTICAL_SPACE, IBinaryNodesElements.WIDTH,IBinaryNodesElements.HEIGHT);
     }
 
 }
