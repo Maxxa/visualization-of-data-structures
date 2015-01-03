@@ -18,7 +18,7 @@ public class BinaryHeapSceneInfo implements SceneInfo {
 
     @Override
     public String getTitle() {
-        return "Znakový strom";
+        return "Binární halda";
     }
 
     @Override

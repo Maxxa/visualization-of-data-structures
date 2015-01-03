@@ -1,6 +1,5 @@
 package cz.upce.fei.muller.binaryHeap.gui;
 
-import cz.commons.utils.ControlUtils;
 import cz.upce.fei.common.gui.structure.IStructureControls;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -15,7 +14,7 @@ import javafx.scene.layout.HBox;
  */
 public class StructureControls implements IStructureControls {
 
-    Label prvekLabel = new Label("Prvek:");
+    Label nodeLabel = new Label("Prvek:");
     TextField text = new TextField();
 
     Button add = new Button("Vložit");
@@ -34,7 +33,23 @@ public class StructureControls implements IStructureControls {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(5);
-        hBox.getChildren().addAll(prvekLabel,text,add,new Separator(Orientation.VERTICAL),removeRoot,clear);
+        hBox.getChildren().addAll(nodeLabel,text,add,new Separator(Orientation.VERTICAL),removeRoot,clear);
         return hBox;
+    }
+
+    public TextField getText() {
+        return text;
+    }
+
+    public Button getAdd() {
+        return add;
+    }
+
+    public Button getRemoveRoot() {
+        return removeRoot;
+    }
+
+    public Button getClear() {
+        return clear;
     }
 }
