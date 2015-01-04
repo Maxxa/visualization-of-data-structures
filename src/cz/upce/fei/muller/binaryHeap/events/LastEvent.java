@@ -6,8 +6,8 @@ import cz.upce.fei.common.events.AbstractEvent;
 /**
  * @author Vojtěch Müller
  */
-public class EndEvent extends AbstractEvent{
-    public EndEvent(AbstractStructureElement element) {
+public class LastEvent extends AbstractEvent{
+    public LastEvent(AbstractStructureElement element) {
         super(element);
     }
 }

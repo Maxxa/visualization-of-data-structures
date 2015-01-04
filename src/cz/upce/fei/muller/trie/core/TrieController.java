@@ -7,8 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 
 /**
- * Ridici trida pro animaci Huffmanova kodovaciho stromu.
- * @author Martin Šára
+ * @author Vojtěch Müller
  */
 public class TrieController extends Controller{
     

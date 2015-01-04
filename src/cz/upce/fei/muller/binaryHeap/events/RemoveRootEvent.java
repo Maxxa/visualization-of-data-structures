@@ -6,11 +6,8 @@ import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 /**
  * @author Vojtěch Müller
  */
-public class CreateRoot extends AbstractEvent {
-
-    public CreateRoot(HeapNode element) {
+public class RemoveRootEvent extends AbstractEvent {
+    public RemoveRootEvent(HeapNode element) {
         super(element);
-
-
     }
 }

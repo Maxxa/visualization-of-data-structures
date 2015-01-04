@@ -6,12 +6,12 @@ import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 /**
  * @author Vojtěch Müller
  */
-public class CompareNode extends AbstractEvent{
+public class CompareNodeEvent extends AbstractEvent{
 
     private final HeapNode second;
     private final boolean isTrue;
 
-    public CompareNode(HeapNode element,HeapNode second,boolean isSwap) {
+    public CompareNodeEvent(HeapNode element, HeapNode second, boolean isSwap) {
         super(element);
         this.second = second;
         this.isTrue = isSwap;

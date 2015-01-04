@@ -43,7 +43,7 @@ public class BinaryHeap implements IHeap<HeapNode> {
     public void insert(HeapNode insertedValue) {
         if (isEmpty()) {
             binTree.insertRoot(insertedValue);
-            eventBus.post(new CreateRoot(insertedValue));
+            eventBus.post(new CreateRootEvent(insertedValue));
         } else {
             int countItems = binTree.countItems();
             int parentIndex = (countItems - 1) / 2;
@@ -57,29 +57,29 @@ public class BinaryHeap implements IHeap<HeapNode> {
 
             countItems = binTree.countItems();
             int iChild = countItems - 1; // new child position
-            eventBus.post(new InsertNode(insertedValue,binTree.getParent(iChild),isLeftChild));
+            eventBus.post(new InsertNodeEvent(insertedValue,binTree.getParent(iChild),isLeftChild));
             while (true) {
                 HeapNode parent =binTree.getParent(iChild);
                 boolean isSwap = comp.compare(parent,insertedValue) && iChild>0;
-                eventBus.post(new CompareNode(parent,insertedValue,isSwap));
+                eventBus.post(new CompareNodeEvent(parent,insertedValue,isSwap));
                 if (isSwap){
                     binTree.swapNode(iChild, (iChild - 1) / 2);
                     iChild = (iChild - 1) / 2;
-                    eventBus.post(new SwapNode(parent,insertedValue));
+                    eventBus.post(new SwapNodeEvent(parent,insertedValue));
                 } else {
                     break;
                 }
             }
         }
-        eventBus.post(new EndEvent(insertedValue));
+        eventBus.post(new LastEvent(insertedValue));
     }
 
     @Override
     public HeapNode removeRoot() {
-        eventBus.post(new SwapNode(binTree.getRoot(),binTree.getLast()));
+        eventBus.post(new SwapNodeEvent(binTree.getRoot(),binTree.getLast()));
         binTree.swapNode(0, binTree.countItems() - 1);
         HeapNode oldRoot= binTree.removeLast();
-        eventBus.post(new RemoveRoot(oldRoot));
+        eventBus.post(new RemoveRootEvent(oldRoot));
 
         //sprave serazeni 
         int parentIdx = 0;
@@ -106,17 +106,17 @@ public class BinaryHeap implements IHeap<HeapNode> {
 
             //porovnani se synem..
             boolean isSwap = comp.compare(currentNode, child);
-            eventBus.post(new CompareNode(currentNode,child,isSwap));
+            eventBus.post(new CompareNodeEvent(currentNode,child,isSwap));
             if (isSwap) {
                 binTree.swapNode(parentIdx, childIdx);
-                eventBus.post(new SwapNode(currentNode,child));
+                eventBus.post(new SwapNodeEvent(currentNode,child));
             } else {
                 break;
             }
             parentIdx = childIdx;
         }
 
-        eventBus.post(new EndEvent(oldRoot));
+        eventBus.post(new LastEvent(oldRoot));
         return oldRoot;
     }
 

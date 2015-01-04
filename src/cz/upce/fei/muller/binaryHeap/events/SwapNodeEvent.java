@@ -6,11 +6,11 @@ import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 /**
  * @author Vojtěch Müller
  */
-public class SwapNode extends AbstractEvent {
+public class SwapNodeEvent extends AbstractEvent {
 
     protected HeapNode secondNode;
 
-    public SwapNode(HeapNode element,HeapNode secondNode) {
+    public SwapNodeEvent(HeapNode element, HeapNode secondNode) {
         super(element);
         this.secondNode =secondNode;
     }

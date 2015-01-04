@@ -1,12 +1,14 @@
 package cz.upce.fei.muller.binaryHeap.core;
 
 import com.google.common.eventbus.EventBus;
+import cz.commons.animation.AnimationControl;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.utils.dialogs.Dialog;
 import cz.upce.fei.common.core.Controller;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.muller.binaryHeap.gui.StructureControls;
 import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
+import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import cz.upce.fei.muller.binaryHeap.structure.HeapType;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,12 +22,15 @@ public class BinaryHeapController extends Controller {
     private BinaryHeap heap;
     private ITreeLayoutManager manager;
     private final EventBus eventBus = new EventBus();
+    private final AnimationCore animationCore;
 
-    public BinaryHeapController(Pane pane, ToolBarControlsContainer containerControls, ITreeLayoutManager manager) {
+    public BinaryHeapController(ToolBarControlsContainer containerControls, ITreeLayoutManager manager) {
         super(containerControls);
         this.manager = manager;
         this.initStructureControls(containerControls);
         heap = new BinaryHeap(eventBus, HeapType.MIN);
+        animationCore = new AnimationCore(animationControl,manager);
+        eventBus.register(animationCore);
     }
 
     private void initStructureControls(final ToolBarControlsContainer containerControls) {
@@ -33,14 +38,17 @@ public class BinaryHeapController extends Controller {
         controls.addInsertHandler(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                Integer parsedValue =null;
                 try {
                     String s = controls.getTextValue();
-                    Integer parsedValue = Integer.parseInt(s.trim());
+                    parsedValue = Integer.parseInt(s.trim());
                 } catch (NumberFormatException e) {
                     Dialog.showError("Chyba", "Zadáno neplatné číslo.");
                     return;
                 }
-                //TODO
+
+                HeapNode newNode = new HeapNode(parsedValue);
+                heap.insert(newNode);
             }
         });
 
@@ -50,12 +58,11 @@ public class BinaryHeapController extends Controller {
                 if(showDialogIsEmpty()){
                     return;
                 }
-                //TODO
+                heap.removeRoot();
             }
         });
 
     }
-
 
     @Override
     protected EventHandler<ActionEvent> getHelpHandler() {
