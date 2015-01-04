@@ -1,68 +1,34 @@
 package cz.upce.fei.muller.trie.core;
 
 import cz.upce.fei.common.core.Controller;
-import cz.upce.fei.common.core.UIControl;
-import cz.upce.fei.muller.treap.events.HuffmanTreeEventQueue;
-import cz.upce.fei.muller.treap.graphics.TreapGraphics;
-import javafx.scene.control.ScrollPane;
+import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 
 /**
  * Ridici trida pro animaci Huffmanova kodovaciho stromu.
  * @author Martin Šára
  */
-public class TrieController extends Controller<TreapGraphics, HuffmanTreeEventQueue> {
+public class TrieController extends Controller{
     
 
-    public TrieController(Pane pane, ScrollPane scrollPane, UIControl uiControls) {
+    public TrieController(Pane pane, ToolBarControlsContainer toolBarControlsContainer) {
+        super(toolBarControlsContainer);
     }
 
-    /**
-     * {@inheritDoc }
-     */
     @Override
-    protected void processEvent() {  
-        }
+    protected EventHandler<ActionEvent> getHelpHandler() {
+        return null;
+    }
 
-    
-    
-    /**
-     * Zajistuje davkove nahravani predpripravenych sad dat.
-     * @param text
-     * @param animate 
-     */
-    public void loadPreset(String text, boolean animate) {
-//        loadingPreset = true;
-//        uiControls.info(text);
-//
-//        if (animate == false && autoNextStep == true) {
-////            graphics.setMinDuration();
-////            progressDialog = new ProgressDialog();
-//            progressDialog.show();
-//        }
-//
-//        String bits = huffmanTree.encode(text);
-//        String decode = huffmanTree.decode(bits);
-//        System.out.println(decode);
-//
-//        loadingPreset = false;
-//        queue.add(new HuffmanTreeEvent(EventType.LOADING_PRESET_FINISHED));
-//        if (animate == false && autoNextStep == true) progressDialog.setTotalEvents(queue.size());
-//
-//        step();
+    @Override
+    protected EventHandler<ActionEvent> getPatternHandler() {
+        return null;
     }
-    
-    public void reset() {
-//        graphics.reset();
-//        queue.clear();
+
+    @Override
+    protected EventHandler<ActionEvent> getResetHandler() {
+        return null;
     }
-    
-    public void setPrefWidth(double width) {
-//        graphics.setPrefWidth(width);
-    }
-    
-    public void printHuffmanTree() {
-//        System.out.println(huffmanTree);
-    }
-           
 }

@@ -1,5 +1,7 @@
 package cz.upce.fei.muller.trie.structure;
 
+import com.google.common.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -10,11 +12,13 @@ import java.util.List;
  */
 public class Trie<T extends Description> implements Iterable<T>,ITrie<T> {
 
+    private final EventBus eventBus;
     Node root;
     private Integer count;
 
-    public Trie() {
+    public Trie(EventBus eventBus) {
         clear();
+        this.eventBus = eventBus;
     }
 
     @Override

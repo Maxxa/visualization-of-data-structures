@@ -2,26 +2,20 @@ package cz.upce.fei.muller.binaryHeap.core;
 
 import com.google.common.eventbus.EventBus;
 import cz.commons.layoutManager.ITreeLayoutManager;
-import cz.commons.layoutManager.TreeLayoutManager;
 import cz.commons.utils.dialogs.Dialog;
 import cz.upce.fei.common.core.Controller;
-import cz.upce.fei.common.core.MyController;
-import cz.upce.fei.common.core.UIControl;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
-import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapGraphics;
 import cz.upce.fei.muller.binaryHeap.gui.StructureControls;
 import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
 import cz.upce.fei.muller.binaryHeap.structure.HeapType;
-import cz.upce.fei.muller.treap.events.HuffmanTreeEventQueue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 
 /**
  * @author Vojtěch Müller
  */
-public class BinaryHeapController extends MyController {
+public class BinaryHeapController extends Controller {
 
     private BinaryHeap heap;
     private ITreeLayoutManager manager;
