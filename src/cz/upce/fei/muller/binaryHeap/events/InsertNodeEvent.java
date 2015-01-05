@@ -16,4 +16,16 @@ public class InsertNodeEvent extends AbstractEvent {
         this.parentNode = parentNode;
         this.isLeftChild = isLeftChild;
     }
+
+    public HeapNode getParentNode(){
+        return parentNode;
+    }
+
+    public HeapNode getNewNode(){
+        return (HeapNode) element;
+    }
+
+    public boolean isLeftChild() {
+        return isLeftChild;
+    }
 }

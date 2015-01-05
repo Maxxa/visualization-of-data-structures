@@ -10,4 +10,9 @@ public class RemoveRootEvent extends AbstractEvent {
     public RemoveRootEvent(HeapNode element) {
         super(element);
     }
+
+    public HeapNode getRootNode() {
+        return (HeapNode) element;
+    }
+
 }

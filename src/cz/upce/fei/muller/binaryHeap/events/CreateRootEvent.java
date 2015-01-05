@@ -10,7 +10,10 @@ public class CreateRootEvent extends AbstractEvent {
 
     public CreateRootEvent(HeapNode element) {
         super(element);
-
-
     }
+
+    HeapNode getHeapNode(){
+        return (HeapNode) element;
+    }
+
 }

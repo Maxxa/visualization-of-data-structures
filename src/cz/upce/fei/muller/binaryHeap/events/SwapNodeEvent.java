@@ -10,8 +10,15 @@ public class SwapNodeEvent extends AbstractEvent {
 
     protected HeapNode secondNode;
 
-    public SwapNodeEvent(HeapNode element, HeapNode secondNode) {
-        super(element);
+    public SwapNodeEvent(HeapNode firstNode, HeapNode secondNode) {
+        super(firstNode);
         this.secondNode =secondNode;
+    }
+
+    public HeapNode getSecondNode() {
+        return secondNode;
+    }
+    public HeapNode getFirstNode() {
+        return (HeapNode) element;
     }
 }
