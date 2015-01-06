@@ -6,7 +6,6 @@ import cz.commons.graphics.LineElement;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
-import cz.upce.fei.muller.binaryHeap.animations.*;
 import cz.upce.fei.muller.binaryHeap.events.*;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 
