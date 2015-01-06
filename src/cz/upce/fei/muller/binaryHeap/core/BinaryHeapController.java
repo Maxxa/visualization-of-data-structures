@@ -20,14 +20,14 @@ public class BinaryHeapController extends Controller {
     private BinaryHeap heap;
     private ITreeLayoutManager manager;
     private final EventBus eventBus = new EventBus();
-    private final AnimationCore animationCore;
+    private final AnimationsEventsHandlersCore animationCore;
 
     public BinaryHeapController(ToolBarControlsContainer containerControls, ITreeLayoutManager manager) {
         super(containerControls);
         this.manager = manager;
         this.initStructureControls(containerControls);
         heap = new BinaryHeap(eventBus, HeapType.MIN);
-        animationCore = new AnimationCore(animationControl,manager);
+        animationCore = new AnimationsEventsHandlersCore(animationControl,manager);
         eventBus.register(animationCore);
     }
 
