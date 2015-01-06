@@ -1,5 +1,6 @@
 package cz.upce.fei.common.gui;
 
+import cz.commons.utils.ZoomHandler;
 import cz.upce.fei.common.core.Controller;
 import cz.upce.fei.common.gui.utils.SceneInfo;
 import javafx.application.Application;
@@ -25,6 +26,7 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
     private final ScrollPane scrollPane = new ScrollPane();
     private final Pane canvas = new Pane();
     private ToolBar toolbar;
+    private final ZoomHandler zoomHandler = new ZoomHandler(scrollPane, canvas);
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -34,16 +36,19 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
         toolbar= initToolbar();
         layout.setTop(toolbar);
         initScrollPane();
-        animationController = getController();
 
         startStage(stage);
+        animationController = getController();
         onShow();
     }
 
     private void initScrollPane() {
+        canvas.setOnScroll(zoomHandler);
+        scrollPane.setOnScroll(zoomHandler);
         scrollPane.setStyle("-fx-background-color: transparent; -fx-control-inner-background: transparent;");
         scrollPane.setContent(new Group(canvas));
         scrollPane.setPannable(true);
+
         layout.setCenter(scrollPane);
     }
 
@@ -54,6 +59,7 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
         stage.setMinWidth(sceneInfo.getMinSceneWith());
         stage.setScene(scene);
         stage.show();
+        scrollPane.setHvalue(0.5);
     }
 
     protected abstract void beforeStart(Stage stage);

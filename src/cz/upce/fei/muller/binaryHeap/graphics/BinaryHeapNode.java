@@ -3,6 +3,10 @@ package cz.upce.fei.muller.binaryHeap.graphics;
 import cz.commons.graphics.BinaryNodeElement;
 import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
@@ -14,6 +18,7 @@ public class BinaryHeapNode extends BinaryNodeElement implements IBinaryNodesEle
 
     private final HeapNode node;
     private Rectangle backgroundRectangle;
+    private Label label = new Label();
 
     public BinaryHeapNode(HeapNode node, int x, int y) {
         super(node.getId(), WIDTH, HEIGHT);
@@ -21,11 +26,23 @@ public class BinaryHeapNode extends BinaryNodeElement implements IBinaryNodesEle
         setTranslateX(x);
         setTranslateY(y);
 
+        label.setText(String.valueOf(node.getValue()));
+        label.setMaxWidth(WIDTH);
+        label.setAlignment(Pos.CENTER);
+        label.setStyle("-fx-font-weight: bold;");
+
         backgroundRectangle = new Rectangle(WIDTH, HEIGHT);
         backgroundRectangle.setStrokeType(StrokeType.INSIDE);
         backgroundRectangle.setStroke(BG_STROKE);
         backgroundRectangle.setFill(BG_COLOR);
-        this.getChildren().add(backgroundRectangle);
+
+        VBox labelsBox = new VBox();
+        labelsBox.getChildren().addAll(label);
+
+        StackPane sp = new StackPane();
+        sp.getChildren().addAll(backgroundRectangle, labelsBox);
+
+        this.getChildren().add(sp);
     }
 
     @Override

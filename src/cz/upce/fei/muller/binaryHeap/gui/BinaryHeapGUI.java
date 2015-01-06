@@ -16,12 +16,18 @@ import java.util.HashMap;
  */
 public class BinaryHeapGUI extends AbstractApplication<BinaryHeapController> {
 
+    public static final int CANVAS_WIDTH = (int) 8400;
+    public static final int CANVAS_HEIGHT = (int) 450;
+
     private ToolBarControlsContainer containerControls = new ToolBarControlsContainer(new StructureControls());
 
     private BinaryTreeLayoutManager binaryTreeLayoutManager;
 
     @Override
-    protected void beforeStart(Stage stage) {  }
+    protected void beforeStart(Stage stage) {
+        getCanvas().setPrefWidth(CANVAS_WIDTH);
+        getCanvas().setPrefHeight(CANVAS_HEIGHT);
+    }
 
     @Override
     protected BinaryHeapController getController() {
@@ -44,7 +50,8 @@ public class BinaryHeapGUI extends AbstractApplication<BinaryHeapController> {
         return new BinaryHeapSceneInfo();
     }
 
-    protected void onShow() {}
+    protected void onShow() {
+    }
 
     public static void main(String[] args) {
         launch(args);

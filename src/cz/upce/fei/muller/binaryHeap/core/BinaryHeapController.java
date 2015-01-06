@@ -1,7 +1,6 @@
 package cz.upce.fei.muller.binaryHeap.core;
 
 import com.google.common.eventbus.EventBus;
-import cz.commons.animation.AnimationControl;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.utils.dialogs.Dialog;
 import cz.upce.fei.common.core.Controller;
@@ -12,7 +11,6 @@ import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import cz.upce.fei.muller.binaryHeap.structure.HeapType;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.Pane;
 
 /**
  * @author Vojtěch Müller
@@ -38,7 +36,7 @@ public class BinaryHeapController extends Controller {
         controls.addInsertHandler(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Integer parsedValue =null;
+                Integer parsedValue;
                 try {
                     String s = controls.getTextValue();
                     parsedValue = Integer.parseInt(s.trim());
