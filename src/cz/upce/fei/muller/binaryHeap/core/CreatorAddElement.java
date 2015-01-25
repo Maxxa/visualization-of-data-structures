@@ -8,8 +8,8 @@ import javafx.geometry.Point2D;
  */
 public class CreatorAddElement extends CreatorAnimMoveNode{
 
-    public CreatorAddElement(Point2D to, Element element) {
-        super(new Point2D(0,0), to, element);
+    public CreatorAddElement(Point2D to,Point2D creatingPoint, Element element) {
+        super(creatingPoint, to, element);
     }
 
 }

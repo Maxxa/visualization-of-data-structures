@@ -24,8 +24,14 @@ public class CreatorAnimMoveNode implements IAnimationCreator{
 
     @Override
     public ParallelTransition getAnimation() {
+        return new ParallelTransition(getTranslateTranistion());
+    }
+
+    public TranslateTransition getTranslateTranistion(){
         TranslateTransition tt=TranslateTransitionBuilder.create().fromX(from.getX()).fromY(from.getY()).toX(to.getX())
                 .toY(to.getY()).duration(new Duration(1000)).node(element).build();
-        return new ParallelTransition(tt);
+        return tt;
     }
+
+
 }
