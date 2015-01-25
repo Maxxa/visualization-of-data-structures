@@ -1,5 +1,6 @@
 package cz.upce.fei.muller.binaryHeap.gui;
 
+import cz.commons.graphics.IGraphics;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.upce.fei.common.gui.AbstractApplication;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
@@ -16,8 +17,8 @@ import java.util.HashMap;
  */
 public class BinaryHeapGUI extends AbstractApplication<BinaryHeapController> {
 
-    public static final int CANVAS_WIDTH = (int) 8400;
-    public static final int CANVAS_HEIGHT = (int) 450;
+    public static final int CANVAS_WIDTH = (int) (8400* IGraphics.PLATFORM_SCALE);
+    public static final int CANVAS_HEIGHT = (int) (450* IGraphics.PLATFORM_SCALE);
 
     private ToolBarControlsContainer containerControls = new ToolBarControlsContainer(new StructureControls());
 

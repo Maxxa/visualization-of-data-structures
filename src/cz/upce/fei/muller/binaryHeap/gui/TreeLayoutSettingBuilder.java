@@ -1,5 +1,6 @@
 package cz.upce.fei.muller.binaryHeap.gui;
 
+import cz.commons.graphics.IGraphics;
 import cz.commons.layoutManager.TreeLayoutSettings;
 import cz.upce.fei.muller.binaryHeap.graphics.IBinaryNodesElements;
 
@@ -8,11 +9,11 @@ import cz.upce.fei.muller.binaryHeap.graphics.IBinaryNodesElements;
  */
 final class TreeLayoutSettingBuilder {
 
-    static final Integer PADDING_TOP = 10;
+    static final Integer PADDING_TOP = (int) (25* IGraphics.PLATFORM_SCALE);
 
-    static final Integer HORIZONTAL_SPACE = 10;
+    static final Integer HORIZONTAL_SPACE =(int) (10* IGraphics.PLATFORM_SCALE);
 
-    static final Integer VERTICAL_SPACE = 10;
+    static final Integer VERTICAL_SPACE = (int) (10* IGraphics.PLATFORM_SCALE);
 
     static TreeLayoutSettings getSetting(){
         return new TreeLayoutSettings(PADDING_TOP,HORIZONTAL_SPACE,VERTICAL_SPACE, IBinaryNodesElements.WIDTH,IBinaryNodesElements.HEIGHT);
