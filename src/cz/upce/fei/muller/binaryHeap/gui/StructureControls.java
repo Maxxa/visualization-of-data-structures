@@ -48,4 +48,28 @@ public class StructureControls implements IStructureControls {
     public String getTextValue() {
         return text.getText();
     }
+
+    @Override
+    public void toggleEnableButtons() {
+        if(add.isDisable()){
+            enableButtons();
+        }else{
+            disableButtons();
+        }
+    }
+
+    @Override
+    public void enableButtons() {
+        setEnablingBtn(false);
+    }
+
+    @Override
+    public void disableButtons() {
+        setEnablingBtn(true);
+    }
+
+    private void setEnablingBtn(boolean isDisable){
+        add.setDisable(isDisable);
+        removeRoot.setDisable(isDisable);
+    }
 }

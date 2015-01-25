@@ -8,4 +8,8 @@ import javafx.scene.layout.HBox;
  */
 public interface IStructureControls extends IToolBarControl {
 
+    void toggleEnableButtons();
+
+    void enableButtons();
+    void disableButtons();
 }
