@@ -14,15 +14,15 @@ import javafx.scene.shape.StrokeType;
 /**
  * @author Vojtěch Müller
  */
-public class BinaryHeapNode extends BinaryNodeElement implements IBinaryNodesElements {
+public class TreapNode extends BinaryNodeElement implements IBinaryNodesElements {
 
-    private final TreapNode node;
+    private final cz.upce.fei.muller.treap.structure.TreapNode node;
     private Rectangle backgroundRectangle;
     private Label label = new Label();
 
     private LineElement[] lineToChild = new LineElement[2];
 
-    public BinaryHeapNode(TreapNode node, int x, int y) {
+    public TreapNode(cz.upce.fei.muller.treap.structure.TreapNode node, int x, int y) {
         super(node.getId(), WIDTH, HEIGHT);
         this.node = node;
         setTranslateX(x);

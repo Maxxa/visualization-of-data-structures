@@ -7,11 +7,11 @@ import javafx.scene.shape.StrokeType;
 /**
  * @author Vojtěch Müller
  */
-public class BinarySearchNode extends Element implements IBinaryNodesElements {
+public class SearchNode extends Element implements IBinaryNodesElements {
 
     private Circle backgroundCircle;
 
-    public BinarySearchNode(int id,int x,int y,String searchString) {
+    public SearchNode(int id, int x, int y, String searchString) {
         this.id=id;
         setTranslateX(x);
         setTranslateY(y);
