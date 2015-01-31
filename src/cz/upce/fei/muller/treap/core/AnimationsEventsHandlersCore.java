@@ -1,15 +1,9 @@
 package cz.upce.fei.muller.treap.core;
 
-import com.google.common.eventbus.Subscribe;
 import cz.commons.animation.AnimationControl;
-import cz.commons.graphics.LineElement;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
-import cz.commons.layoutManager.MoveElementEvent;
-import cz.upce.fei.muller.treap.events.*;
-import cz.upce.fei.muller.treap.graphics.BinaryHeapNode;
 import cz.upce.fei.muller.treap.graphics.IBinaryNodesElements;
-import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 
