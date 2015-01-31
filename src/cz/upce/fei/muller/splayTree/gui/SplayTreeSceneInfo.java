@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.splayTree.core.gui;
+package cz.upce.fei.muller.splayTree.gui;
 
 import cz.commons.graphics.IGraphics;
 import cz.upce.fei.common.gui.utils.SceneInfo;
