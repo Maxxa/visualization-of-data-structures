@@ -6,12 +6,12 @@ import javafx.animation.ParallelTransition;
 /**
  * @author Vojtěch Müller
  */
-public class CreatorRemoveRoot implements IAnimationCreator {
-    public CreatorRemoveRoot(BinaryHeapNode node) {
+public class BuilderCompareNode implements IAnimationBuilder {
+    public BuilderCompareNode(BinaryHeapNode node, BinaryHeapNode node1, boolean aTrue) {
     }
 
     @Override
     public ParallelTransition getAnimation() {
-        return null;
+        return new ParallelTransition();
     }
 }

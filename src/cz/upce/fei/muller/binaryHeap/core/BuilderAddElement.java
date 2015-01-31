@@ -6,9 +6,9 @@ import javafx.geometry.Point2D;
 /**
  * @author Vojtěch Müller
  */
-public class CreatorAddElement extends CreatorAnimMoveNode{
+public class BuilderAddElement extends BuilderAnimMoveNode {
 
-    public CreatorAddElement(Point2D to,Point2D creatingPoint, Element element) {
+    public BuilderAddElement(Point2D to, Point2D creatingPoint, Element element) {
         super(creatingPoint, to, element);
     }
 

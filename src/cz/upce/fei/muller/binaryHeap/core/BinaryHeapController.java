@@ -29,6 +29,18 @@ public class BinaryHeapController extends Controller {
         heap = new BinaryHeap(eventBus, HeapType.MIN);
         animationCore = new AnimationsEventsHandlersCore(animationControl,manager);
         eventBus.register(animationCore);
+        initAnimationHandlersFinished();
+    }
+
+    private void initAnimationHandlersFinished() {
+        animationCore.setEndAnimationHandler(new IEndAnimation() {
+            @Override
+            public void endAnimation(boolean steping) {
+                if (steping) {
+                    controlsContainer.getStepControls().enableBtnNext();
+                }
+            }
+        });
     }
 
     private void initStructureControls(final ToolBarControlsContainer containerControls) {
@@ -46,7 +58,10 @@ public class BinaryHeapController extends Controller {
                 }
 
                 HeapNode newNode = new HeapNode(parsedValue);
+                animationControl.clear();
+                containerControls.getStructureControls().disableButtons();
                 heap.insert(newNode);
+
             }
         });
 
@@ -60,6 +75,10 @@ public class BinaryHeapController extends Controller {
             }
         });
 
+    }
+
+    private void resetAnimation() {
+        //TODO remove all animation from before values
     }
 
     @Override
@@ -85,7 +104,7 @@ public class BinaryHeapController extends Controller {
                     heap.clear();
                     manager.clear();
                     heap = new BinaryHeap(eventBus,dlg.getResult());
-//                    disableControls(false);
+                    controlsContainer.getStructureControls().enableButtons();
 //                    disableStepping(true); //TODO
                 }
 
