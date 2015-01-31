@@ -1,6 +1,7 @@
 package cz.upce.fei.muller.binaryHeap.graphics;
 
 import cz.commons.graphics.BinaryNodeElement;
+import cz.commons.graphics.LineElement;
 import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
@@ -19,6 +20,8 @@ public class BinaryHeapNode extends BinaryNodeElement implements IBinaryNodesEle
     private final HeapNode node;
     private Rectangle backgroundRectangle;
     private Label label = new Label();
+
+    private LineElement[] lineToChild = new LineElement[2];
 
     public BinaryHeapNode(HeapNode node, int x, int y) {
         super(node.getId(), WIDTH, HEIGHT);
@@ -41,7 +44,7 @@ public class BinaryHeapNode extends BinaryNodeElement implements IBinaryNodesEle
 
         StackPane sp = new StackPane();
         sp.getChildren().addAll(backgroundRectangle, labelsBox);
-
+        doParentBindings();
         this.getChildren().add(sp);
     }
 
@@ -50,4 +53,13 @@ public class BinaryHeapNode extends BinaryNodeElement implements IBinaryNodesEle
         centerX.bind(Bindings.add(Bindings.divide(backgroundRectangle.widthProperty(), 2), translateXProperty()));
         centerY.bind(Bindings.add(translateYProperty(), 1));
     }
+
+    public void setChildLine(LineElement element, boolean isLeft){
+        lineToChild[isLeft?0:1]= element;
+    }
+
+    public LineElement getChildLine(boolean isLeft){
+        return lineToChild[isLeft?0:1];
+    }
+
 }

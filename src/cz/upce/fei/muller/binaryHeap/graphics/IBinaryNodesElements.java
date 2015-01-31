@@ -1,5 +1,6 @@
 package cz.upce.fei.muller.binaryHeap.graphics;
 
+import cz.commons.graphics.IGraphics;
 import javafx.scene.paint.Color;
 
 /**
@@ -7,9 +8,9 @@ import javafx.scene.paint.Color;
  */
 public interface IBinaryNodesElements {
 
-    public static final Integer WIDTH = 30;
+    public static final Integer WIDTH = (int) (30 * IGraphics.PLATFORM_SCALE);
 
-    public static final Integer HEIGHT = 20;
+    public static final Integer HEIGHT = (int) (20 * IGraphics.PLATFORM_SCALE);
 
     public static final Color BG_COLOR = Color.LIGHTYELLOW;
 
