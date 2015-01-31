@@ -76,12 +76,12 @@ public class BinaryHeap implements IHeap<HeapNode> {
 
     @Override
     public HeapNode removeRoot() {
-        eventBus.post(new SwapNodeEvent(binTree.getRoot(),binTree.getLast()));
+        eventBus.post(new SwapNodeEvent(binTree.getRoot(), binTree.getLast()));
         binTree.swapNode(0, binTree.countItems() - 1);
         HeapNode oldRoot= binTree.removeLast();
         eventBus.post(new RemoveRootEvent(oldRoot));
 
-        //sprave serazeni 
+        //sprave serazeni
         int parentIdx = 0;
         int childIdx;
         HeapNode child,currentNode = binTree.getRoot();
@@ -122,20 +122,20 @@ public class BinaryHeap implements IHeap<HeapNode> {
 
     @Override
     public boolean isHeap(Comparator com, IBinaryTree tree) {
-        Object pSyn;
-        Object lSyn;
+        Object rightChild;
+        Object leftChild;
         int i, j;
-        for (int otec = 0; otec < tree.countItems(); otec++) {
-            if (tree.getParent(2 * otec + 1) == null) { //
+        for (int parent = 0; parent < tree.countItems(); parent++) {
+            if (tree.getParent(2 * parent + 1) == null) { //
                 return false;
             }
 
-            pSyn = tree.getRight(2 * otec + 2);
-            lSyn = tree.getLeft(2 * otec + 1);
+            rightChild = tree.getRight(2 * parent + 2);
+            leftChild = tree.getLeft(2 * parent + 1);
 
            
-            i = com.compare(lSyn, tree.getParent(2 * otec + 1));
-            j = com.compare(pSyn, tree.getParent(2 * otec + 1));
+            i = com.compare(leftChild, tree.getParent(2 * parent + 1));
+            j = com.compare(rightChild, tree.getParent(2 * parent + 1));
             if (i == 1 || j == 1) {
                 return false;
             }
