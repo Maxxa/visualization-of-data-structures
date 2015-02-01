@@ -1,13 +1,7 @@
 package cz.upce.fei.muller.binaryHeap.core;
 
-import cz.commons.animation.StepEventHandler;
-import cz.commons.graphics.LineElement;
-import cz.upce.fei.common.graphics.NodePosition;
-import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
-import javafx.animation.FadeTransitionBuilder;
+import cz.commons.utils.FadesTransitionBuilder;
 import javafx.animation.ParallelTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.util.Duration;
 
 /**
@@ -15,45 +9,25 @@ import javafx.util.Duration;
  */
 public class BuilderRemoveRoot implements IAnimationBuilder {
 
-    private final BinaryHeapNode node;
 
-    public BuilderRemoveRoot(BinaryHeapNode node) {
-        this.node = node;
+    private final RemovePreparation removePreparation;
+
+    public BuilderRemoveRoot(RemovePreparation removePreparation) {
+        this.removePreparation = removePreparation;
     }
 
     @Override
     public ParallelTransition getAnimation() {
-        ParallelTransition pt = new ParallelTransition(
-                FadeTransitionBuilder.create()
-                    .duration(Duration.seconds(1))
-                    .fromValue(1)
-                    .toValue(0)
-                    .cycleCount(1)
-                    .node(node)
-                    .build());
+        ParallelTransition pt = new ParallelTransition();
+        System.out.println("build animation remove");
 
-        pt.setOnFinished(getFinishedHandler());
+        if(removePreparation.isLineToRemoved()){
+            pt.getChildren().add(FadesTransitionBuilder.getTransition(removePreparation.getLineToRemoved(), Duration.seconds(1), 1, 0));
+        }
+
+        pt.getChildren().add(FadesTransitionBuilder.getTransition(removePreparation.getRemovedElement(), Duration.seconds(1), 1, 0));
+
         return pt;
-
-
     }
 
-    public EventHandler<ActionEvent> getFinishedHandler() {
-        return new StepEventHandler() {
-
-            BinaryHeapNode root = node;
-            LineElement left = node.getChildLine(NodePosition.LEFT);
-            LineElement right = node.getChildLine(NodePosition.RIGHT);
-
-            @Override
-            protected void handleForward(ActionEvent actionEvent) {
-                //TODO
-            }
-
-            @Override
-            protected void handleBack(ActionEvent actionEvent) {
-                //TODO
-            }
-        };
-    }
 }

@@ -37,8 +37,9 @@ public class BinaryHeapController extends Controller {
             @Override
             public void endAnimation(boolean steping) {
                 if (steping) {
-                    controlsContainer.getStepControls().enableBtnNext();
+                    controlsContainer.getStepControls().enableBtnAll();
                 }
+
             }
         });
     }
@@ -56,7 +57,7 @@ public class BinaryHeapController extends Controller {
                     Dialog.showError("Chyba", "Zadáno neplatné číslo.");
                     return;
                 }
-
+                clearBeforeNewAction();
                 HeapNode newNode = new HeapNode(parsedValue);
                 animationControl.clear();
                 containerControls.getStructureControls().disableButtons();
@@ -71,6 +72,7 @@ public class BinaryHeapController extends Controller {
                 if(showDialogIsEmpty()){
                     return;
                 }
+                clearBeforeNewAction();
                 heap.removeRoot();
             }
         });
@@ -118,6 +120,14 @@ public class BinaryHeapController extends Controller {
             return true;
         }
         return false;
+    }
+
+    private void clearBeforeNewAction(){
+        RemovePreparation removePreparation =animationCore.getRemovePreparation();
+        if(removePreparation!=null){
+            removePreparation.executeRemove();
+            animationCore.setRemovePreparation(null);
+        }
     }
 
 }

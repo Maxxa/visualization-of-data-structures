@@ -6,6 +6,7 @@ import cz.commons.graphics.LineElement;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
+import cz.upce.fei.common.graphics.NodePosition;
 import cz.upce.fei.muller.binaryHeap.events.*;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import cz.upce.fei.muller.binaryHeap.graphics.IBinaryNodesElements;
@@ -26,7 +27,7 @@ public class AnimationsEventsHandlersCore {
     private IEndAnimation endHandler;
 
     private Point2D creatingPoint;
-    private Integer removeElementId;
+    private RemovePreparation removePreparation;
 
     private List<TranslateTransition> moveParentsElements = new ArrayList<>();
 
@@ -43,8 +44,10 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleCreateRootEvent(CreateRootEvent event) {
-        manager.addElement(new BinaryHeapNode(event.getHeapNode(), 0, 0), null, false);
-        insertTransition(new BuilderAddElement(manager.getNodePosition(event.getHeapNode().getId()),creatingPoint,getNode(event.getHeapNode().getId())));
+        BinaryHeapNode newNode = new BinaryHeapNode(event.getHeapNode(), 0, 0);
+        manager.addElement(newNode, null, false);
+        manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT));
+        insertTransition(new BuilderAddElement(manager.getNodePosition(event.getHeapNode().getId()), creatingPoint, getNode(event.getHeapNode().getId())));
     }
 
     @Subscribe
@@ -86,27 +89,30 @@ public class AnimationsEventsHandlersCore {
         manager.addElement(new BinaryHeapNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY()), event.getParentNode().getId(), event.isLeftChild());
         BinaryHeapNode parent = getNode(event.getParentNode().getId());
         BinaryHeapNode newNode = getNode(event.getNewNode().getId());
-        LineElement line = new LineElement(parent.getChildConnector(event.isLeftChild()?0:1),newNode);
-        parent.setChildLine(line,event.isLeftChild());
-        manager.getCanvas().getChildren().addAll(line);
+        manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT));
+
+        LineElement lineFromParent = parent.getChildLine(event.isLeftChild()?NodePosition.LEFT:NodePosition.RIGHT);
+        lineFromParent.setEnd(newNode);
+        lineFromParent.setVisible(true);
         insertTransition(new BuilderAddElement(manager.getNodePosition(event.getNewNode().getId()), creatingPoint, getNode(event.getNewNode().getId())));
     }
 
     @Subscribe
     public void handleRemoveRootEvent(RemoveRootEvent event) {
         System.out.println("Handle remove root");
-        manager.removeElement(event.getRootNode().getId());
-        insertTransition(new BuilderRemoveRoot(getNode(event.getRootNode().getId())));
+        removePreparation = new RemovePreparation(manager.getElementInfo(event.getRootNode().getId()),manager);
+        manager.removeElement(event.getRootNode().getId(),false);
+        insertTransition(new BuilderRemoveRoot(removePreparation));
         initMovingTransition();
-        removeElementId = event.getRootNode().getId();
     }
 
     @Subscribe
     public void handleSwapNodeEvent(SwapNodeEvent event) {
         System.out.println("Handle swap node");
         initMovingTransition();
-        SwapHandler handler = new SwapHandler(manager,getNode(event.getFirstNode().getId()), getNode(event.getSecondNode().getId()),event);
+        SwapPreparation handler = new SwapPreparation(manager,getNode(event.getFirstNode().getId()), getNode(event.getSecondNode().getId()),event);
         IAnimationBuilder creator = handler.getCreator();
+        System.out.println("prohazuji...");
         manager.swapElement(event.getFirstNode().getId(), event.getSecondNode().getId());
         insertTransition(creator);
     }
@@ -126,5 +132,13 @@ public class AnimationsEventsHandlersCore {
 
     public void setEndAnimationHandler(IEndAnimation handler) {
         this.endHandler = handler;
+    }
+
+    public RemovePreparation getRemovePreparation() {
+        return removePreparation;
+    }
+
+    public void setRemovePreparation(RemovePreparation removePreparation) {
+        this.removePreparation = removePreparation;
     }
 }

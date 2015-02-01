@@ -2,6 +2,7 @@ package cz.upce.fei.muller.binaryHeap.core;
 
 import cz.commons.graphics.LineElement;
 import cz.commons.utils.FadesTransitionBuilder;
+import cz.upce.fei.common.graphics.BinaryNodeWithLine;
 import cz.upce.fei.common.graphics.NodePosition;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.animation.FadeTransition;
@@ -18,12 +19,12 @@ import javafx.util.Duration;
 public class BuilderSwapRoot extends BuilderSwapNode {
 
     private final BinaryHeapNode leafParent;
+    private final NodePosition leafParentPosition;
 
-    private LineElement lineParentOfLeaf;
-
-    public BuilderSwapRoot(BinaryHeapNode nodeFirst, BinaryHeapNode nodeSecond, Point2D firstPoint, Point2D secondPoint, BinaryHeapNode leafParent) {
-        super(nodeFirst, nodeSecond, firstPoint, secondPoint);
+    public BuilderSwapRoot(BinaryHeapNode nodeFirst, BinaryHeapNode nodeSecond, Point2D firstPoint, Point2D secondPoint, BinaryHeapNode leafParent,NodePosition leafParentPosition) {
+        super(nodeFirst, nodeSecond, firstPoint, secondPoint, null, null, null);
         this.leafParent = leafParent;
+        this.leafParentPosition =leafParentPosition;
     }
 
     @Override
@@ -35,24 +36,25 @@ public class BuilderSwapRoot extends BuilderSwapNode {
     }
 
     private EventHandler<ActionEvent> setFinishedHandler() {
-        return new SwapRootEndEventHandler(lineParentOfLeaf,leafParent,nodeFirst,nodeSecond);
+        return new SwapRootEndEventHandler(leafParent.getChildLine(leafParentPosition),information.first,information.second);
     }
 
     private FadeTransition getFadeTransition(int from,int to) {
-        BinaryHeapNode left= leafParent.getChild(NodePosition.LEFT);
-        lineParentOfLeaf = leafParent.getChildLine(left!=null && left.getElementId()==nodeSecond.getElementId()?NodePosition.LEFT:NodePosition.RIGHT);
-        return FadesTransitionBuilder.getTransition(lineParentOfLeaf,Duration.millis(1),from,to);
+        LineElement line = leafParent.getChildLine(leafParentPosition);
+        return FadesTransitionBuilder.getTransition(line,Duration.millis(1),from,to);
     }
-    private FadeTransition getFadeTransitionRoot(NodePosition position,int from,int to) {
-        return FadesTransitionBuilder.getTransition(nodeFirst.getChildLine(position),Duration.millis(1),from,to);
+    private FadeTransition getFadeTransitionRoot(BinaryNodeWithLine node, int from, int to, NodePosition position) {
+        return FadesTransitionBuilder.getTransition(node.getChildLine(position),Duration.millis(1),from,to);
     }
 
-    private ParallelTransition getFades(boolean forward){
-        int from = forward?1:0;
-        int to = forward?0:1;
+    private ParallelTransition getFades(boolean visibility){
+        int from = visibility?1:0;
+        int to = visibility?0:1;
         FadeTransition ft =getFadeTransition(from,to);
-        FadeTransition ft1 = getFadeTransitionRoot(NodePosition.LEFT,from,to);
-        FadeTransition ft2 = getFadeTransitionRoot(NodePosition.RIGHT,from,to);
-        return new ParallelTransition(ft,ft1,ft2);
+        FadeTransition ft1 = getFadeTransitionRoot(information.first, from, to, NodePosition.LEFT);
+        FadeTransition ft2 = getFadeTransitionRoot(information.first, from, to, NodePosition.RIGHT);
+        FadeTransition ft3 = getFadeTransitionRoot(information.second, from, to, NodePosition.LEFT);
+        FadeTransition ft4 = getFadeTransitionRoot(information.second, from, to, NodePosition.RIGHT);
+        return new ParallelTransition(ft,ft1,ft2,ft3,ft4);
     }
 }
