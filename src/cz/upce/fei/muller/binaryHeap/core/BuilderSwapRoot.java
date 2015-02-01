@@ -1,19 +1,15 @@
 package cz.upce.fei.muller.binaryHeap.core;
 
-import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.LineElement;
 import cz.commons.utils.FadesTransitionBuilder;
-import cz.commons.utils.transitions.RelativeTranslateTransition;
 import cz.upce.fei.common.graphics.NodePosition;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**

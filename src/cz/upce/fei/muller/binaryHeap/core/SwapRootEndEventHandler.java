@@ -2,12 +2,9 @@ package cz.upce.fei.muller.binaryHeap.core;
 
 import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.LineElement;
-import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.graphics.NodePosition;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
-import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
 import javafx.event.ActionEvent;
-import javafx.util.Duration;
 
 /**
  * @author Vojtěch Müller
