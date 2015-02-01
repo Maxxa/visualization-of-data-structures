@@ -12,42 +12,14 @@ public abstract class BinaryNodeWithLine extends BinaryNodeElement {
 
     public BinaryNodeWithLine(int id, int keyWidth, int height) {
         super(id, keyWidth, height);
-    }
-
-    public void setChildLine(LineElement element, boolean isLeft){
-        lineToChild[isLeft?0:1]= element;
+        lineToChild[0] = new LineElement(this.getLeftChildConnector(),this);
+        lineToChild[1] = new LineElement(this.getRightChildConnector(),this);
+        lineToChild[0].setVisible(false);
+        lineToChild[1].setVisible(false);
     }
 
     public LineElement getChildLine(NodePosition position){
         return lineToChild[position.equals(NodePosition.LEFT)?0:1];
-    }
-
-    public boolean isLeftChild(){
-        return isChild(NodePosition.LEFT);
-    }
-
-    public boolean isRightChild(){
-        return isChild(NodePosition.RIGHT);
-    }
-
-    private boolean isChild(NodePosition position){
-        LineElement line = getChildLine(position);
-        return line!=null && line.getEnd()!=null && BinaryNodeWithLine.class.isInstance(line.getEnd());
-    }
-
-    public <T> T getLeftChild(){
-        return getChild(NodePosition.LEFT);
-    }
-
-    public <T> T getRightChild(){
-        return getChild(NodePosition.RIGHT);
-    }
-
-    public <T> T getChild(NodePosition position){
-        if(isChild(position)){
-            return (T) getChildLine(position).getEnd();
-        }
-        return null;
     }
 
 }
