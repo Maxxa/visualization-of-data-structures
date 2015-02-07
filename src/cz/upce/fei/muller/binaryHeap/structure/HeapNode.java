@@ -21,4 +21,9 @@ public class HeapNode extends AbstractStructureElement {
     public Integer getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

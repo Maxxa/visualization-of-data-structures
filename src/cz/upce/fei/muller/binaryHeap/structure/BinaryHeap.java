@@ -47,10 +47,9 @@ public class BinaryHeap implements IHeap<HeapNode> {
         } else {
             int countItems = binTree.countItems();
             int parentIndex = (countItems - 1) / 2;
-            boolean isLeftChild = false;
-            if (countItems % 2 == 1) {// left child
+            boolean isLeftChild = countItems % 2 == 1;
+            if (isLeftChild) {// left child
                 binTree.insertLeftChild(parentIndex, insertedValue);
-                isLeftChild = true;
             } else {// right child
                 binTree.insertRightChild(parentIndex, insertedValue);
             }
