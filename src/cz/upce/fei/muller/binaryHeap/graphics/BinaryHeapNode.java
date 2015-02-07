@@ -1,16 +1,12 @@
 package cz.upce.fei.muller.binaryHeap.graphics;
 
-import cz.commons.graphics.BinaryNodeElement;
-import cz.commons.graphics.LineElement;
-import cz.upce.fei.common.graphics.BinaryNodeWithLine;
-import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
+import cz.commons.graphics.BinaryNodeWithLine;
 import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
@@ -29,7 +25,7 @@ public class BinaryHeapNode extends BinaryNodeWithLine implements IBinaryNodesEl
         setTranslateX(x);
         setTranslateY(y);
 
-        label.setText(String.valueOf(node.getValue()));
+        label.setText(String.valueOf("("+node.getId()+") "+node.getValue()));
         label.setMaxWidth(WIDTH);
         label.setAlignment(Pos.CENTER);
         label.setStyle("-fx-font-weight: bold;");
