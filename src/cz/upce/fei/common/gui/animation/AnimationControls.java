@@ -35,8 +35,8 @@ public final class AnimationControls implements IAnimationsControls {
         playPauseButton.setDisable(true);
 
         speedSlider = new Slider();
-        speedSlider.setMin(0.1);
-        speedSlider.setMax(5);
+        speedSlider.setMin(0.3);
+        speedSlider.setMax(2.5);
         speedSlider.setValue(1);
         speedSlider.setPrefWidth(120);
 
