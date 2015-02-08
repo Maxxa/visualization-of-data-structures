@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.binaryHeap.animationsRename;
+package cz.upce.fei.muller.binaryHeap.animations;
 
 import cz.commons.graphics.LineElement;
 import cz.commons.graphics.NodePosition;
@@ -7,7 +7,7 @@ import cz.commons.layoutManager.WorkBinaryNodeInfo;
 import cz.commons.layoutManager.WorkBinaryNodeInfoBuilder;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IPreparation;
-import cz.upce.fei.muller.binaryHeap.animationsRename.builders.BuilderAddElement;
+import cz.upce.fei.muller.binaryHeap.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.binaryHeap.events.InsertNodeEvent;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.geometry.Point2D;

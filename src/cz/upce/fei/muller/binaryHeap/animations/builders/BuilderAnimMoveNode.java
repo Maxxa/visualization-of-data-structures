@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.binaryHeap.animationsRename.builders;
+package cz.upce.fei.muller.binaryHeap.animations.builders;
 
 import cz.commons.graphics.Element;
 import cz.commons.utils.FadesTransitionBuilder;

@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.binaryHeap.animationsRename;
+package cz.upce.fei.muller.binaryHeap.animations;
 
 import cz.commons.graphics.LineElement;
 import cz.commons.layoutManager.BinaryTreeHelper;
