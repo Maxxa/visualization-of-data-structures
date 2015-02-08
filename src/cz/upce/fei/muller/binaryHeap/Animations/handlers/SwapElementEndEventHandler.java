@@ -1,9 +1,11 @@
-package cz.upce.fei.muller.binaryHeap.core;
+package cz.upce.fei.muller.binaryHeap.animations.handlers;
 
 import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.ConnectibleElement;
 import cz.commons.graphics.LineElement;
-import cz.upce.fei.common.graphics.NodePosition;
+import cz.commons.graphics.NodePosition;
+import cz.commons.layoutManager.WorkBinaryNodeInfo;
+import cz.upce.fei.muller.binaryHeap.animations.builders.SwapInformation;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.event.ActionEvent;
 
@@ -13,25 +15,27 @@ import javafx.event.ActionEvent;
 public class SwapElementEndEventHandler extends StepEventHandler {
 
 
-    private final BuilderSwapNode.Information information;
+    private final SwapInformation information;
 
-    public SwapElementEndEventHandler(BuilderSwapNode.Information information) {
+    public SwapElementEndEventHandler(SwapInformation information) {
         this.information = information;
     }
 
     @Override
     protected void handleForward(ActionEvent actionEvent) {
-        buildHandle(information.second,information.first);
+        buildHandle(information.getSecond(),information.getFirst());
     }
 
     @Override
     protected void handleBack(ActionEvent actionEvent) {
-        buildHandle(information.first,information.second);
+        buildHandle(information.getFirst(),information.getSecond());
     }
 
-    private void buildHandle(BinaryHeapNode newNode,BinaryHeapNode oldNode){
-        if(information.firstParent!=null){
-            information.firstParent.getChildLine(information.firstParentPosition).setEnd(newNode);
+    private void buildHandle(WorkBinaryNodeInfo newNodeInfo,WorkBinaryNodeInfo oldNodeInfo){
+        BinaryHeapNode newNode = (BinaryHeapNode)newNodeInfo.get().getElement();
+        BinaryHeapNode oldNode =(BinaryHeapNode)oldNodeInfo.get().getElement();
+        if(information.getFirstParent()!=null){
+            information.getFirstParent().getChildLine(information.getFirstParentPosition()).setEnd(newNode);
         }
 
         LineElement leftOldLine = oldNode.getChildLine(NodePosition.LEFT);
@@ -44,7 +48,7 @@ public class SwapElementEndEventHandler extends StepEventHandler {
         ConnectibleElement tmp1 = leftNewLine.getEnd();
         ConnectibleElement tmp2 = rightNewLine.getEnd();
 
-        if(information.positionFromFirst.equals(NodePosition.LEFT)){
+        if(information.getPositionFromFirst().equals(NodePosition.LEFT)){
             leftNewLine.setEnd(oldNode);
             rightNewLine.setEnd(rightOldLine.getEnd());
         }else{
@@ -56,12 +60,12 @@ public class SwapElementEndEventHandler extends StepEventHandler {
 
 
         // nastaveni sprave visibility
-        boolean tmpB1 = leftOldLine.isVisible();
-        boolean tmpB2 = rightOldLine.isVisible();
-        leftOldLine.setVisible(leftNewLine.isVisible());
-        rightOldLine.setVisible(rightNewLine.isVisible());
-        leftNewLine.setVisible(tmpB1);
-        rightNewLine.setVisible(tmpB2);
+//        boolean tmpB1 = leftOldLine.isVisible();
+//        boolean tmpB2 = rightOldLine.isVisible();
+//        leftOldLine.setVisible(leftNewLine.isVisible());
+//        rightOldLine.setVisible(rightNewLine.isVisible());
+//        leftNewLine.setVisible(tmpB1);
+//        rightNewLine.setVisible(tmpB2);
 
     }
 }

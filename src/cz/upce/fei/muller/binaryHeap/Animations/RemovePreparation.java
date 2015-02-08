@@ -1,16 +1,18 @@
-package cz.upce.fei.muller.binaryHeap.core;
+package cz.upce.fei.muller.binaryHeap.animations;
 
 import cz.commons.graphics.LineElement;
 import cz.commons.layoutManager.BinaryTreeHelper;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ElementInfo;
-import cz.upce.fei.common.graphics.NodePosition;
+import cz.commons.graphics.NodePosition;
+import cz.commons.layoutManager.WorkBinaryNodeInfo;
+import cz.upce.fei.common.core.IPreparation;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 
 /**
  * @author Vojtěch Müller
  */
-public class RemovePreparation {
+public class RemovePreparation{
 
     private final ElementInfo removedElementInfo;
     private final BinaryTreeLayoutManager manager;
@@ -30,10 +32,13 @@ public class RemovePreparation {
 
     public LineElement getLineToRemoved(){
         if(isLineToRemoved()){
+            System.out.println(removedElementInfo.getIdParent());
             ElementInfo infoParent =manager.getElementInfo(removedElementInfo.getIdParent());
             if(BinaryTreeHelper.getLeftChildIndex(infoParent.getIndexAtRow())==removedElementInfo.getIndexAtRow()){
+                System.out.println("LINE left REMOVE");
                 return ((BinaryHeapNode)infoParent.getElement()).getChildLine(NodePosition.LEFT);
             }else{
+                System.out.println("LINE right REMOVE");
                 return ((BinaryHeapNode)infoParent.getElement()).getChildLine(NodePosition.RIGHT);
             }
         }
@@ -42,7 +47,10 @@ public class RemovePreparation {
 
     public void executeRemove(){
         if(isLineToRemoved()){
-            getLineToRemoved().setEnd((BinaryHeapNode) manager.getElementInfo(removedElementInfo.getIdParent()).getElement());
+            LineElement lineFromParentToRemoved =getLineToRemoved();
+            lineFromParentToRemoved.setVisible(false);
+            lineFromParentToRemoved.setEnd((BinaryHeapNode) manager.getElementInfo(
+                    removedElementInfo.getIdParent()).getElement());
         }
         manager.getCanvas().getChildren().remove(removedElementInfo.getElement());
         manager.getCanvas().getChildren().remove(((BinaryHeapNode)removedElementInfo.getElement()).getChildLine(NodePosition.LEFT));

@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: cz.upce.fei.muller.binaryHeap.gui.BinaryHeapGUI
+

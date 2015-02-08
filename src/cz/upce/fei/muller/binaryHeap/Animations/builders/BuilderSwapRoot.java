@@ -1,9 +1,11 @@
-package cz.upce.fei.muller.binaryHeap.core;
+package cz.upce.fei.muller.binaryHeap.animations.builders;
 
 import cz.commons.graphics.LineElement;
+import cz.commons.layoutManager.WorkBinaryNodeInfo;
 import cz.commons.utils.FadesTransitionBuilder;
-import cz.upce.fei.common.graphics.BinaryNodeWithLine;
-import cz.upce.fei.common.graphics.NodePosition;
+import cz.commons.graphics.BinaryNodeWithLine;
+import cz.commons.graphics.NodePosition;
+import cz.upce.fei.muller.binaryHeap.animations.handlers.SwapRootEndEventHandler;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -21,10 +23,21 @@ public class BuilderSwapRoot extends BuilderSwapNode {
     private final BinaryHeapNode leafParent;
     private final NodePosition leafParentPosition;
 
-    public BuilderSwapRoot(BinaryHeapNode nodeFirst, BinaryHeapNode nodeSecond, Point2D firstPoint, Point2D secondPoint, BinaryHeapNode leafParent,NodePosition leafParentPosition) {
-        super(nodeFirst, nodeSecond, firstPoint, secondPoint, null, null, null);
+//    public BuilderSwapRoot(BinaryHeapNode nodeFirst, BinaryHeapNode nodeSecond,
+//                              Point2D firstPoint, Point2D secondPoint,
+//                              BinaryHeapNode leafParent,NodePosition leafParentPosition) {
+//        super(nodeFirst, nodeSecond, firstPoint, secondPoint, null, null, null);
+//        this.leafParent = leafParent;
+//        this.leafParentPosition =leafParentPosition;
+//    }
+
+    public BuilderSwapRoot(WorkBinaryNodeInfo infoFirst, WorkBinaryNodeInfo infoSecond,
+                           Point2D firstPoint, Point2D secondPoint,
+                           BinaryHeapNode leafParent, NodePosition leafParentPosition) {
+        super(infoFirst, infoSecond, firstPoint,secondPoint, null,null,null);
         this.leafParent = leafParent;
         this.leafParentPosition =leafParentPosition;
+
     }
 
     @Override
@@ -51,10 +64,10 @@ public class BuilderSwapRoot extends BuilderSwapNode {
         int from = visibility?1:0;
         int to = visibility?0:1;
         FadeTransition ft =getFadeTransition(from,to);
-        FadeTransition ft1 = getFadeTransitionRoot(information.first, from, to, NodePosition.LEFT);
-        FadeTransition ft2 = getFadeTransitionRoot(information.first, from, to, NodePosition.RIGHT);
-        FadeTransition ft3 = getFadeTransitionRoot(information.second, from, to, NodePosition.LEFT);
-        FadeTransition ft4 = getFadeTransitionRoot(information.second, from, to, NodePosition.RIGHT);
+        FadeTransition ft1 = getFadeTransitionRoot((BinaryNodeWithLine) information.first.get().getElement(), from, to, NodePosition.LEFT);
+        FadeTransition ft2 = getFadeTransitionRoot((BinaryNodeWithLine) information.first.get().getElement(), from, to, NodePosition.RIGHT);
+        FadeTransition ft3 = getFadeTransitionRoot((BinaryNodeWithLine) information.second.get().getElement(), from, to, NodePosition.LEFT);
+        FadeTransition ft4 = getFadeTransitionRoot((BinaryNodeWithLine) information.second.get().getElement(), from, to, NodePosition.RIGHT);
         return new ParallelTransition(ft,ft1,ft2,ft3,ft4);
     }
 }
