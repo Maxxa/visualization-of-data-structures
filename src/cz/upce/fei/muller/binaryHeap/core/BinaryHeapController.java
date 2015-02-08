@@ -9,7 +9,7 @@ import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.muller.binaryHeap.BinaryHeapPresetItem;
 import cz.upce.fei.muller.binaryHeap.BinaryHeapPresets;
-import cz.upce.fei.muller.binaryHeap.animationsRename.RemovePreparation;
+import cz.upce.fei.muller.binaryHeap.animations.RemovePreparation;
 import cz.upce.fei.muller.binaryHeap.gui.HelpDialog;
 import cz.upce.fei.muller.binaryHeap.gui.StructureControls;
 import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
