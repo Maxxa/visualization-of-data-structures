@@ -23,14 +23,6 @@ public class BuilderSwapRoot extends BuilderSwapNode {
     private final BinaryHeapNode leafParent;
     private final NodePosition leafParentPosition;
 
-//    public BuilderSwapRoot(BinaryHeapNode nodeFirst, BinaryHeapNode nodeSecond,
-//                              Point2D firstPoint, Point2D secondPoint,
-//                              BinaryHeapNode leafParent,NodePosition leafParentPosition) {
-//        super(nodeFirst, nodeSecond, firstPoint, secondPoint, null, null, null);
-//        this.leafParent = leafParent;
-//        this.leafParentPosition =leafParentPosition;
-//    }
-
     public BuilderSwapRoot(WorkBinaryNodeInfo infoFirst, WorkBinaryNodeInfo infoSecond,
                            Point2D firstPoint, Point2D secondPoint,
                            BinaryHeapNode leafParent, NodePosition leafParentPosition) {

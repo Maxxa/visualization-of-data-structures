@@ -34,29 +34,28 @@ public class SwapRootEndEventHandler extends StepEventHandler {
     }
 
     private void buildHandle(WorkBinaryNodeInfo oRoot,WorkBinaryNodeInfo nRoot){
+        BinaryHeapNode oldR = oRoot.get().getElement();
+        BinaryHeapNode newR = nRoot.get().getElement();
+
         //set line from parent leaf
-        lineElementToLeaf.setEnd((BinaryHeapNode)oRoot.get().getElement());
+        lineElementToLeaf.setEnd(oldR);
 
         //set line from new root
-        LineElement leftNew = ((BinaryHeapNode)nRoot.get().getElement()).getChildLine(NodePosition.LEFT);
-        LineElement rightNew = ((BinaryHeapNode)nRoot.get().getElement()).getChildLine(NodePosition.RIGHT);
+        LineElement leftNew = newR.getChildLine(NodePosition.LEFT);
+        LineElement rightNew = newR.getChildLine(NodePosition.RIGHT);
 
-        LineElement leftOld = ((BinaryHeapNode)oRoot.get().getElement()).getChildLine(NodePosition.LEFT);
-        LineElement rightOld =((BinaryHeapNode)oRoot.get().getElement()).getChildLine(NodePosition.RIGHT);
+        LineElement leftOld = oldR.getChildLine(NodePosition.LEFT);
+        LineElement rightOld = oldR.getChildLine(NodePosition.RIGHT);
 
         leftNew.setEnd(leftOld.getEnd());
         rightNew.setEnd(rightOld.getEnd());
+        leftOld.setEnd(oldR);
+        rightOld.setEnd(oldR);
 
-//        boolean tmp1= leftNew.isVisible();
-//        boolean tmp2= rightNew.isVisible();
-//
-//        leftNew.setVisible(true);
-//        rightNew.setVisible(true);
-
-        leftOld.setEnd((BinaryHeapNode)oRoot.get().getElement());
-        rightOld.setEnd((BinaryHeapNode)oRoot.get().getElement());
-//        leftOld.setVisible(tmp1);
-//        rightOld.setVisible(tmp2);
+        leftOld.setOpacity(0);
+        rightNew.setOpacity(0);
+        leftOld.setVisible(false);
+        rightOld.setVisible(false);
 
     }
 }

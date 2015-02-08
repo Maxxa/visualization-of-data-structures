@@ -82,8 +82,7 @@ public class AnimationsHandlersCore {
     @Subscribe
     public void handleRemoveRootEvent(RemoveRootEvent event) {
         System.out.println("Handle remove root");
-        removePreparation = new RemovePreparation(manager.getElementInfo(event.getRootNode().getId()),manager);
-//        removePreparation = new RemovePreparation(WorkBinaryNodeInfoBuilder.getWorkInfo(event.getRootNode().getId(),manager));
+        removePreparation = new RemovePreparation(event.getRootNode().getId(),manager);
         manager.removeElement(event.getRootNode().getId(),false);
         insertTransition(new BuilderRemoveRoot(removePreparation));
         initMovingTransition();

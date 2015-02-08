@@ -1,9 +1,7 @@
 package cz.upce.fei.muller.binaryHeap.animations;
 
 import cz.commons.graphics.LineElement;
-import cz.commons.layoutManager.BinaryTreeHelper;
-import cz.commons.layoutManager.BinaryTreeLayoutManager;
-import cz.commons.layoutManager.ElementInfo;
+import cz.commons.layoutManager.*;
 import cz.commons.graphics.NodePosition;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 
@@ -12,47 +10,42 @@ import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
  */
 public class RemovePreparation{
 
-    private final ElementInfo removedElementInfo;
+    private final WorkBinaryNodeInfo workerInfo;
     private final BinaryTreeLayoutManager manager;
 
-    public RemovePreparation(ElementInfo removedElement, BinaryTreeLayoutManager manager) {
-        this.removedElementInfo = removedElement;
+    private LineElement lineElement = null;
+
+    public RemovePreparation(Integer idElement, BinaryTreeLayoutManager manager) {
+        this.workerInfo = WorkBinaryNodeInfoBuilder.getWorkInfo(idElement,manager);
         this.manager = manager;
+        if(isLineToRemoved()){
+            boolean isLeft= BinaryTreeHelper.getLeftChildIndex(workerInfo.getParent().getIndexAtRow())== workerInfo.get().getIndexAtRow();
+            lineElement =((BinaryHeapNode) workerInfo.getParent().getElement()).getChildLine(isLeft?NodePosition.LEFT:NodePosition.RIGHT);
+        }
     }
 
     public BinaryHeapNode getRemovedElement(){
-        return (BinaryHeapNode) removedElementInfo.getElement();
+        return (BinaryHeapNode) workerInfo.get().getElement();
     }
 
     public boolean isLineToRemoved(){
-        return removedElementInfo.getIdParent()!=null;
+        return workerInfo.hasParent();
     }
 
     public LineElement getLineToRemoved(){
-        if(isLineToRemoved()){
-            System.out.println(removedElementInfo.getIdParent());
-            ElementInfo infoParent =manager.getElementInfo(removedElementInfo.getIdParent());
-            if(BinaryTreeHelper.getLeftChildIndex(infoParent.getIndexAtRow())==removedElementInfo.getIndexAtRow()){
-                System.out.println("LINE left REMOVE");
-                return ((BinaryHeapNode)infoParent.getElement()).getChildLine(NodePosition.LEFT);
-            }else{
-                System.out.println("LINE right REMOVE");
-                return ((BinaryHeapNode)infoParent.getElement()).getChildLine(NodePosition.RIGHT);
-            }
-        }
-        return null;
+        return lineElement;
     }
 
     public void executeRemove(){
         if(isLineToRemoved()){
             LineElement lineFromParentToRemoved =getLineToRemoved();
             lineFromParentToRemoved.setVisible(false);
-            lineFromParentToRemoved.setEnd((BinaryHeapNode) manager.getElementInfo(
-                    removedElementInfo.getIdParent()).getElement());
+            lineFromParentToRemoved.setOpacity(0);
+            lineFromParentToRemoved.setEnd((BinaryHeapNode) workerInfo.getParent().getElement());
         }
-        manager.getCanvas().getChildren().remove(removedElementInfo.getElement());
-        manager.getCanvas().getChildren().remove(((BinaryHeapNode)removedElementInfo.getElement()).getChildLine(NodePosition.LEFT));
-        manager.getCanvas().getChildren().remove(((BinaryHeapNode)removedElementInfo.getElement()).getChildLine(NodePosition.RIGHT));
+        manager.getCanvas().getChildren().remove(workerInfo.get().getElement());
+        manager.getCanvas().getChildren().remove(((BinaryHeapNode) workerInfo.get().getElement()).getChildLine(NodePosition.LEFT));
+        manager.getCanvas().getChildren().remove(((BinaryHeapNode) workerInfo.get().getElement()).getChildLine(NodePosition.RIGHT));
     }
 
 }

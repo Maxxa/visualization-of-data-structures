@@ -173,12 +173,11 @@ public class BinaryHeapController extends Controller {
 
     private void clearBeforeNewAction(){
         System.err.println("NEW ACTION =================================================================================");
-
         RemovePreparation removePreparation =animationCore.getRemovePreparation();
         if(removePreparation!=null){
             removePreparation.executeRemove();
-            animationCore.setRemovePreparation(null);
         }
+        animationCore.clear();
     }
 
 }
