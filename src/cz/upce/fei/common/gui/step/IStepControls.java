@@ -9,4 +9,13 @@ import javafx.scene.layout.HBox;
 public interface IStepControls extends IToolBarControl {
 
     void addStepListener(IStepListener listener);
+
+    void enableBtnNext();
+    void disableBtnNext();
+    void enableBtnBack();
+    void disableBtnBack();
+
+    void disableBtnAll();
+    void enableBtnAll();
+    void setCheckBoxSelected(boolean selected);
 }

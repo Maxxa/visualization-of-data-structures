@@ -16,4 +16,5 @@ public interface IAnimationsControls extends IToolBarControl {
 
     void removeChangesListener(IAnimationListener listener);
 
+    void setSliderValue(double value);
 }

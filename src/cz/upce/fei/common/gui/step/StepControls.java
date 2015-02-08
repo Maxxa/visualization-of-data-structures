@@ -1,6 +1,5 @@
 package cz.upce.fei.common.gui.step;
 
-import com.sun.javafx.event.EventHandlerManager;
 import cz.upce.fei.common.events.EventListenersList;
 import cz.upce.fei.common.gui.builders.DefaultToolBarControlsBuilder;
 import javafx.beans.value.ChangeListener;
@@ -32,8 +31,7 @@ public class StepControls implements IStepControls {
 
         nextBtn = new Button("Další");
         previousBtn =  new Button("Zpět");
-        nextBtn.setDisable(true);
-        previousBtn.setDisable(true);
+        disableBtnAll();
         initListeners();
     }
 
@@ -56,7 +54,6 @@ public class StepControls implements IStepControls {
         stepCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                setEnableBtn(!newValue);
                 fireChangeStepEnable(newValue);
             }
         });
@@ -88,6 +85,41 @@ public class StepControls implements IStepControls {
     @Override
     public void addStepListener(IStepListener listener) {
         listenersList.addListener(listener);
+    }
+
+    @Override
+    public void enableBtnNext() {
+        nextBtn.setDisable(false);
+    }
+
+    @Override
+    public void disableBtnNext() {
+        nextBtn.setDisable(true);
+    }
+
+    @Override
+    public void enableBtnBack() {
+        previousBtn.setDisable(false);
+    }
+
+    @Override
+    public void disableBtnBack() {
+        previousBtn.setDisable(true);
+    }
+
+    @Override
+    public void disableBtnAll() {
+       setEnableBtn(true);
+    }
+
+    @Override
+    public void enableBtnAll() {
+       setEnableBtn(false);
+    }
+
+    @Override
+    public void setCheckBoxSelected(boolean selected) {
+        this.stepCheckBox.setSelected(selected);
     }
 
     private void setEnableBtn(boolean disable){

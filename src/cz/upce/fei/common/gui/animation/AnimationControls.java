@@ -89,6 +89,11 @@ public final class AnimationControls implements IAnimationsControls {
         listenerList.removeListener(listener);
     }
 
+    @Override
+    public void setSliderValue(double value) {
+        speedSlider.setValue(value);
+    }
+
     private void fireStart(){
         if(!playPauseButton.isDisable()){
             for(IAnimationListener listener : listenerList.getListeners()){
