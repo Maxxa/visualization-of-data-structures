@@ -1,8 +1,9 @@
 package cz.upce.fei.common.core;
 
 import cz.commons.animation.AnimationControl;
+import cz.commons.animation.TransitionEndPositionType;
+import cz.commons.animation.TransitionFinishedEvent;
 import cz.upce.fei.common.gui.animation.AnimationListenerAdapter;
-import cz.upce.fei.common.gui.step.StepListenerAdapter;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,14 +22,15 @@ public abstract class Controller {
         initStepListeners();
         initAnimationListeners();
         initHelpResetListeners();
+        initAnimationFinished();
     }
-
 
     protected void initHelpResetListeners() {
         controlsContainer.getPaternControls().addHelpHandler(getHelpHandler());
         controlsContainer.getPaternControls().addPatternHandler(getPatternHandler());
         controlsContainer.getPaternControls().addResetHandler(getResetHandler());
     }
+
 
     protected void initAnimationListeners() {
         controlsContainer.getAnimationsControls().addChangesListener(
@@ -52,23 +54,19 @@ public abstract class Controller {
     }
 
     protected void initStepListeners() {
-        controlsContainer.getStepControls().addStepListener(new StepListenerAdapter(){
+        controlsContainer.getStepControls().addStepListener(new StepListener(animationControl,controlsContainer));
+    }
 
+    private void initAnimationFinished() {
+        animationControl.addTransitionFinishedListener(new TransitionFinishedEvent() {
             @Override
-            public void isStepChange(Boolean newValue) {
-                animationControl.markAsStepping(newValue);
-            }
+            public void handle(TransitionEndPositionType type) {
+                if(type.equals(TransitionEndPositionType.END)){
+                    controlsContainer.getStructureControls().enableButtons();
+                }
+                controlsContainer.getAnimationsControls().disable();
 
-            @Override
-            public void next() {
-                animationControl.goForth();
             }
-
-            @Override
-            public void previous() {
-                animationControl.goBack();
-            }
-
         });
     }
 

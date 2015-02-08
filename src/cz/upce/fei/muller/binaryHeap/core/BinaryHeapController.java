@@ -3,8 +3,12 @@ package cz.upce.fei.muller.binaryHeap.core;
 import com.google.common.eventbus.EventBus;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.utils.dialogs.Dialog;
+import cz.commons.utils.dialogs.PresetsDialog;
 import cz.upce.fei.common.core.Controller;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
+import cz.upce.fei.muller.binaryHeap.BinaryHeapPresetItem;
+import cz.upce.fei.muller.binaryHeap.BinaryHeapPresets;
+import cz.upce.fei.muller.binaryHeap.gui.HelpDialog;
 import cz.upce.fei.muller.binaryHeap.gui.StructureControls;
 import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
 import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
@@ -33,13 +37,12 @@ public class BinaryHeapController extends Controller {
     }
 
     private void initAnimationHandlersFinished() {
-        animationCore.setEndAnimationHandler(new IEndAnimation() {
+        animationCore.setEndAnimationHandler(new IEndInitAnimation() {
             @Override
-            public void endAnimation(boolean steping) {
-                if (steping) {
-                    controlsContainer.getStepControls().enableBtnAll();
+            public void endAnimation(boolean stepping) {
+                if (stepping) {
+                    controlsContainer.getStepControls().enableBtnNext();
                 }
-
             }
         });
     }
@@ -79,18 +82,32 @@ public class BinaryHeapController extends Controller {
 
     }
 
-    private void resetAnimation() {
-        //TODO remove all animation from before values
-    }
-
     @Override
     protected EventHandler<ActionEvent> getHelpHandler() {
-        return null; //TODO
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                HelpDialog.show();
+            }
+        };
     }
 
     @Override
     protected EventHandler<ActionEvent> getPatternHandler() {
-        return null; //TODO
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                PresetsDialog<HeapNode, BinaryHeapPresetItem> dlg = new PresetsDialog<>("Vzory", new BinaryHeapPresets());
+                if (dlg.showDialog() == Dialog.Result.OK) {
+                    if (showHeapType() == Dialog.Result.OK) {
+                        // loading..
+//                        stepCheckBox.setSelected(false);
+//                        speedSlider.setValue(1);
+//                        control.loadPreset(dlg.getSelectedPresetItems(), dlg.runAnimation());
+                    }
+                }
+            }
+        };
     }
 
     @Override
@@ -98,20 +115,21 @@ public class BinaryHeapController extends Controller {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
-                HeapType[] buttons = new HeapType[]{HeapType.MIN,HeapType.MAX};
-                Dialog.CustomButtonsDialog<HeapType> dlg = Dialog.createCustomButtonsDialog("Reset", "Vyberte typ nové haldy:", Dialog.Icon.QUESTION, buttons, true);
-                Dialog.Result result = dlg.showDialog();
-                if (result == Dialog.Result.OK) {
-                    heap.clear();
-                    manager.clear();
-                    heap = new BinaryHeap(eventBus,dlg.getResult());
-                    controlsContainer.getStructureControls().enableButtons();
-//                    disableStepping(true); //TODO
-                }
-
+                showHeapType();
             }
         };
+    }
+
+    private Dialog.Result showHeapType() {
+        HeapType[] buttons = new HeapType[]{HeapType.MIN,HeapType.MAX};
+        Dialog.CustomButtonsDialog<HeapType> dlg = Dialog.createCustomButtonsDialog("Reset", "Vyberte typ nové haldy:", Dialog.Icon.QUESTION, buttons, true);
+        Dialog.Result result = dlg.showDialog();
+        if (result == Dialog.Result.OK) {
+            heap = new BinaryHeap(eventBus,dlg.getResult());
+            clear();
+            controlsContainer.getStructureControls().enableButtons();
+        }
+        return result;
     }
 
     private boolean showDialogIsEmpty() {
@@ -122,7 +140,16 @@ public class BinaryHeapController extends Controller {
         return false;
     }
 
+    private void clear(){
+        heap.clear();
+        manager.clear();
+        animationCore.setRemovePreparation(null);
+
+    }
+
     private void clearBeforeNewAction(){
+        System.err.println("NEW ACTION =================================================================================");
+
         RemovePreparation removePreparation =animationCore.getRemovePreparation();
         if(removePreparation!=null){
             removePreparation.executeRemove();
