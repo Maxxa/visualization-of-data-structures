@@ -5,9 +5,11 @@ import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.utils.dialogs.Dialog;
 import cz.commons.utils.dialogs.PresetsDialog;
 import cz.upce.fei.common.core.Controller;
+import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.muller.binaryHeap.BinaryHeapPresetItem;
 import cz.upce.fei.muller.binaryHeap.BinaryHeapPresets;
+import cz.upce.fei.muller.binaryHeap.animations.RemovePreparation;
 import cz.upce.fei.muller.binaryHeap.gui.HelpDialog;
 import cz.upce.fei.muller.binaryHeap.gui.StructureControls;
 import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
@@ -24,14 +26,14 @@ public class BinaryHeapController extends Controller {
     private BinaryHeap heap;
     private ITreeLayoutManager manager;
     private final EventBus eventBus = new EventBus();
-    private final AnimationsEventsHandlersCore animationCore;
+    private final AnimationsHandlersCore animationCore;
 
     public BinaryHeapController(ToolBarControlsContainer containerControls, ITreeLayoutManager manager) {
         super(containerControls);
         this.manager = manager;
         this.initStructureControls(containerControls);
         heap = new BinaryHeap(eventBus, HeapType.MIN);
-        animationCore = new AnimationsEventsHandlersCore(animationControl,manager);
+        animationCore = new AnimationsHandlersCore(animationControl,manager);
         eventBus.register(animationCore);
         initAnimationHandlersFinished();
     }
@@ -100,15 +102,37 @@ public class BinaryHeapController extends Controller {
                 PresetsDialog<HeapNode, BinaryHeapPresetItem> dlg = new PresetsDialog<>("Vzory", new BinaryHeapPresets());
                 if (dlg.showDialog() == Dialog.Result.OK) {
                     if (showHeapType() == Dialog.Result.OK) {
-                        // loading..
-//                        stepCheckBox.setSelected(false);
-//                        speedSlider.setValue(1);
-//                        control.loadPreset(dlg.getSelectedPresetItems(), dlg.runAnimation());
+
+                            controlsContainer.getStepControls().setCheckBoxSelected(false);
+                            controlsContainer.getAnimationsControls().setSliderValue(1);
+                            loadPreset(dlg.getSelectedPresetItems(), dlg.runAnimation());
                     }
                 }
             }
         };
     }
+
+    public void loadPreset(HeapNode[] nums, boolean animate) {
+        isLoading.setValue(true);
+
+//      if (animate == false && autoNextStep == true) {
+//            graphics.setMinDuration();
+//            progressDialog = new ProgressDialog();
+//            progressDialog.show();
+//      }
+//
+      for (HeapNode num : nums) {
+//          System.out.println(num);
+            heap.insert(num);
+      }
+//
+//      loadingPreset = false;
+//      queue.add(new BTreeEvent(EventType.LOADING_PRESET_FINISHED, 0, null, 0));
+//      if (animate == false && autoNextStep == true) progressDialog.setTotalEvents(queue.size());
+//
+//      step();
+    }
+
 
     @Override
     protected EventHandler<ActionEvent> getResetHandler() {
