@@ -90,7 +90,7 @@ public final class AnimationControls implements IAnimationsControls {
     }
 
     private void fireStart(){
-        if(playPauseButton.isDisable()){
+        if(!playPauseButton.isDisable()){
             for(IAnimationListener listener : listenerList.getListeners()){
                 listener.playAnimation();
             }
@@ -98,7 +98,7 @@ public final class AnimationControls implements IAnimationsControls {
     }
 
     private void fireStop(){
-        if(playPauseButton.isDisable()){
+        if(!playPauseButton.isDisable()){
             for(IAnimationListener listener : listenerList.getListeners()){
                 listener.pauseAnimation();
             }
