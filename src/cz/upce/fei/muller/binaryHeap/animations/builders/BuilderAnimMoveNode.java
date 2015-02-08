@@ -29,15 +29,7 @@ public class BuilderAnimMoveNode implements IAnimationBuilder {
     public Transition getAnimation() {
         FadeTransition fadeBefore = getFadeBefore();
         FadeTransition fadeAfter = getFadeAfter();
-        FadeTransition create = getFadeTransition();
-        SequentialTransition st = new SequentialTransition(create,getTranslateTransition());
-        create.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                System.out.println("WTF");
-            }
-        });
-
+        SequentialTransition st = new SequentialTransition(getFadeTransition(),getTranslateTransition());
         if(fadeBefore!=null){
             st.getChildren().add(0,fadeBefore);
         }
