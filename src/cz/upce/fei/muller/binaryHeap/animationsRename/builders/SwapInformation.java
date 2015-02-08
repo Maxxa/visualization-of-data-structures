@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.binaryHeap.animations.builders;
+package cz.upce.fei.muller.binaryHeap.animationsRename.builders;
 
 import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.WorkBinaryNodeInfo;

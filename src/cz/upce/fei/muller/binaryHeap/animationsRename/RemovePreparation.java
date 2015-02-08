@@ -1,12 +1,10 @@
-package cz.upce.fei.muller.binaryHeap.animations;
+package cz.upce.fei.muller.binaryHeap.animationsRename;
 
 import cz.commons.graphics.LineElement;
 import cz.commons.layoutManager.BinaryTreeHelper;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ElementInfo;
 import cz.commons.graphics.NodePosition;
-import cz.commons.layoutManager.WorkBinaryNodeInfo;
-import cz.upce.fei.common.core.IPreparation;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 
 /**

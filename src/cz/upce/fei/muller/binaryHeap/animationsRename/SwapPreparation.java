@@ -1,11 +1,11 @@
-package cz.upce.fei.muller.binaryHeap.animations;
+package cz.upce.fei.muller.binaryHeap.animationsRename;
 
 import cz.commons.layoutManager.*;
 import cz.commons.graphics.NodePosition;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IPreparation;
-import cz.upce.fei.muller.binaryHeap.animations.builders.BuilderSwapNode;
-import cz.upce.fei.muller.binaryHeap.animations.builders.BuilderSwapRoot;
+import cz.upce.fei.muller.binaryHeap.animationsRename.builders.BuilderSwapNode;
+import cz.upce.fei.muller.binaryHeap.animationsRename.builders.BuilderSwapRoot;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 
 /**

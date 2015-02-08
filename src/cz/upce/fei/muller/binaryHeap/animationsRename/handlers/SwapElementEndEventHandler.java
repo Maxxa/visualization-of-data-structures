@@ -1,11 +1,11 @@
-package cz.upce.fei.muller.binaryHeap.animations.handlers;
+package cz.upce.fei.muller.binaryHeap.animationsRename.handlers;
 
 import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.ConnectibleElement;
 import cz.commons.graphics.LineElement;
 import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.WorkBinaryNodeInfo;
-import cz.upce.fei.muller.binaryHeap.animations.builders.SwapInformation;
+import cz.upce.fei.muller.binaryHeap.animationsRename.builders.SwapInformation;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.event.ActionEvent;
 

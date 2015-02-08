@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.binaryHeap.animations.handlers;
+package cz.upce.fei.muller.binaryHeap.animationsRename.handlers;
 
 import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.LineElement;

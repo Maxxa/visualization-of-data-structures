@@ -9,12 +9,12 @@ import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.WorkBinaryNodeInfoBuilder;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
-import cz.upce.fei.muller.binaryHeap.animations.InsertPreparation;
-import cz.upce.fei.muller.binaryHeap.animations.RemovePreparation;
-import cz.upce.fei.muller.binaryHeap.animations.SwapPreparation;
-import cz.upce.fei.muller.binaryHeap.animations.builders.BuilderAddElement;
-import cz.upce.fei.muller.binaryHeap.animations.builders.BuilderAnimMoveNode;
-import cz.upce.fei.muller.binaryHeap.animations.builders.BuilderRemoveRoot;
+import cz.upce.fei.muller.binaryHeap.animationsRename.InsertPreparation;
+import cz.upce.fei.muller.binaryHeap.animationsRename.RemovePreparation;
+import cz.upce.fei.muller.binaryHeap.animationsRename.SwapPreparation;
+import cz.upce.fei.muller.binaryHeap.animationsRename.builders.BuilderAddElement;
+import cz.upce.fei.muller.binaryHeap.animationsRename.builders.BuilderAnimMoveNode;
+import cz.upce.fei.muller.binaryHeap.animationsRename.builders.BuilderRemoveRoot;
 import cz.upce.fei.muller.binaryHeap.events.*;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import cz.upce.fei.muller.binaryHeap.graphics.IBinaryNodesElements;
@@ -64,6 +64,7 @@ public class AnimationsHandlersCore {
     @Subscribe
     public void handleCreateRootEvent(CreateRootEvent event) {
         BinaryHeapNode newNode = new BinaryHeapNode(event.getHeapNode(), 0, 0);
+        newNode.setOpacity(0);
         manager.addElement(newNode, null, false);
         manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT));
         insertTransition(new BuilderAddElement(manager.getNodePosition(event.getHeapNode().getId()), creatingPoint, getNode(event.getHeapNode().getId())));
@@ -75,14 +76,6 @@ public class AnimationsHandlersCore {
         BinaryHeapNode newNode = getNode(event.getNewNode().getId());
         manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT));
         InsertPreparation preparation = new InsertPreparation(event,manager,creatingPoint);
-
-//        BinaryHeapNode parent = getNode(event.getParentNode().getId());
-//        LineElement lineFromParent = parent.getChildLine(event.isLeftChild()?NodePosition.LEFT:NodePosition.RIGHT);
-//        lineFromParent.setEnd(newNode);
-//        lineFromParent.setVisible(true);
-
-
-
         insertTransition(preparation.getBuilder());
     }
 

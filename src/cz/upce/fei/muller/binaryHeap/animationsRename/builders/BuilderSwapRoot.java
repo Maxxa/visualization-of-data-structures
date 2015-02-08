@@ -1,11 +1,11 @@
-package cz.upce.fei.muller.binaryHeap.animations.builders;
+package cz.upce.fei.muller.binaryHeap.animationsRename.builders;
 
 import cz.commons.graphics.LineElement;
 import cz.commons.layoutManager.WorkBinaryNodeInfo;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.commons.graphics.BinaryNodeWithLine;
 import cz.commons.graphics.NodePosition;
-import cz.upce.fei.muller.binaryHeap.animations.handlers.SwapRootEndEventHandler;
+import cz.upce.fei.muller.binaryHeap.animationsRename.handlers.SwapRootEndEventHandler;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;

@@ -1,8 +1,8 @@
-package cz.upce.fei.muller.binaryHeap.animations.builders;
+package cz.upce.fei.muller.binaryHeap.animationsRename.builders;
 
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.core.IAnimationBuilder;
-import cz.upce.fei.muller.binaryHeap.animations.RemovePreparation;
+import cz.upce.fei.muller.binaryHeap.animationsRename.RemovePreparation;
 import javafx.animation.ParallelTransition;
 import javafx.util.Duration;
 
