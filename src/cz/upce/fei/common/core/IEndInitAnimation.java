@@ -5,6 +5,6 @@ package cz.upce.fei.common.core;
  */
 public interface IEndInitAnimation {
 
-    void endAnimation(boolean steping);
+    void endAnimation(boolean stepping);
 
 }
