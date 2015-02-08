@@ -25,23 +25,29 @@ public class BinaryHeapNode extends BinaryNodeWithLine implements IBinaryNodesEl
         setTranslateX(x);
         setTranslateY(y);
 
-        label.setText(String.valueOf("("+node.getId()+") "+node.getValue()));
-        label.setMaxWidth(WIDTH);
-        label.setAlignment(Pos.CENTER);
-        label.setStyle("-fx-font-weight: bold;");
-
-        backgroundRectangle = new Rectangle(WIDTH, HEIGHT);
-        backgroundRectangle.setStrokeType(StrokeType.INSIDE);
-        backgroundRectangle.setStroke(BG_STROKE);
-        backgroundRectangle.setFill(BG_COLOR);
+        initLabel(node);
+        initBackground();
 
         VBox labelsBox = new VBox();
         labelsBox.getChildren().addAll(label);
-
         StackPane sp = new StackPane();
         sp.getChildren().addAll(backgroundRectangle, labelsBox);
         doParentBindings();
         this.getChildren().add(sp);
+    }
+
+    private void initBackground() {
+        backgroundRectangle = new Rectangle(WIDTH, HEIGHT);
+        backgroundRectangle.setStrokeType(StrokeType.INSIDE);
+        backgroundRectangle.setStroke(BG_STROKE);
+        backgroundRectangle.setFill(BG_COLOR);
+    }
+
+    private void initLabel(HeapNode node) {
+        label.setText(String.valueOf("("+node.getId()+") "+node.getValue()));
+        label.setMaxWidth(WIDTH);
+        label.setAlignment(Pos.CENTER);
+        label.setStyle("-fx-font-weight: bold;");
     }
 
     @Override

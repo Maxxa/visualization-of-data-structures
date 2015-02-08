@@ -6,6 +6,8 @@ import cz.upce.fei.common.gui.AbstractApplication;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.common.gui.utils.SceneInfo;
 import cz.upce.fei.muller.binaryHeap.core.BinaryHeapController;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
 import javafx.stage.Stage;
@@ -55,6 +57,7 @@ public class BinaryHeapGUI extends AbstractApplication<BinaryHeapController> {
     }
 
     public static void main(String[] args) {
+
         launch(args);
     }
 
