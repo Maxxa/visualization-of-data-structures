@@ -5,6 +5,8 @@ import cz.commons.animation.TransitionEndPositionType;
 import cz.commons.animation.TransitionFinishedEvent;
 import cz.upce.fei.common.gui.animation.AnimationListenerAdapter;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -16,6 +18,8 @@ public abstract class Controller {
     protected AnimationControl animationControl = new AnimationControl();
 
     protected ToolBarControlsContainer controlsContainer;
+
+    protected BooleanProperty isLoading = new SimpleBooleanProperty(false);
 
     public Controller(ToolBarControlsContainer controlsContainer) {
         this.controlsContainer = controlsContainer;

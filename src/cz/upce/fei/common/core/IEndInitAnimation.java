@@ -1,9 +1,9 @@
-package cz.upce.fei.muller.binaryHeap.core;
+package cz.upce.fei.common.core;
 
 /**
  * @author Vojtěch Müller
  */
-interface IEndInitAnimation {
+public interface IEndInitAnimation {
 
     void endAnimation(boolean steping);
 

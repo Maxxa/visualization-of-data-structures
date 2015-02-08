@@ -1,6 +1,5 @@
-package cz.upce.fei.muller.binaryHeap.core;
+package cz.upce.fei.common.core;
 
-import javafx.animation.Animation;
 import javafx.animation.Transition;
 
 /**
