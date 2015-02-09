@@ -77,6 +77,7 @@ public class BinaryHeapController extends Controller {
                 if(showDialogIsEmpty()){
                     return;
                 }
+                containerControls.getStructureControls().disableButtons();
                 clearBeforeNewAction();
                 heap.removeRoot();
             }

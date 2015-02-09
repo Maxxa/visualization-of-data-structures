@@ -13,11 +13,10 @@ import javafx.event.ActionEvent;
  * @author Vojtěch Müller
  */
 public class FadesTransitionHandler extends StepEventHandler{
-    private final boolean visibility;
+
     private final SwapInformation information;
 
-    public FadesTransitionHandler(boolean visibility, SwapInformation information) {
-        this.visibility = visibility;
+    public FadesTransitionHandler(SwapInformation information) {
         this.information = information;
     }
 
@@ -26,12 +25,9 @@ public class FadesTransitionHandler extends StepEventHandler{
         buildFadesAfterEnd((BinaryHeapNode)information.getSecond().get().getElement(),(BinaryHeapNode)information.getFirst().get().getElement());
     }
 
-
-
     @Override
     protected void handleBack(ActionEvent actionEvent) {
         buildFadesAfterEnd((BinaryHeapNode)information.getFirst().get().getElement(),(BinaryHeapNode)information.getSecond().get().getElement());
-
     }
 
     private void buildFadesAfterEnd(BinaryHeapNode newNode,BinaryHeapNode oldNode){

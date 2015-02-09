@@ -20,7 +20,7 @@ public class BinaryHeapPresets implements Preset<HeapNode, BinaryHeapPresetItem>
     public ArrayList<BinaryHeapPresetItem> getAll() {
         ArrayList<BinaryHeapPresetItem> presets = new ArrayList<>();
         
-        presets.add(new BinaryHeapPresetItem("Sada 1", new Integer[]{1,1,1}));
+        presets.add(new BinaryHeapPresetItem("Sada 1", new Integer[]{24,4,9,23,69,45,21,94,23,4,6,2}));
         presets.add(new BinaryHeapPresetItem("Sada 1", new Integer[]{40,11,9,35,2,30,18,34,17,15,7}));
         presets.add(new BinaryHeapPresetItem("Sada 2", new Integer[]{12,7,6,10,8,20,23,46,11,9,13,28,49,13,15}));
         presets.add(new BinaryHeapPresetItem("Sada 3", new Integer[]{19,13,3,9,1,4,36,5,9,19,25,42,17,47,9}));

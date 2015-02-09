@@ -61,57 +61,8 @@ public class BuilderSwapNode implements IAnimationBuilder {
         addFadeToTransition(pt,information.second.get(),NodePosition.LEFT,visibility);
         addFadeToTransition(pt,information.first.get(), NodePosition.RIGHT,visibility);
         addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
-//        initLeftLinesFades(visibility,pt);
-//        initRightLinesFades(visibility,pt);
-        pt.setOnFinished(new FadesTransitionHandler(visibility,information));
+        pt.setOnFinished(new FadesTransitionHandler(information));
         return pt;
-    }
-
-    private void initLeftLinesFades(boolean visibility, ParallelTransition pt) {
-        if(information.first.hasLeft()){
-            if(information.second.hasLeft()){ // node first and second have left child must evry line adding...
-                addFadeToTransition(pt,information.first.get(), NodePosition.LEFT,visibility);
-                addFadeToTransition(pt,information.second.get(),NodePosition.LEFT,visibility);
-            }else{
-                if(visibility){
-                    addFadeToTransition(pt,information.first.get(),NodePosition.LEFT,visibility);
-                }else{
-                    addFadeToTransition(pt,information.second.get(),NodePosition.LEFT,visibility);
-                }
-            }
-        }else{
-            if(information.second.hasLeft()){
-                if(visibility){
-                    addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
-                }else{
-                    addFadeToTransition(pt,information.first.get(),NodePosition.RIGHT,visibility);
-                }
-            }
-        }
-    }
-
-    private void initRightLinesFades(boolean visibility, ParallelTransition pt) {
-        if(information.first.hasRight()){
-            if(information.second.hasRight()){
-                addFadeToTransition(pt,information.first.get(), NodePosition.RIGHT,visibility);
-                addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
-            }else{
-                if(visibility){
-                    addFadeToTransition(pt,information.first.get(),NodePosition.RIGHT,visibility);
-                }else{
-                    addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
-                }
-            }
-        }else{
-            if(information.second.hasRight()){
-                if(visibility){
-                    addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
-                }else{
-                    addFadeToTransition(pt,information.first.get(),NodePosition.RIGHT,visibility);
-                }
-
-            }
-        }
     }
 
     private void addFadeToTransition(ParallelTransition pt, ElementInfo elementInfo,NodePosition position,boolean visibility){

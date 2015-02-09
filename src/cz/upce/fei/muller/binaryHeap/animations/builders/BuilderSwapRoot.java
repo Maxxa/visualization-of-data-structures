@@ -10,6 +10,7 @@ import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -52,7 +53,7 @@ public class BuilderSwapRoot extends BuilderSwapNode {
         return FadesTransitionBuilder.getTransition(node.getChildLine(position),Duration.millis(1),from,to);
     }
 
-    private ParallelTransition getFades(boolean visibility){
+    private Transition getFades(boolean visibility){
         int from = visibility?1:0;
         int to = visibility?0:1;
         FadeTransition ft =getFadeTransition(from,to);

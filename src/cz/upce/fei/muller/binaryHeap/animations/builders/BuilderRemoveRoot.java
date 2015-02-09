@@ -21,7 +21,9 @@ public class BuilderRemoveRoot implements IAnimationBuilder {
     @Override
     public Transition getAnimation() {
         ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().add(FadesTransitionBuilder.getTransition(removePreparation.getLineToRemoved(), Duration.seconds(1), 1, 0));
+        if(removePreparation.isLineToRemoved()){
+            pt.getChildren().add(FadesTransitionBuilder.getTransition(removePreparation.getLineToRemoved(), Duration.seconds(1), 1, 0));
+        }
         pt.getChildren().add(FadesTransitionBuilder.getTransition(removePreparation.getRemovedElement(), Duration.seconds(1), 1, 0));
         return pt;
     }

@@ -14,13 +14,14 @@ public class RemovePreparation{
     private final BinaryTreeLayoutManager manager;
 
     private LineElement lineElement = null;
+    private boolean isLeftLine = false;
 
     public RemovePreparation(Integer idElement, BinaryTreeLayoutManager manager) {
         this.workerInfo = WorkBinaryNodeInfoBuilder.getWorkInfo(idElement,manager);
         this.manager = manager;
         if(isLineToRemoved()){
-            boolean isLeft= BinaryTreeHelper.getLeftChildIndex(workerInfo.getParent().getIndexAtRow())== workerInfo.get().getIndexAtRow();
-            lineElement =((BinaryHeapNode) workerInfo.getParent().getElement()).getChildLine(isLeft?NodePosition.LEFT:NodePosition.RIGHT);
+            isLeftLine = BinaryTreeHelper.getLeftChildIndex(workerInfo.getParent().getIndexAtRow())== workerInfo.get().getIndexAtRow();
+            lineElement =((BinaryHeapNode) workerInfo.getParent().getElement()).getChildLine(isLeftLine ?NodePosition.LEFT:NodePosition.RIGHT);
         }
     }
 
@@ -38,10 +39,13 @@ public class RemovePreparation{
 
     public void executeRemove(){
         if(isLineToRemoved()){
-            LineElement lineFromParentToRemoved =getLineToRemoved();
-            lineFromParentToRemoved.setVisible(false);
-            lineFromParentToRemoved.setOpacity(0);
-            lineFromParentToRemoved.setEnd((BinaryHeapNode) workerInfo.getParent().getElement());
+            WorkBinaryNodeInfo parent = WorkBinaryNodeInfoBuilder.getWorkInfo(workerInfo.getParent().getElement().getElementId(),manager);
+            if(isLeftLine && !parent.hasLeft() || !isLeftLine&&!parent.hasRight()){
+                LineElement lineFromParentToRemoved =getLineToRemoved();
+                lineFromParentToRemoved.setVisible(false);
+                lineFromParentToRemoved.setOpacity(0);
+                lineFromParentToRemoved.setEnd((BinaryHeapNode) workerInfo.getParent().getElement());
+            }
         }
         manager.getCanvas().getChildren().remove(workerInfo.get().getElement());
         manager.getCanvas().getChildren().remove(((BinaryHeapNode) workerInfo.get().getElement()).getChildLine(NodePosition.LEFT));

@@ -44,7 +44,7 @@ public class BinaryHeapNode extends BinaryNodeWithLine implements IBinaryNodesEl
     }
 
     private void initLabel(HeapNode node) {
-        label.setText(String.valueOf("("+node.getId()+") "+node.getValue()));
+        label.setText(String.valueOf(node.getValue()));
         label.setMaxWidth(WIDTH);
         label.setAlignment(Pos.CENTER);
         label.setStyle("-fx-font-weight: bold;");

@@ -93,11 +93,9 @@ public class AnimationsHandlersCore {
         System.out.println("Handle SWAP NODE");
         initMovingTransition();
         if(event.getFirstNode().getId()!=event.getSecondNode().getId()) {
-//            SwapPreparation handler = new SwapPreparation(manager, getNode(event.getFirstNode().getId()), getNode(event.getSecondNode().getId()), event);
             SwapPreparation handler = new SwapPreparation(manager,WorkBinaryNodeInfoBuilder.getWorkInfo(event.getFirstNode().getId(),manager),
                                                            WorkBinaryNodeInfoBuilder.getWorkInfo(event.getSecondNode().getId(),manager));
             IAnimationBuilder creator = handler.getBuilder();
-            System.out.println("prohazuji...");
             manager.swapElement(event.getFirstNode().getId(), event.getSecondNode().getId());
             insertTransition(creator);
         }
