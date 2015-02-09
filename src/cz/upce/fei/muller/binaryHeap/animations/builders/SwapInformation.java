@@ -10,12 +10,8 @@ import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 public class SwapInformation {
     WorkBinaryNodeInfo first;
     WorkBinaryNodeInfo second;
-//        BinaryHeapNode first;
-//        BinaryHeapNode second;
 
     NodePosition positionFromFirst;
-
-    BinaryHeapNode firstParent;
 
     NodePosition firstParentPosition;
 
@@ -29,10 +25,6 @@ public class SwapInformation {
 
     public NodePosition getPositionFromFirst() {
         return positionFromFirst;
-    }
-
-    public BinaryHeapNode getFirstParent() {
-        return firstParent;
     }
 
     public NodePosition getFirstParentPosition() {

@@ -1,10 +1,13 @@
 package cz.upce.fei.muller.binaryHeap.animations.builders;
 
+import cz.commons.graphics.LineElement;
+import cz.commons.layoutManager.ElementInfo;
 import cz.commons.layoutManager.WorkBinaryNodeInfo;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.commons.utils.transitions.RelativeTranslateTransition;
 import cz.commons.graphics.NodePosition;
 import cz.upce.fei.common.core.IAnimationBuilder;
+import cz.upce.fei.muller.binaryHeap.animations.handlers.FadesTransitionHandler;
 import cz.upce.fei.muller.binaryHeap.animations.handlers.SwapElementEndEventHandler;
 import cz.upce.fei.muller.binaryHeap.graphics.BinaryHeapNode;
 import javafx.animation.*;
@@ -23,35 +26,22 @@ public class BuilderSwapNode implements IAnimationBuilder {
 
     protected final SwapInformation information = new SwapInformation();
 
-//    public BuilderSwapNode(BinaryHeapNode nodeFirst, BinaryHeapNode nodeSecond,
-//                           Point2D firstPoint, Point2D secondPoint,
-//                           BinaryHeapNode firstParent,
-//                           NodePosition positionFromFirst, NodePosition firstParentPosition) {
-//        information.positionFromFirst= positionFromFirst;
-//        information.first =nodeFirst;
-//        information.second= nodeSecond;
-//        information.firstParent = firstParent;
-//        information.firstParentPosition = firstParentPosition;
-//        this.firstPoint = firstPoint;
-//        this.secondPoint = secondPoint;
-//    }
-
     public BuilderSwapNode(WorkBinaryNodeInfo infoFirst, WorkBinaryNodeInfo infoSecond,
                            Point2D firstPoint, Point2D secondPoint,
-                           BinaryHeapNode firstParent, NodePosition positionFromFirst, NodePosition firstParentPosition) {
+                           NodePosition positionFromFirst, NodePosition firstParentPosition) {
         information.first=infoFirst;
         information.second=infoSecond;
         this.firstPoint=firstPoint;
         this.secondPoint=secondPoint;
-        information.firstParent = firstParent;
         information.positionFromFirst=positionFromFirst ;
         information.firstParentPosition = firstParentPosition;
+
     }
 
     @Override
     public ParallelTransition getAnimation() {
         ParallelTransition pt = getMovingElements();
-        SequentialTransition sq = new SequentialTransition(getFades(true),pt,getFades(false));
+        SequentialTransition sq = new SequentialTransition(getLinesFades(true),pt, getLinesFades(false));
         pt.setOnFinished(setFinishedHandler());
         return new ParallelTransition(sq);
     }
@@ -60,24 +50,80 @@ public class BuilderSwapNode implements IAnimationBuilder {
         return new SwapElementEndEventHandler(information);
     }
 
-    private ParallelTransition getFades(boolean visibility) {
+    private ParallelTransition getLinesFades(boolean visibility) {
         ParallelTransition pt = new ParallelTransition();
 
-        if(information.firstParent!=null){ // first swaping node have parent, get
-            pt.getChildren().add(getFadeTransition(information.firstParent,information.firstParentPosition, visibility));
+        if(information.first.hasParent()){ // first swapping node have parent...
+            pt.getChildren().add(getFadeTransition((BinaryHeapNode) information.first.getParent().getElement(), information.firstParentPosition, visibility));
         }
-        pt.getChildren().addAll(
-                getFadeTransition((BinaryHeapNode) information.second.get().getElement(), NodePosition.LEFT, visibility),
-                getFadeTransition((BinaryHeapNode) information.second.get().getElement(), NodePosition.RIGHT, visibility));
-//        if(information.first.getElementId()!=information.second.getElementId()){
-            pt.getChildren().addAll(getFadeTransition((BinaryHeapNode) information.first.get().getElement(), NodePosition.RIGHT, visibility),
-                                    getFadeTransition((BinaryHeapNode) information.first.get().getElement(), NodePosition.LEFT, visibility));
-//        }/
+
+        addFadeToTransition(pt,information.first.get(), NodePosition.LEFT,visibility);
+        addFadeToTransition(pt,information.second.get(),NodePosition.LEFT,visibility);
+        addFadeToTransition(pt,information.first.get(), NodePosition.RIGHT,visibility);
+        addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
+//        initLeftLinesFades(visibility,pt);
+//        initRightLinesFades(visibility,pt);
+        pt.setOnFinished(new FadesTransitionHandler(visibility,information));
         return pt;
     }
 
-    private FadeTransition getFadeTransition(BinaryHeapNode node,NodePosition position,boolean visibility) {
-        return FadesTransitionBuilder.getTransition(node.getChildLine(position),Duration.millis(1),visibility?1:0,visibility?0:1);
+    private void initLeftLinesFades(boolean visibility, ParallelTransition pt) {
+        if(information.first.hasLeft()){
+            if(information.second.hasLeft()){ // node first and second have left child must evry line adding...
+                addFadeToTransition(pt,information.first.get(), NodePosition.LEFT,visibility);
+                addFadeToTransition(pt,information.second.get(),NodePosition.LEFT,visibility);
+            }else{
+                if(visibility){
+                    addFadeToTransition(pt,information.first.get(),NodePosition.LEFT,visibility);
+                }else{
+                    addFadeToTransition(pt,information.second.get(),NodePosition.LEFT,visibility);
+                }
+            }
+        }else{
+            if(information.second.hasLeft()){
+                if(visibility){
+                    addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
+                }else{
+                    addFadeToTransition(pt,information.first.get(),NodePosition.RIGHT,visibility);
+                }
+            }
+        }
+    }
+
+    private void initRightLinesFades(boolean visibility, ParallelTransition pt) {
+        if(information.first.hasRight()){
+            if(information.second.hasRight()){
+                addFadeToTransition(pt,information.first.get(), NodePosition.RIGHT,visibility);
+                addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
+            }else{
+                if(visibility){
+                    addFadeToTransition(pt,information.first.get(),NodePosition.RIGHT,visibility);
+                }else{
+                    addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
+                }
+            }
+        }else{
+            if(information.second.hasRight()){
+                if(visibility){
+                    addFadeToTransition(pt,information.second.get(),NodePosition.RIGHT,visibility);
+                }else{
+                    addFadeToTransition(pt,information.first.get(),NodePosition.RIGHT,visibility);
+                }
+
+            }
+        }
+    }
+
+    private void addFadeToTransition(ParallelTransition pt, ElementInfo elementInfo,NodePosition position,boolean visibility){
+        pt.getChildren().add(getFadeTransition((BinaryHeapNode)elementInfo.getElement(),position, visibility));
+    }
+
+    private FadeTransition getFadeTransition(BinaryHeapNode node,NodePosition position, boolean visibility) {
+        final LineElement childLine = node.getChildLine(position);
+        int from = visibility?1:0;
+        int to = visibility?0:1;
+        FadeTransition ft = FadesTransitionBuilder.getTransition(childLine,Duration.millis(1),from ,to);
+        return ft;
     }
 
     protected ParallelTransition getMovingElements(){

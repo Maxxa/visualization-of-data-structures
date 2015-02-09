@@ -9,7 +9,7 @@ package cz.upce.fei.muller.splayTree.structure;// Splay trees - Nils Anders Dani
 
 import java.util.*;
 
-/**
+/**+
  * An implementation of splay trees.
  * <p>
  * Uses the element type's "natural ordering" to compare elements.

@@ -15,20 +15,10 @@ public class SwapPreparation implements IPreparation{
 
     private  WorkBinaryNodeInfo infoFirst;
     private  WorkBinaryNodeInfo infoSecond;
-//    private BinaryHeapNode nodeOne;
-//    private BinaryHeapNode nodeSecond;
     private ITreeLayoutManager manager;
-//    private SwapNodeEvent event;
 
     private boolean isSwapRootForRemove = false;
 
-//    public SwapPreparation(BinaryTreeLayoutManager manager, BinaryHeapNode nodeFirst, BinaryHeapNode nodeSecond, SwapNodeEvent event) {
-//        this.manager = manager;
-////        this.nodeOne = nodeFirst
-////        this.nodeSecond = nodeSecond;
-//      //  this.event = event;
-//        initIsSwapRoot();
-//    }
     public SwapPreparation(ITreeLayoutManager manager,WorkBinaryNodeInfo infoFirstElement, WorkBinaryNodeInfo infoSecondElement){
         this.manager = manager;
         this.infoFirst = infoFirstElement;
@@ -49,16 +39,8 @@ public class SwapPreparation implements IPreparation{
                 getBuilderSwapRoot() : getBuilderDefaultSwap();
     };
 
-//    private BinaryHeapNode getParent(BinaryHeapNode node) {
-//        ElementInfo elementInfo = manager.getElementInfo(node.getElementId());
-//        if(elementInfo.getIdParent()==null){
-//            return null;
-//        }
-//        return (BinaryHeapNode) manager.getElementInfo(elementInfo.getIdParent()).getElement();
-//    }
-
     private IAnimationBuilder getBuilderSwapRoot() {
-        BinaryHeapNode parent= (BinaryHeapNode) infoSecond.getParent().getElement();;
+        BinaryHeapNode parent= infoSecond.getParent().getElement();;
         return  new BuilderSwapRoot(infoFirst,infoSecond,
                 manager.getNodePosition(infoFirst.get().getElement().getElementId()),
                 manager.getNodePosition(infoSecond.get().getElement().getElementId()),
@@ -66,18 +48,11 @@ public class SwapPreparation implements IPreparation{
         );
     }
 
-//    private NodePosition getParentPosition(BinaryHeapNode parent, BinaryHeapNode nodeSecond) {
-//        Integer indexAtRow = manager.getElementInfo(parent.getElementId()).getIndexAtRow();
-//        Integer indexAtRowChild = manager.getElementInfo(nodeSecond.getElementId()).getIndexAtRow();
-//        return BinaryTreeHelper.getLeftChildIndex(indexAtRow)==indexAtRowChild?NodePosition.LEFT:NodePosition.RIGHT;
-//    }
-
     private IAnimationBuilder getBuilderDefaultSwap() {
         BinaryHeapNode parent = infoFirst.getParent()!=null? (BinaryHeapNode) infoFirst.getParent().getElement() :null;
         return   new BuilderSwapNode(infoFirst, infoSecond,
                      manager.getNodePosition(infoFirst.get().getElement().getElementId()),
                      manager.getNodePosition(infoSecond.get().getElement().getElementId()),
-                     parent,
                      getParentPosition(infoFirst.get().getIndexAtRow(), infoSecond.get().getIndexAtRow()),
                      parent!=null?getParentPosition(infoFirst.getParent().getIndexAtRow(), infoFirst.get().getIndexAtRow()):null
             );

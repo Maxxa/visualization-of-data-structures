@@ -25,4 +25,19 @@ public final class StructureDefaultControl implements IStructureControls {
         //TODO
         return hBox;
     }
+
+    @Override
+    public void toggleEnableButtons() {
+
+    }
+
+    @Override
+    public void enableButtons() {
+
+    }
+
+    @Override
+    public void disableButtons() {
+
+    }
 }

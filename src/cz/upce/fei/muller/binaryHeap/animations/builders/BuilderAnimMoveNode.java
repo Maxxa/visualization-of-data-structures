@@ -4,9 +4,10 @@ import cz.commons.graphics.Element;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.commons.utils.transitions.RelativeTranslateTransition;
 import cz.upce.fei.common.core.IAnimationBuilder;
-import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
