@@ -4,7 +4,6 @@ import com.google.common.eventbus.EventBus;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.utils.dialogs.Dialog;
 import cz.commons.utils.dialogs.PresetsDialog;
-import cz.commons.utils.dialogs.ProgressDialog;
 import cz.upce.fei.common.core.Controller;
 import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.common.core.InsertExecute;
@@ -17,7 +16,6 @@ import cz.upce.fei.muller.binaryHeap.gui.StructureControls;
 import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
 import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import cz.upce.fei.muller.binaryHeap.structure.HeapType;
-import javafx.animation.ParallelTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -161,7 +159,6 @@ public class BinaryHeapController extends Controller {
     }
 
     private void clearBeforeNewAction(){
-        System.err.println("NEW ACTION =================================================================================");
         RemovePreparation removePreparation =animationCore.getRemovePreparation();
         if(removePreparation!=null){
             removePreparation.executeRemove();
