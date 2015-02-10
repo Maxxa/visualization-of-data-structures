@@ -14,7 +14,7 @@ public class BinaryHeapPresets implements Preset<HeapNode, BinaryHeapPresetItem>
     private static final int GENERATE_MIN_NUMBERS = 10;
     private static final int GENERATE_MAX_NUMBERS = 31;
     private static final int MIN_NUMBER = 1;
-    private static final int MAX_NUMBER = 999;
+    private static final int MAX_NUMBER = 200;
 
     @Override
     public ArrayList<BinaryHeapPresetItem> getAll() {

@@ -29,8 +29,6 @@ public class SwapPreparation implements IPreparation{
     private void initIsSwapRoot() {
         isSwapRootForRemove = !infoFirst.hasParent() &&
                 infoSecond.get().getIdParent()!= infoFirst.get().getElement().getElementId();
-        System.out.print(String.format("Prohazuji[%s => %s]", infoFirst.get().getElement().getElementId(), infoSecond.get().getElement().getElementId()));
-        System.out.println(" swap root: " + isSwapRootForRemove);
     }
 
     @Override

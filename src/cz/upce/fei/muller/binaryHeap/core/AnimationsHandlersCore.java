@@ -52,13 +52,11 @@ public class AnimationsHandlersCore {
 
     @Subscribe
     public void handleEndEvent(LastEvent event) {
-        System.out.println("_Handle LAST EVENT_\n");
         initMovingTransition();
         endInitAnimation.endAnimation(animationControl.isMarkedAsStepping());
         if(!animationControl.isMarkedAsStepping()){
             animationControl.playForward();
         }
-      //  manager.PrintDebug();
     }
 
     @Subscribe
@@ -81,7 +79,6 @@ public class AnimationsHandlersCore {
 
     @Subscribe
     public void handleRemoveRootEvent(RemoveRootEvent event) {
-        System.out.println("Handle remove root");
         removePreparation = new RemovePreparation(event.getRootNode().getId(),manager);
         manager.removeElement(event.getRootNode().getId(),false);
         insertTransition(new BuilderRemoveRoot(removePreparation));
@@ -90,7 +87,6 @@ public class AnimationsHandlersCore {
 
     @Subscribe
     public void handleSwapNodeEvent(SwapNodeEvent event) {
-        System.out.println("Handle SWAP NODE");
         initMovingTransition();
         if(event.getFirstNode().getId()!=event.getSecondNode().getId()) {
             SwapPreparation handler = new SwapPreparation(manager,WorkBinaryNodeInfoBuilder.getWorkInfo(event.getFirstNode().getId(),manager),
