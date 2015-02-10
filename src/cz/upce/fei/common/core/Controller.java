@@ -3,8 +3,10 @@ package cz.upce.fei.common.core;
 import cz.commons.animation.AnimationControl;
 import cz.commons.animation.TransitionEndPositionType;
 import cz.commons.animation.TransitionFinishedEvent;
+import cz.commons.utils.dialogs.ProgressDialog;
 import cz.upce.fei.common.gui.animation.AnimationListenerAdapter;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
+import javafx.animation.ParallelTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -20,6 +22,8 @@ public abstract class Controller {
     protected ToolBarControlsContainer controlsContainer;
 
     protected BooleanProperty isLoading = new SimpleBooleanProperty(false);
+
+    protected ProgressDialog progressDialog;
 
     public Controller(ToolBarControlsContainer controlsContainer) {
         this.controlsContainer = controlsContainer;
@@ -79,4 +83,36 @@ public abstract class Controller {
     protected abstract EventHandler<ActionEvent> getPatternHandler();
 
     protected abstract EventHandler<ActionEvent> getResetHandler();
+
+    protected <T> void loadPreset(T[] nodes,InsertExecute<T> insertExecute, boolean animate) {
+        isLoading.setValue(true);
+        if (animate == false) {
+            progressDialog = new ProgressDialog();
+            controlsContainer.getStructureControls().disableButtons();
+            animationControl.setRate(50);
+            progressDialog.show();
+        }
+
+        for (T num : nodes) {
+            insertExecute.insert(num);
+        }
+        isLoading.setValue(false);
+
+        if (animate == false ){
+            ParallelTransition pt = new ParallelTransition();
+            pt.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    if (progressDialog != null) progressDialog.close();
+                    progressDialog = null;
+                    animationControl.setRate(1);
+                    controlsContainer.getStructureControls().enableButtons();
+                }
+            });
+            animationControl.getTransitions().add(pt);
+            progressDialog.setTotalEvents(animationControl.getTransitions().size());
+        }
+
+    }
+
 }

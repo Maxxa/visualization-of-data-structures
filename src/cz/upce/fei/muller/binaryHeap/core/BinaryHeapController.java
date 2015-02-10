@@ -4,8 +4,10 @@ import com.google.common.eventbus.EventBus;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.utils.dialogs.Dialog;
 import cz.commons.utils.dialogs.PresetsDialog;
+import cz.commons.utils.dialogs.ProgressDialog;
 import cz.upce.fei.common.core.Controller;
 import cz.upce.fei.common.core.IEndInitAnimation;
+import cz.upce.fei.common.core.InsertExecute;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.muller.binaryHeap.BinaryHeapPresetItem;
 import cz.upce.fei.muller.binaryHeap.BinaryHeapPresets;
@@ -15,6 +17,7 @@ import cz.upce.fei.muller.binaryHeap.gui.StructureControls;
 import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
 import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import cz.upce.fei.muller.binaryHeap.structure.HeapType;
+import javafx.animation.ParallelTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -103,36 +106,21 @@ public class BinaryHeapController extends Controller {
                 PresetsDialog<HeapNode, BinaryHeapPresetItem> dlg = new PresetsDialog<>("Vzory", new BinaryHeapPresets());
                 if (dlg.showDialog() == Dialog.Result.OK) {
                     if (showHeapType() == Dialog.Result.OK) {
-
                             controlsContainer.getStepControls().setCheckBoxSelected(false);
                             controlsContainer.getAnimationsControls().setSliderValue(1);
-                            loadPreset(dlg.getSelectedPresetItems(), dlg.runAnimation());
+                            loadPreset(dlg.getSelectedPresetItems(),new InsertExecute<HeapNode>() {
+                                @Override
+                                public void insert(HeapNode value) {
+                                    heap.insert(value);
+                                }
+                            }, dlg.runAnimation());
                     }
                 }
             }
         };
     }
 
-    public void loadPreset(HeapNode[] nums, boolean animate) {
-        isLoading.setValue(true);
 
-//      if (animate == false && autoNextStep == true) {
-//            graphics.setMinDuration();
-//            progressDialog = new ProgressDialog();
-//            progressDialog.show();
-//      }
-//
-      for (HeapNode num : nums) {
-//          System.out.println(num);
-            heap.insert(num);
-      }
-//
-//      loadingPreset = false;
-//      queue.add(new BTreeEvent(EventType.LOADING_PRESET_FINISHED, 0, null, 0));
-//      if (animate == false && autoNextStep == true) progressDialog.setTotalEvents(queue.size());
-//
-//      step();
-    }
 
 
     @Override
