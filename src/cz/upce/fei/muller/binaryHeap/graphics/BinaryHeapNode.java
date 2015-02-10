@@ -1,10 +1,12 @@
 package cz.upce.fei.muller.binaryHeap.graphics;
 
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.TopLevelAttribute;
 import cz.commons.graphics.BinaryNodeWithLine;
 import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -18,6 +20,8 @@ public class BinaryHeapNode extends BinaryNodeWithLine implements IBinaryNodesEl
     private final HeapNode node;
     private Rectangle backgroundRectangle;
     private Label label = new Label();
+
+    private Tooltip tooltip;
 
     public BinaryHeapNode(HeapNode node, int x, int y) {
         super(node.getId(), WIDTH, HEIGHT);
@@ -44,10 +48,13 @@ public class BinaryHeapNode extends BinaryNodeWithLine implements IBinaryNodesEl
     }
 
     private void initLabel(HeapNode node) {
-        label.setText(String.valueOf(node.getValue()));
+        String text = String.valueOf(node.getValue());
+        label.setText(text);
         label.setMaxWidth(WIDTH);
         label.setAlignment(Pos.CENTER);
         label.setStyle("-fx-font-weight: bold;");
+        this.tooltip = new Tooltip(text);
+        Tooltip.install(this,tooltip);
     }
 
     @Override

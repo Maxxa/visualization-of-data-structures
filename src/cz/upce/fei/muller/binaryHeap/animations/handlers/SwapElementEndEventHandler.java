@@ -55,8 +55,8 @@ public class SwapElementEndEventHandler extends StepEventHandler {
             lineFromNewRight.setEnd(oldNode);
         }
 
-        lineFromOldLeft.setEnd(information.getSecond().hasLeft()?(BinaryHeapNode)information.getSecond().getLeftChild().getElement():oldNode);
-        lineFromOldRight.setEnd(information.getSecond().hasRight()?(BinaryHeapNode)information.getSecond().getRightChild().getElement():oldNode);
+        lineFromOldLeft.setEnd(information.getSecond().hasLeft()?(BinaryHeapNode)information.getSecond().getLeftChild().getElement():oldNode.getRightChildConnector());
+        lineFromOldRight.setEnd(information.getSecond().hasRight()?(BinaryHeapNode)information.getSecond().getRightChild().getElement():oldNode.getLeftChildConnector());
 
     }
 
