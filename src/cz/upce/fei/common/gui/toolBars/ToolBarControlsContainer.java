@@ -7,7 +7,6 @@ import cz.upce.fei.common.gui.patternsResetHelp.PatternsResetHelpControls;
 import cz.upce.fei.common.gui.step.IStepControls;
 import cz.upce.fei.common.gui.step.StepControls;
 import cz.upce.fei.common.gui.structure.IStructureControls;
-import cz.upce.fei.muller.trie.gui.StructureDefaultControl;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;

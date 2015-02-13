@@ -1,6 +1,6 @@
 package cz.upce.fei.common.gui;
 
-import cz.commons.utils.ZoomHandler;
+import cz.commons.utils.handlers.ZoomHandler;
 import cz.upce.fei.common.core.Controller;
 import cz.upce.fei.common.gui.utils.SceneInfo;
 import javafx.application.Application;
