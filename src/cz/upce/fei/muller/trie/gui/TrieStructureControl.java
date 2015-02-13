@@ -19,6 +19,11 @@ public final class TrieStructureControl implements IStructureControls {
     Label label = new Label("Slovo:");
     TextField text = new TextField();
 
+
+    Button debug = new Button("DEBUG");
+    String[] tmp = new String[]{"amos","lev","anna","pavla","miloslav","lea","mila","pavel","petra","petr"};
+    Integer count = 0;
+
     Button add = new Button("Vložit");
     Button search = new Button("Najít");
     Button remove = new Button("Odebrat");
@@ -31,6 +36,16 @@ public final class TrieStructureControl implements IStructureControls {
         text.setAlignment(Pos.CENTER);
         text.setMaxWidth(100);
         text.addEventFilter(KeyEvent.KEY_TYPED, new LetterValidationHandler(10, LetterValidationHandler.CharacterSize.LOWER_CASE));
+
+        debug.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if(count<tmp.length){
+                    text.setText(tmp[count]);
+                    count++;
+                }
+            }
+        });
     }
 
     @Override
@@ -38,7 +53,7 @@ public final class TrieStructureControl implements IStructureControls {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(5);
-        hBox.getChildren().addAll(label, text, add, search, remove);
+        hBox.getChildren().addAll(label, text,debug, add, search, remove);
         return hBox;
     }
 
@@ -66,6 +81,8 @@ public final class TrieStructureControl implements IStructureControls {
             search.setDisable(isDisable);
             remove.setDisable(isDisable);
     }
+
+
 
     public void addInsertHandler(EventHandler<ActionEvent> handler) {
         add.setOnAction(handler);
