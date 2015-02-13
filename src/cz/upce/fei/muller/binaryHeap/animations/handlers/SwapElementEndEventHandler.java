@@ -47,16 +47,19 @@ public class SwapElementEndEventHandler extends StepEventHandler {
         LineElement lineFromOldLeft = oldNode.getChildLine(NodePosition.LEFT);
         LineElement lineFromOldRight= oldNode.getChildLine(NodePosition.RIGHT);
 
+        ConnectibleElement tmp1 = lineFromNewLeft.getEnd();
+        ConnectibleElement tmp2 = lineFromNewRight.getEnd();
+
         if(information.getPositionFromFirst().equals(NodePosition.LEFT)){
             lineFromNewLeft.setEnd(oldNode);
-            lineFromNewRight.setEnd(information.getFirst().hasRight()?(BinaryHeapNode)information.getFirst().getRightChild().getElement():newNode);
+            lineFromNewRight.setEnd(information.getFirst().hasRight()?lineFromOldRight.getEnd():newNode);
         }else{
-            lineFromNewLeft.setEnd(information.getFirst().hasLeft()?(BinaryHeapNode)information.getFirst().getLeftChild().getElement():newNode);
+            lineFromNewLeft.setEnd(information.getFirst().hasLeft()?lineFromOldLeft.getEnd():newNode);
             lineFromNewRight.setEnd(oldNode);
         }
 
-        lineFromOldLeft.setEnd(information.getSecond().hasLeft()?(BinaryHeapNode)information.getSecond().getLeftChild().getElement():oldNode.getRightChildConnector());
-        lineFromOldRight.setEnd(information.getSecond().hasRight()?(BinaryHeapNode)information.getSecond().getRightChild().getElement():oldNode.getLeftChildConnector());
+        lineFromOldLeft.setEnd(information.getSecond().hasLeft()?tmp1:oldNode.getRightChildConnector());
+        lineFromOldRight.setEnd(information.getSecond().hasRight()?tmp2:oldNode.getLeftChildConnector());
 
     }
 
