@@ -15,4 +15,6 @@ public interface ITrie<T> {
 
     List<T> get(String name);
 
+    Integer getCount();
+
 }

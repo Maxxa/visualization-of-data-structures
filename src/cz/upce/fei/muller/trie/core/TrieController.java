@@ -1,33 +1,83 @@
 package cz.upce.fei.muller.trie.core;
 
+import com.google.common.eventbus.EventBus;
+import cz.commons.utils.dialogs.Dialog;
+import cz.commons.utils.dialogs.PresetsDialog;
 import cz.upce.fei.common.core.Controller;
+import cz.upce.fei.common.core.InsertExecute;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
+import cz.upce.fei.muller.binaryHeap.gui.HelpDialog;
+import cz.upce.fei.muller.trie.TriePresetItem;
+import cz.upce.fei.muller.trie.TriePresets;
+import cz.upce.fei.muller.trie.manager.LayoutManager;
+import cz.upce.fei.muller.trie.structure.Trie;
+import cz.upce.fei.muller.trie.structure.Word;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.Pane;
 
 /**
  * @author Vojtěch Müller
  */
 public class TrieController extends Controller{
-    
 
-    public TrieController(Pane pane, ToolBarControlsContainer toolBarControlsContainer) {
+    private final LayoutManager layoutManager;
+
+    private final EventBus eventBus = new EventBus();
+    private final Trie<Word> trie;
+    private AnimationsCore animationCore;
+
+    public TrieController(ToolBarControlsContainer toolBarControlsContainer, LayoutManager layoutManager) {
         super(toolBarControlsContainer);
+        this.layoutManager = layoutManager;
+        animationCore = new AnimationsCore(animationControl,layoutManager);
+        trie = new Trie<>(eventBus);
+        eventBus.register(animationCore);
     }
 
     @Override
     protected EventHandler<ActionEvent> getHelpHandler() {
-        return null;
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                HelpDialog.show();
+            }
+        };
     }
 
     @Override
     protected EventHandler<ActionEvent> getPatternHandler() {
-        return null;
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                PresetsDialog<Word, TriePresetItem> dlg = new PresetsDialog<>("Vzory", new TriePresets());
+                if (dlg.showDialog() == Dialog.Result.OK) {
+                        controlsContainer.getStepControls().setCheckBoxSelected(false);
+                        controlsContainer.getAnimationsControls().setSliderValue(1);
+                        loadPreset(dlg.getSelectedPresetItems(),new InsertExecute<Word>() {
+                            @Override
+                            public void insert(Word word) {
+                                trie.add(word);
+                            }
+                        }, dlg.runAnimation());
+                    }
+            }
+        };
     }
 
     @Override
     protected EventHandler<ActionEvent> getResetHandler() {
-        return null;
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                clear();
+            }
+        };
     }
+
+    private void clear(){
+        trie.clear();
+        animationCore.clear();
+        layoutManager.clear();
+    }
+
 }
