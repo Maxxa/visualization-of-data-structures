@@ -1,5 +1,6 @@
 package cz.upce.fei.muller.binaryHeap.gui;
 
+import cz.commons.utils.handlers.NumberValidationHandler;
 import cz.upce.fei.common.gui.structure.IStructureControls;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 
 /**
@@ -26,6 +28,8 @@ public class StructureControls implements IStructureControls {
     public StructureControls() {
         text.setAlignment(Pos.CENTER);
         text.setMaxWidth(50);
+        text.addEventFilter(KeyEvent.KEY_TYPED, new NumberValidationHandler(10));
+
     }
 
     @Override
@@ -60,7 +64,7 @@ public class StructureControls implements IStructureControls {
 
     @Override
     public void enableButtons() {
-        setEnablingBtn(false);
+            setEnablingBtn(false);
     }
 
     @Override
