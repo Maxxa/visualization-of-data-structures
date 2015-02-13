@@ -65,7 +65,6 @@ public class BinaryHeapController extends Controller {
                 }
                 clearBeforeNewAction();
                 HeapNode newNode = new HeapNode(parsedValue);
-                animationControl.clear();
                 containerControls.getStructureControls().disableButtons();
                 heap.insert(newNode);
 
