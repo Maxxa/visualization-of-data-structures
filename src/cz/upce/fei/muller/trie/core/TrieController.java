@@ -6,9 +6,10 @@ import cz.commons.utils.dialogs.PresetsDialog;
 import cz.upce.fei.common.core.Controller;
 import cz.upce.fei.common.core.InsertExecute;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
-import cz.upce.fei.muller.binaryHeap.gui.HelpDialog;
 import cz.upce.fei.muller.trie.TriePresetItem;
 import cz.upce.fei.muller.trie.TriePresets;
+import cz.upce.fei.muller.trie.gui.HelpDialog;
+import cz.upce.fei.muller.trie.gui.TrieStructureControl;
 import cz.upce.fei.muller.trie.manager.LayoutManager;
 import cz.upce.fei.muller.trie.structure.Trie;
 import cz.upce.fei.muller.trie.structure.Word;
@@ -32,6 +33,7 @@ public class TrieController extends Controller{
         animationCore = new AnimationsCore(animationControl,layoutManager);
         trie = new Trie<>(eventBus);
         eventBus.register(animationCore);
+        initStructureHandlers();
     }
 
     @Override
@@ -59,7 +61,7 @@ public class TrieController extends Controller{
                                 trie.add(word);
                             }
                         }, dlg.runAnimation());
-                    }
+                }
             }
         };
     }
@@ -74,10 +76,53 @@ public class TrieController extends Controller{
         };
     }
 
+    private void initStructureHandlers() {
+        final TrieStructureControl controls = ((TrieStructureControl) controlsContainer.getStructureControls());
+        controls.addInsertHandler(getInsertHandler(controls));
+        controls.addRemoveHandler(getRemoveHandler(controls));
+        controls.addSearchHandler(getSearchHandler(controls));
+    }
+
     private void clear(){
         trie.clear();
         animationCore.clear();
         layoutManager.clear();
     }
 
+    private EventHandler<ActionEvent> getInsertHandler(final TrieStructureControl controls) {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                clearBeforeNewAction();
+                Word newWord = new Word(controls.getTextValue());
+                animationControl.clear();
+                controls.disableButtons();
+                trie.add(newWord);
+            }
+        };
+    }
+
+    private void clearBeforeNewAction() {
+        System.err.println("NEW ACTION---------------------------------------");
+
+
+    }
+
+    private EventHandler<ActionEvent> getSearchHandler(TrieStructureControl controls) {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+            }
+        };
+    }
+
+    private EventHandler<ActionEvent> getRemoveHandler(TrieStructureControl controls) {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+            }
+        };
+    }
 }

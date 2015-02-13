@@ -14,9 +14,9 @@ public class TriePresets implements Preset<Word, TriePresetItem> {
     public ArrayList<TriePresetItem> getAll() {
         ArrayList<TriePresetItem> presets = new ArrayList<>();
         presets.add(new TriePresetItem("Sada 1", new String[]{"amos","lev","anna","pavla","miloslav","lea","mila","pavel","petra","petr"}));
-        presets.add(new TriePresetItem("Sada 1", new String[]{"sada"}));
-        presets.add(new TriePresetItem("Sada 2", new String[]{"test"}));
-        presets.add(new TriePresetItem("Sada 3", new String[]{"last"}));
+        presets.add(new TriePresetItem("Sada 2", new String[]{"sada"}));
+        presets.add(new TriePresetItem("Sada 3", new String[]{"test"}));
+        presets.add(new TriePresetItem("Sada 4", new String[]{"last"}));
         return presets;
     }
 
