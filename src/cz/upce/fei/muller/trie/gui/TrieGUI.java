@@ -49,7 +49,15 @@ public class TrieGUI extends AbstractApplication<TrieController> {
 
     @Override
     protected void onShow() {
-        
+        int count = 0;
+        for (int i = 97; i < 123; i++) {
+            count++;
+            Character character = new Character((char)i);
+            System.out.println(character);
+
+        }
+        System.out.println(count);
+
     }
 
     public static void main(String[] args) {launch(args);}
