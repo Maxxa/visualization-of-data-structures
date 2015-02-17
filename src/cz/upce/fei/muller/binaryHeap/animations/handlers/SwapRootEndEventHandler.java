@@ -14,6 +14,7 @@ public class SwapRootEndEventHandler extends StepEventHandler {
 
     final LineElement lineElementToLeaf;
 
+    
     final WorkBinaryNodeInfo oldRoot;
     final WorkBinaryNodeInfo newRoot;
 
