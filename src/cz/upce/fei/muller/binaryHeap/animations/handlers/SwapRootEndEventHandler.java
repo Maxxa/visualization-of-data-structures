@@ -14,7 +14,6 @@ public class SwapRootEndEventHandler extends StepEventHandler {
 
     final LineElement lineElementToLeaf;
 
-    
     final WorkBinaryNodeInfo oldRoot;
     final WorkBinaryNodeInfo newRoot;
 
@@ -50,11 +49,10 @@ public class SwapRootEndEventHandler extends StepEventHandler {
 
         leftNew.setEnd(leftOld.getEnd());
         rightNew.setEnd(rightOld.getEnd());
-        leftOld.setEnd(oldR);
-        rightOld.setEnd(oldR);
-
+        leftOld.setEnd(oldR.getRightChildConnector());
+        rightOld.setEnd(oldR.getLeftChildConnector());
         leftOld.setOpacity(0);
-        rightNew.setOpacity(0);
+        rightOld.setOpacity(0);
         leftOld.setVisible(false);
         rightOld.setVisible(false);
 
