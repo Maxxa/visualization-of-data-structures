@@ -2,6 +2,7 @@ package cz.upce.fei.muller.trie.graphics;
 
 import cz.commons.graphics.BranchNodeElement;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -79,6 +80,7 @@ public class TrieKeysBlock extends BranchNodeElement implements ITrieNodesSettin
     }
 
 
-
-
+    public DoubleProperty widthProperty() {
+        return background.widthProperty();
+    }
 }
