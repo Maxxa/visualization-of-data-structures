@@ -9,6 +9,9 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 /**
  * @author Vojtěch Müller
@@ -23,12 +26,33 @@ public class TrieKey extends Element implements ITrieNodesSetting,ConnectibleEle
 
     private LineElement lineToChilds;
 
+    private Rectangle rect;
+
 
     public TrieKey(String text,Integer positionAtBlocX) {
         textLabel = new Label(text);
         setTranslateX(positionAtBlocX);
+        initRect();
         initElement();
         doBindings();
+    }
+
+    private void initRect() {
+        rect = new Rectangle(KEY_WIDTH, HEIGHT);
+        rect.setFill(null);
+        rect.setStroke(Color.TRANSPARENT);
+        rect.setStrokeWidth(2);
+    }
+
+    public Shape getRect(){
+        return rect;
+    }
+
+    public void defaultText(){
+        textLabel.setTextFill(Color.BLACK);
+    }
+    public void coloredText(){
+        textLabel.setTextFill(Color.RED);
     }
 
     private void initElement() {
@@ -38,7 +62,7 @@ public class TrieKey extends Element implements ITrieNodesSetting,ConnectibleEle
         textLabel.setMaxWidth(KEY_WIDTH);
         textLabel.setAlignment(Pos.CENTER);
 
-        stackPane.getChildren().addAll(textLabel);
+        stackPane.getChildren().addAll(textLabel,rect);
         this.getChildren().addAll(stackPane);
     }
 
