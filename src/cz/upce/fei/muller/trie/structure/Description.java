@@ -27,4 +27,9 @@ public abstract class Description{
     public int hashCode() {
         return getDescription() != null ? getDescription().hashCode() * 29 : 0;
     }
+
+    @Override
+    public String toString() {
+        return getDescription();
+    }
 }

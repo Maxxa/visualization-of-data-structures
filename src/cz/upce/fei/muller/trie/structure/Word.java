@@ -15,4 +15,9 @@ public class Word extends Description {
     public String getDescription() {
         return text;
     }
+
+    @Override
+    public String toString() {
+        return getDescription();
+    }
 }
