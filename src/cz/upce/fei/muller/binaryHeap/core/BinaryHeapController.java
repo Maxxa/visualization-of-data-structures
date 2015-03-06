@@ -117,9 +117,6 @@ public class BinaryHeapController extends Controller {
         };
     }
 
-
-
-
     @Override
     protected EventHandler<ActionEvent> getResetHandler() {
         return new EventHandler<ActionEvent>() {
