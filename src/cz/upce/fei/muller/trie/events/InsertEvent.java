@@ -2,18 +2,21 @@ package cz.upce.fei.muller.trie.events;
 
 import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.common.events.AbstractEvent;
-import cz.upce.fei.muller.trie.structure.TrieNode;
 
 /**
  * @author Vojtěch Müller
  */
 public class InsertEvent extends AbstractEvent {
 
-    public InsertEvent(AbstractStructureElement element) {
+    private final Character current;
+
+    public InsertEvent(Character current, AbstractStructureElement element) {
         super(element);
+        this.current = current;
     }
 
-    public InsertEvent(Character current, TrieNode temp) {
-        super(temp);
+    @Override
+    public String toString() {
+        return " ... ["+current+"] "+this.element.toString();
     }
 }
