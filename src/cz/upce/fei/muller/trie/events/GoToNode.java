@@ -7,12 +7,20 @@ import cz.upce.fei.muller.trie.structure.TrieNode;
  * @author Vojtěch Müller
  */
 public class GoToNode extends AbstractEvent{
-    public GoToNode(TrieNode temp) {
+
+    private final Character current;
+
+    public GoToNode(Character current, TrieNode temp) {
         super(temp);
+        this.current = current;
     }
 
-    public TrieNode getToNode(){
-        return (TrieNode) this.element;
+    public Character getCurrent() {
+        return current;
     }
 
+    @Override
+    public String toString() {
+        return this.element.toString();
+    }
 }

@@ -29,7 +29,7 @@ public class TrieGUI extends AbstractApplication<TrieController> {
 
     @Override
     protected TrieController getController() {
-        return new TrieController(controlsContainer,new LayoutManager(getCanvas(),TrieLayoutSetting.getSetting()));
+        return new TrieController(controlsContainer,new LayoutManager(getCanvas(),TrieLayoutSetting.getSetting(),new FirstRowBuilder()));
     }
 
     @Override
@@ -49,14 +49,6 @@ public class TrieGUI extends AbstractApplication<TrieController> {
 
     @Override
     protected void onShow() {
-        int count = 0;
-        for (int i = 97; i < 123; i++) {
-            count++;
-            Character character = new Character((char)i);
-            System.out.println(character);
-
-        }
-        System.out.println(count);
 
     }
 

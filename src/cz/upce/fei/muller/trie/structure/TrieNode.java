@@ -9,9 +9,9 @@ import java.util.Hashtable;
  */
 public class TrieNode<T extends Description> extends AbstractStructureElement {
 
-    public Hashtable<Character, TrieNode> next;
-    public T object;
-    public TrieNode parent;
+    protected Hashtable<Character, TrieNode> next;
+    protected T object;
+    protected TrieNode parent;
 
     TrieNode() {
         next = new Hashtable<>();
@@ -22,6 +22,10 @@ public class TrieNode<T extends Description> extends AbstractStructureElement {
     public TrieNode(TrieNode parent) {
         this();
         this.parent = parent;
+    }
+
+    public TrieNode getParent() {
+        return parent;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cz.upce.fei.muller.trie.structure;
 
 import com.google.common.eventbus.EventBus;
+import cz.upce.fei.muller.trie.events.BuildWord;
 import cz.upce.fei.muller.trie.events.EndAction;
 import cz.upce.fei.muller.trie.events.GoToNode;
 import cz.upce.fei.muller.trie.events.InsertEvent;
@@ -31,15 +32,17 @@ public class Trie<T extends Description> implements Iterable<T>,ITrie<T> {
 
     @Override
     public void add(T inserted) {
+        eventBus.post(new BuildWord(inserted,true));
         TrieNode temp = root;
         for (int i = 0; i < inserted.getDescription().length();i++){
             Character current = inserted.getDescription().charAt(i);
             if(!temp.next.containsKey(current)){
                 eventBus.post(new InsertEvent(current,temp));
                 temp.next.put(current, new TrieNode(temp));
+            }else{
+                eventBus.post(new GoToNode(current,temp));
             }
             temp = (TrieNode) temp.next.get(current);
-            eventBus.post(new GoToNode(temp));
         }
 
         if(temp.object.equals(T.EMPTY)){

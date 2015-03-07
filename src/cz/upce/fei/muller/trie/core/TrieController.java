@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import cz.commons.utils.dialogs.Dialog;
 import cz.commons.utils.dialogs.PresetsDialog;
 import cz.upce.fei.common.core.Controller;
+import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.common.core.InsertExecute;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.muller.trie.TriePresetItem;
@@ -34,6 +35,7 @@ public class TrieController extends Controller{
         trie = new Trie<>(eventBus);
         eventBus.register(animationCore);
         initStructureHandlers();
+        initEndAnimation();
     }
 
     @Override
@@ -104,6 +106,7 @@ public class TrieController extends Controller{
 
     private void clearBeforeNewAction() {
         System.err.println("NEW ACTION---------------------------------------");
+        animationCore.clearBeforeNewAction();
 
 
     }
@@ -125,4 +128,16 @@ public class TrieController extends Controller{
             }
         };
     }
+
+    private void initEndAnimation() {
+        animationCore.setEndAnimationHandler(new IEndInitAnimation() {
+            @Override
+            public void endAnimation(boolean stepping) {
+                if (stepping) {
+                    controlsContainer.getStepControls().enableBtnNext();
+                }
+            }
+        });
+    }
+
 }
