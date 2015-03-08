@@ -7,13 +7,12 @@ import cz.upce.fei.muller.trie.events.GoToNode;
 import cz.upce.fei.muller.trie.events.InsertEvent;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Vojtěch Müller
  */
-public class Trie<T extends Description> implements Iterable<T>,ITrie<T> {
+public class Trie<T extends Description> implements ITrie<T> {
 
     private final EventBus eventBus;
     TrieNode root;
@@ -34,14 +33,16 @@ public class Trie<T extends Description> implements Iterable<T>,ITrie<T> {
     public void add(T inserted) {
         eventBus.post(new BuildWord(inserted,true));
         TrieNode temp = root;
+        Character parentKey = null;
         for (int i = 0; i < inserted.getDescription().length();i++){
             Character current = inserted.getDescription().charAt(i);
             if(!temp.next.containsKey(current)){
-                eventBus.post(new InsertEvent(current,temp));
+                eventBus.post(new InsertEvent(current,temp,parentKey));
                 temp.next.put(current, new TrieNode(temp));
             }else{
                 eventBus.post(new GoToNode(current,temp));
             }
+            parentKey=current;
             temp = (TrieNode) temp.next.get(current);
         }
 
@@ -141,9 +142,4 @@ public class Trie<T extends Description> implements Iterable<T>,ITrie<T> {
         return count;
     }
 
-
-    @Override
-    public Iterator<T> iterator() {
-        return null;
-    }
 }

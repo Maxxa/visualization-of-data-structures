@@ -19,6 +19,10 @@ public class GoToNode extends AbstractEvent{
         return current;
     }
 
+    public TrieNode getNode() {
+        return (TrieNode) element;
+    }
+
     @Override
     public String toString() {
         return this.element.toString();

@@ -9,10 +9,12 @@ import cz.upce.fei.muller.trie.structure.TrieNode;
 public class InsertEvent extends AbstractEvent {
 
     private final Character currentCharacter;
+    private final Character parentKey;
 
-    public InsertEvent(Character current, TrieNode element) {
+    public InsertEvent(Character current, TrieNode element, Character parentKey) {
         super(element);
         this.currentCharacter = current;
+        this.parentKey = parentKey;
     }
 
     public Character getCurrentCharacter() {
@@ -23,8 +25,12 @@ public class InsertEvent extends AbstractEvent {
         return (TrieNode) element;
     }
 
+    public Character getParentKey() {
+        return parentKey;
+    }
+
     @Override
     public String toString() {
-        return " ... ["+ currentCharacter +"] "+this.element.toString();
+        return " ... ["+ currentCharacter +"] "+this.element.toString()+(parentKey!=null?String.format("[%s]",parentKey):"");
     }
 }

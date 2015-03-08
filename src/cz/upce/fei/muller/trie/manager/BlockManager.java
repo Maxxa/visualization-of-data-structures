@@ -1,7 +1,6 @@
 package cz.upce.fei.muller.trie.manager;
 
 import com.google.common.eventbus.EventBus;
-import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;
 
 /**
@@ -10,10 +9,7 @@ import javafx.geometry.Point2D;
 class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
 
     private final Integer id;
-    /**
-     * This is X position of parent
-     */
-    private DoubleProperty parentXPosition;
+
     private final EventBus eventBus;
 
     protected Point2D blockPosition;
@@ -21,9 +17,8 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
     protected BlockManager leftBlock = null;
     protected BlockManager rightBLock = null;
 
-    BlockManager(Integer id, DoubleProperty parentXPosition,Point2D blockPosition, EventBus eventBus) {
+    BlockManager(Integer id, Point2D blockPosition, EventBus eventBus) {
         this.id = id;
-        this.parentXPosition = parentXPosition;
         this.eventBus = eventBus;
         this.blockPosition = blockPosition;
     }
@@ -66,4 +61,16 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
         blockPosition = tmp;
     }
 
+    public void setIdChildBlock(Character character, Integer idChild) {
+        if(exist(character)){
+            get(character).childBlockId=idChild;
+        }
+    }
+
+    public void addCharacterInfo(Character key, int i) {
+        BlockKeyInfo info = new BlockKeyInfo();
+        info.positionAtBlock=i;
+        this.add(key,info);
+        blocks[getCharacterPosition(key)]=key;
+    }
 }

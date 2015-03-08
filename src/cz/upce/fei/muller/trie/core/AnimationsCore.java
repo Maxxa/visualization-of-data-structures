@@ -4,6 +4,8 @@ import com.google.common.eventbus.Subscribe;
 import cz.commons.animation.AnimationControl;
 import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.muller.trie.animations.builders.BuilderGoToNode;
+import cz.upce.fei.muller.trie.animations.builders.BuilderInsertKeyToNode;
+import cz.upce.fei.muller.trie.animations.builders.BuilderInsertNode;
 import cz.upce.fei.muller.trie.events.BuildWord;
 import cz.upce.fei.muller.trie.events.EndAction;
 import cz.upce.fei.muller.trie.events.GoToNode;
@@ -11,7 +13,9 @@ import cz.upce.fei.muller.trie.events.InsertEvent;
 import cz.upce.fei.muller.trie.graphics.TrieKey;
 import cz.upce.fei.muller.trie.graphics.TrieKeysBlock;
 import cz.upce.fei.muller.trie.manager.ElementInfo;
+import cz.upce.fei.muller.trie.manager.IBlocksPositions;
 import cz.upce.fei.muller.trie.manager.LayoutManager;
+import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
@@ -31,7 +35,6 @@ public class AnimationsCore {
     private IEndInitAnimation endAnimationHandler;
 
     public AnimationsCore(AnimationControl animationControl, LayoutManager layoutManager) {
-
         this.animationControl = animationControl;
         this.layoutManager = layoutManager;
     }
@@ -52,38 +55,54 @@ public class AnimationsCore {
     @Subscribe
     public void handleGoToNodeEvent(GoToNode event) {
         System.out.println("________HANDLE %% GO TO NODE .... " + event);
-
-
+        TrieKeysBlock graphicsBlock = layoutManager.get(event.getNode().getId()).getGraphicsBlock();
+        animationControl.getTransitions().add(new BuilderGoToNode(event.getCurrent(), currentWord.get(event.getCurrent()), graphicsBlock).getTransition());
+        coloredShape.add(graphicsBlock.getKey(event.getCurrent()).getRect());
     }
 
     @Subscribe
     public void handleInsertEvent(InsertEvent event) {
         System.out.println("________HANDLE %% INSERT .... " + event);
+        TrieKeysBlock graphicsBlock;
         if (event.getInsertedNode().getParent() == null) {
-            //vytvarim jen animaci zvýrazení
-            TrieKeysBlock graphicsBlock = layoutManager.get(event.getInsertedNode().getId()).getGraphicsBlock();
+            //create animation to visibling..
+            layoutManager.setIdRoot(event.getInsertedNode().getId());
+            graphicsBlock = layoutManager.get(event.getInsertedNode().getId()).getGraphicsBlock();
             animationControl.getTransitions().add(new BuilderGoToNode(event.getCurrentCharacter(),
-                    currentWord.get(event.getCurrentCharacter()),graphicsBlock
+                    currentWord.get(event.getCurrentCharacter()), graphicsBlock
             ).getTransition());
             coloredShape.add(graphicsBlock.getKey(event.getCurrentCharacter()).getRect());
         } else {
-            ElementInfo info = layoutManager.get(event.getInsertedNode().getId());
-            if(info==null){
-                buildNewNode(event);
-            }else{
-                buildNewKeyToNode(event,info);
+            if (layoutManager.existNode(event.getInsertedNode().getId())) {
+                graphicsBlock = buildNewKeyToNode(event);
+            } else {
+                graphicsBlock = buildNewNode(event);
             }
         }
+        if (graphicsBlock != null)
+            coloredShape.add(graphicsBlock.getKey(event.getCurrentCharacter()).getRect());
 
     }
 
-    private void buildNewKeyToNode(InsertEvent event, ElementInfo info) {
-        System.out.println("key new");
+    private TrieKeysBlock buildNewKeyToNode(InsertEvent event) {
+        ElementInfo elementInfo = layoutManager.get(event.getInsertedNode().getId());
+        TrieKeysBlock block = elementInfo.getGraphicsBlock();
+        TrieKey trieKey = new TrieKey(event.getCurrentCharacter().toString(), 0);
+        block.addKey(event.getCurrentCharacter(),trieKey);//TODO add parent key
+
+        BuilderInsertKeyToNode builder = new BuilderInsertKeyToNode();
+        animationControl.getTransitions().add(builder.getTransition());
+        return block;
     }
 
-    private void buildNewNode(InsertEvent event) {
-        System.out.println("node new");
-
+    private TrieKeysBlock buildNewNode(InsertEvent event) {
+        TrieKeysBlock block = new TrieKeysBlock(event.getInsertedNode().getId(), new Point2D(0, 0));
+        TrieKey trieKey = new TrieKey(event.getCurrentCharacter().toString(), 0);
+        block.addKey(event.getCurrentCharacter(), trieKey);
+        IBlocksPositions pointPosition = layoutManager.add(event.getCurrentCharacter(), block,event.getInsertedNode(),event.getParentKey());
+        BuilderInsertNode builder = new BuilderInsertNode(block, trieKey, currentWord.get(event.getCurrentCharacter()), pointPosition);
+        animationControl.getTransitions().add(builder.getTransition());
+        return block;
     }
 
     @Subscribe
@@ -101,7 +120,7 @@ public class AnimationsCore {
 
     public void clearBeforeNewAction() {
         layoutManager.getCanvas().getChildren().removeAll(currentWord.values());
-        for (Iterator<Shape> it = coloredShape.iterator();it.hasNext();) {
+        for (Iterator<Shape> it = coloredShape.iterator(); it.hasNext(); ) {
             Shape s = it.next();
             s.setStroke(Color.TRANSPARENT);
         }

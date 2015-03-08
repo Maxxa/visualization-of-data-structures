@@ -7,5 +7,6 @@ public class BlockKeyInfo {
 
     Integer childBlockId;
 
+    Integer positionAtBlock;
 
 }

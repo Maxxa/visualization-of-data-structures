@@ -1,5 +1,6 @@
 package cz.upce.fei.muller.trie.manager;
 
+import cz.upce.fei.muller.trie.graphics.TrieKey;
 import cz.upce.fei.muller.trie.graphics.TrieKeysBlock;
 import cz.upce.fei.muller.trie.structure.TrieNode;
 import javafx.geometry.Point2D;
@@ -31,35 +32,52 @@ public class LayoutManager {
         initFirstRow(builder);
     }
 
-    public void add(Character character, TrieNode node) {
-        if (rowsManagers.size() == 1) {
-            idRoot = node.getId();// its disable adding to root element.
-            return;
-        }
-        if (node.getParent() == null) return;
+    public void add(Character character, TrieKey key, TrieNode node) {
+        //TODO proste to udelema potom...
+    }
+
+    public IBlocksPositions add(final Character character, final TrieKeysBlock block, final TrieNode node, Character parentKey) {
         Integer idParent = node.getParent().getId();
         if (idRoot == idParent) { // where is parent root, have FIXED ID for manager...
             idParent = CUSTOM_ROOT;
         }
-        ElementInfo infoCurrent = elementsInfo.get(idParent);
-        if(infoCurrent.indexRow+1>=rowsManagers.size()){
-            BlockRowManager rowManager = new BlockRowManager(setting);
+        final ElementInfo infoParent = elementsInfo.get(idParent);
+        final BlockRowManager rowManager;
+        if (infoParent.indexRow + 1 >= rowsManagers.size()) { //add new row
+            rowManager = new BlockRowManager(setting);
             rowsManagers.add(rowManager);
-            //add new row
-        }else{
-            // add to exist row
+            rowManager.createFirstBlock(node.getId(), rowsManagers.get(infoParent.indexRow).getPositionKey(idParent,parentKey), character);
+        } else { // add to exist row
+            rowManager = rowsManagers.get(infoParent.indexRow + 1);
+            // idChild = 0;//TODO
         }
 
-//        BlockRowManager row = rowsManagers.get(infoCurrent.indexRow);
-//        BlockManager blockManager = row.get(idParent);
-//        System.out.println("");
+        addBlockInfo(node.getId(), infoParent.indexRow + 1, block);
 
+        // set info info for parent
+        BlockManager blockManager = rowsManagers.get(infoParent.indexRow).get(idParent);
+        blockManager.setIdChildBlock(parentKey, node.getId());
+        return new IBlocksPositions() {
+
+            Point2D blockPosition = rowManager.get(node.getId()).blockPosition;
+            Point2D keyPosition =   rowManager.getPositionKey(node.getId(), character);
+
+            @Override
+            public Point2D getPositionBlock() {
+                return blockPosition;
+            }
+
+            @Override
+            public Point2D getPositionBlockKey() {
+                return keyPosition;
+            }
+        };
     }
 
     private void initFirstRow(IRootBuilder builder) {
         //create row
         BlockRowManager rootRow = new BlockRowManager(setting);
-        rootRow.addRoot(CUSTOM_ROOT, canvas.getWidth());
+        rootRow.addRoot(CUSTOM_ROOT, canvas.getWidth(), builder.getKeys());
         this.rowsManagers.add(rootRow);
         //create block and init
         TrieKeysBlock rootBlock = builder.getRootBlock();
@@ -91,6 +109,10 @@ public class LayoutManager {
         canvas.getChildren().addAll(info.graphicsBlock);
     }
 
+    public boolean existNode(Integer id) {
+        return elementsInfo.containsKey(id);
+    }
+
     public Pane getCanvas() {
         return canvas;
     }
@@ -100,10 +122,20 @@ public class LayoutManager {
     }
 
     public ElementInfo get(Integer id) {
-        if (id == idRoot || elementsInfo.size()==1) {
+        if (id == idRoot || elementsInfo.size() == 1) {
             return elementsInfo.get(CUSTOM_ROOT);
         }
         return elementsInfo.get(id);
     }
 
+    public void setIdRoot(Integer idRoot) {
+        this.idRoot = idRoot;
+    }
+
+    private void addBlockInfo(Integer id, Integer row, TrieKeysBlock block) {
+        ElementInfo info = new ElementInfo();
+        info.indexRow = row;
+        info.graphicsBlock = block;
+        elementsInfo.put(id, info);
+    }
 }
