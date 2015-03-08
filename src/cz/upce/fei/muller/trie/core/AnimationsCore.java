@@ -100,7 +100,10 @@ public class AnimationsCore {
         TrieKey trieKey = new TrieKey(event.getCurrentCharacter().toString(), 0);
         block.addKey(event.getCurrentCharacter(), trieKey);
         IBlocksPositions pointPosition = layoutManager.add(event.getCurrentCharacter(), block,event.getInsertedNode(),event.getParentKey());
-        BuilderInsertNode builder = new BuilderInsertNode(block, trieKey, currentWord.get(event.getCurrentCharacter()), pointPosition);
+        BuilderInsertNode builder = new BuilderInsertNode
+                (block, trieKey, currentWord.get(event.getCurrentCharacter()), layoutManager.getKey(event.getInsertedNode().getParent(),event.getParentKey()), pointPosition
+                        ,event.getCurrentCharacter()
+                );
         animationControl.getTransitions().add(builder.getTransition());
         return block;
     }

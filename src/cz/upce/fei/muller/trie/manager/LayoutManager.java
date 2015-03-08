@@ -49,11 +49,11 @@ public class LayoutManager {
             rowManager.createFirstBlock(node.getId(), rowsManagers.get(infoParent.indexRow).getPositionKey(idParent,parentKey), character);
         } else { // add to exist row
             rowManager = rowsManagers.get(infoParent.indexRow + 1);
-            // idChild = 0;//TODO
+            rowManager.insertToRow(node.getId(),rowsManagers.get(infoParent.indexRow).get(idParent),character,parentKey);
         }
 
         addBlockInfo(node.getId(), infoParent.indexRow + 1, block);
-
+        canvas.getChildren().add(block);
         // set info info for parent
         BlockManager blockManager = rowsManagers.get(infoParent.indexRow).get(idParent);
         blockManager.setIdChildBlock(parentKey, node.getId());
@@ -137,5 +137,9 @@ public class LayoutManager {
         info.indexRow = row;
         info.graphicsBlock = block;
         elementsInfo.put(id, info);
+    }
+
+    public TrieKey getKey(TrieNode parent, Character key) {
+        return get(parent.getId()).getGraphicsBlock().getKey(key);
     }
 }

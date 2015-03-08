@@ -2,6 +2,7 @@ package cz.upce.fei.muller.trie.manager;
 
 import com.google.common.eventbus.EventBus;
 import cz.upce.fei.muller.trie.graphics.ITrieNodesSetting;
+import javafx.geometry.Point2D;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class BlockRowManagerTmp {
 
-    private Map<Character, Point2DProperty> pointsCharaters = new HashMap<>();
+    private Map<Character, Point2D> pointsCharaters = new HashMap<>();
     private Character[] listBlock = new Character[TrieUtils.LOWER_CASE_END - TrieUtils.LOWER_CASE_BEGIN];
 
     private final EventBus eventBus;
@@ -48,7 +49,7 @@ public class BlockRowManagerTmp {
 
     private void insert(Character block,int index,double position) {
         listBlock[index]=block;
-        pointsCharaters.put(block,new Point2DProperty(position,yPosition));
+        pointsCharaters.put(block,new Point2D(position,yPosition));
     }
 
 
@@ -60,9 +61,9 @@ public class BlockRowManagerTmp {
         for (int i = from; i <= to; i++) {
             Character character = listBlock[i];
             if(character!=null && pointsCharaters.containsKey(character)){
-                Point2DProperty p = pointsCharaters.get(character);
-                p.setX(p.getX() + xPoint);
-                //TODO event
+//                Point2DProperty p = pointsCharaters.get(character);
+//                p.setX(p.getX() + xPoint);
+//                //TODO event
             }
         }
     }

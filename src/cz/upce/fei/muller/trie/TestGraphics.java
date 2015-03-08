@@ -74,10 +74,6 @@ public class TestGraphics extends AbstractExample {
         TrieKey tv = new TrieKey("V",30);
         canvas.getChildren().addAll(tl,te,tv);
 
-
-
-
-
     }
 
     @Override

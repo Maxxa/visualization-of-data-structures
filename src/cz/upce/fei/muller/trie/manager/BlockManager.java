@@ -23,10 +23,39 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
         this.blockPosition = blockPosition;
     }
 
+    public Integer getLeftChild(Character fromCharacter) {
+        return iterationLeft(getCharacterPosition(fromCharacter));
+    }
 
+    public Integer getRightChild(Character fromCharacter) {
+        return iterationRight(getCharacterPosition(fromCharacter));
+    }
 
+    private Integer iterationLeft(int position) {
+        for (int i = position; i >= 0; i--) {
+            if (blocks[i] != null && exist(blocks[i])) {
+                if (get(blocks[i]).childBlockId != null)
+                    return get(blocks[i]).childBlockId;
+            }
+        }
+        if (leftBlock != null) {
+            return leftBlock.iterationRight(blocks.length - 1);
+        }
+        return null;
+    }
 
-
+    private Integer iterationRight(int position) {
+        for (int i = position; i < blocks.length; i++) {
+            if (blocks[i] != null && exist(blocks[i])) {
+                if (get(blocks[i]).childBlockId != null)
+                    return get(blocks[i]).childBlockId;
+            }
+        }
+        if (rightBLock != null) {
+            return rightBLock.iterationRight(0);
+        }
+        return null;
+    }
 
     /**
      * Moving all left block at row
@@ -35,21 +64,21 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
         if (leftBlock != null) leftBlock.moveToLeft(-diffX);
         if (rightBLock != null) rightBLock.moveToRight(diffX);
         double halfDiffX = diffX / 2;
-        move(-halfDiffX,true);
+        move(-halfDiffX, true);
     }
 
     /**
      * Moving all right block at row
      */
-    private void moveToLeft(double diffX) {
-        move(diffX,false);
+    protected void moveToLeft(double diffX) {
+        move(diffX, false);
         if (leftBlock != null) {
             leftBlock.moveToLeft(diffX);
         }
     }
 
-    private void moveToRight(double diffX) {
-        move(diffX,false);
+    protected void moveToRight(double diffX) {
+        move(diffX, false);
         if (rightBLock != null) {
             rightBLock.moveToRight(diffX);
         }
@@ -62,15 +91,15 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
     }
 
     public void setIdChildBlock(Character character, Integer idChild) {
-        if(exist(character)){
-            get(character).childBlockId=idChild;
+        if (exist(character)) {
+            get(character).childBlockId = idChild;
         }
     }
 
     public void addCharacterInfo(Character key, int i) {
         BlockKeyInfo info = new BlockKeyInfo();
-        info.positionAtBlock=i;
-        this.add(key,info);
-        blocks[getCharacterPosition(key)]=key;
+        info.positionAtBlock = i;
+        this.add(key, info);
+        blocks[getCharacterPosition(key)] = key;
     }
 }

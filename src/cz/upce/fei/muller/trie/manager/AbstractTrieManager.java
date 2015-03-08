@@ -40,5 +40,8 @@ abstract class AbstractTrieManager<T> {
         return data.remove(key);
     }
 
+    protected Integer size(){
+        return data.size();
+    }
 
 }
