@@ -42,4 +42,8 @@ public class LayoutManagerSetting {
     public double getMinNodeWidth() {
         return minNodeWidth;
     }
+
+    public void addHandler(Object o){
+        this.eventBus.register(o);
+    }
 }

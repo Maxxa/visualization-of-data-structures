@@ -36,6 +36,7 @@ public class TrieController extends Controller{
         eventBus.register(animationCore);
         initStructureHandlers();
         initEndAnimation();
+        toolBarControlsContainer.getAnimationsControls().setSliderValue(10);
     }
 
     @Override

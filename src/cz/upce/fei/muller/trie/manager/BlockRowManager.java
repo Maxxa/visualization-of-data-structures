@@ -45,22 +45,23 @@ public class BlockRowManager {
         //najdu prvniho praveho bratra
         BlockManager rightBlock = get(parentBlock.getRightChild(parentCharacter));
 
-        PositionHelper rc= new PositionHelper(leftBlock,rightBlock,
-                new Point2D(parentBlock.get(parentCharacter).positionAtBlock*setting.getMinNodeWidth(),
-                            parentBlock.blockPosition.getY()+setting.getVerticalSpace()+setting.getNodeHeight())
-                ,setting.getMinNodeWidth(),setting);
-        rc.build();
+        PositionNewNodeHelper helper= new PositionNewNodeHelper(
+                leftBlock,rightBlock,
+                setting,
+                parentBlock.blockPosition.getX()+parentBlock.get(parentCharacter).positionAtBlock*setting.getMinNodeWidth(), // pozice vůči otci
+                parentBlock.blockPosition.getY()+setting.getVerticalSpace()+setting.getNodeHeight(), // y pozice
+                setting.getMinNodeWidth() //width
+                );
+        helper.build();
 
-        addBlock(id,rc.currentPosition);
-
+        addBlock(id, helper.getPoint());
+        System.out.println(helper.getPoint());
         // propojeni na radku...
-        if(leftBlock!=null){
-            leftBlock.moveToLeft(rc.diffLeft);
+        if(helper.existLeft()){
             leftBlock.rightBLock = blocksAtRow.get(id);
             blocksAtRow.get(id).leftBlock = leftBlock;
         }
-        if(rightBlock!=null){
-            rightBlock.moveToRight(rc.diffRight);
+        if(helper.existRight()){
             rightBlock.leftBlock= blocksAtRow.get(id);
             blocksAtRow.get(id).rightBLock= rightBlock;
         }
@@ -72,4 +73,5 @@ public class BlockRowManager {
         BlockManager rootBlock = new BlockManager(id, position, setting.eventBus);
         blocksAtRow.put(id, rootBlock);
     }
+
 }

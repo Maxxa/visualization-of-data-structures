@@ -95,6 +95,7 @@ public class LayoutManager {
     public void clear() {
         //temporary root
         BlockRowManager rootRow = rowsManagers.get(0);
+        rootRow.get(CUSTOM_ROOT).clear();
         ElementInfo info = elementsInfo.get(CUSTOM_ROOT);
         //clearing
         rowsManagers.clear();

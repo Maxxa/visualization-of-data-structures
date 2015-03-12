@@ -1,12 +1,13 @@
 package cz.upce.fei.muller.trie.manager;
 
 import com.google.common.eventbus.EventBus;
+import cz.upce.fei.muller.trie.graphics.ITrieNodesSetting;
 import javafx.geometry.Point2D;
 
 /**
  * @author Vojtěch Müller
  */
-class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
+class BlockManager extends AbstractTrieManager<BlockKeyInfo> implements ITrieNodesSetting{
 
     private final Integer id;
 
@@ -39,7 +40,7 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
             }
         }
         if (leftBlock != null) {
-            return leftBlock.iterationRight(blocks.length - 1);
+            return leftBlock.iterationLeft(blocks.length - 1);
         }
         return null;
     }
@@ -57,30 +58,28 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
         return null;
     }
 
-    /**
-     * Moving all left block at row
-     */
-    protected void moveCurrent(double diffX) {
-        if (leftBlock != null) leftBlock.moveToLeft(-diffX);
-        if (rightBLock != null) rightBLock.moveToRight(diffX);
-        double halfDiffX = diffX / 2;
-        move(-halfDiffX, true);
-    }
 
     /**
      * Moving all right block at row
      */
-    protected void moveToLeft(double diffX) {
+    protected void moveToLeft(double diffX,double minimalSpace) {
         move(diffX, false);
         if (leftBlock != null) {
-            leftBlock.moveToLeft(diffX);
+            double dif = blockPosition.getX() -(leftBlock.blockPosition.getX() + leftBlock.getWidth());
+            if (dif < minimalSpace) {
+                leftBlock.moveToLeft(dif - minimalSpace, minimalSpace);
+            }
         }
     }
 
-    protected void moveToRight(double diffX) {
+    protected void moveToRight(double diffX,double minimalSpace) {
         move(diffX, false);
         if (rightBLock != null) {
-            rightBLock.moveToRight(diffX);
+            double dif = rightBLock.blockPosition.getX()-(blockPosition.getX()+getWidth());
+            if(dif < minimalSpace){
+                rightBLock.moveToRight(minimalSpace-dif,minimalSpace);
+            }
+
         }
     }
 
@@ -101,5 +100,18 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> {
         info.positionAtBlock = i;
         this.add(key, info);
         blocks[getCharacterPosition(key)] = key;
+    }
+
+    public double getWidth(){
+        return size()*KEY_WIDTH;
+    }
+
+    public void clear() {
+        for (int i = 0; i < blocks.length; i++) {
+            if(exist(blocks[i])){
+                get(blocks[i]).childBlockId=null;
+            }
+        }
+        
     }
 }
