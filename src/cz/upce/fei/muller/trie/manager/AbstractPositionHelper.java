@@ -84,4 +84,12 @@ public abstract class AbstractPositionHelper implements ITrieNodesSetting {
         currentBox.maxX=currentBox.maxX+move;
     }
 
+    void setPositionX(double positionX){
+        this.positionX = positionX;
+        double width = currentBox.maxX-currentBox.minX;
+        currentBox.minX = positionX;
+        currentBox.maxX=positionX+width;
+    }
+
+
 }
