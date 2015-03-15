@@ -32,8 +32,41 @@ public class LayoutManager {
         initFirstRow(builder);
     }
 
-    public void add(Character character, TrieKey key, TrieNode node) {
-        //TODO proste to udelema potom...
+    /** Vlozi klic do bloku */
+    public IBlocksPositions add(final Character character, TrieKey key, final TrieNode node) {
+        ElementInfo elementInfo = elementsInfo.get(node.getId());
+
+        final BlockRowManager manager = rowsManagers.get(elementInfo.indexRow);
+        manager.addKey(node.getId(),character);
+        //mezmu...
+
+        return new IBlocksPositions() {
+
+            Point2D blockPosition = manager.get(node.getId()).blockPosition;
+            Point2D keyPosition = manager.getPositionKey(node.getId(), character);
+            double sizeAfter = manager.get(node.getId()).size()*setting.getMinNodeWidth();
+            double size = sizeAfter-setting.getMinNodeWidth();
+
+            @Override
+            public Point2D getPositionBlock() {
+                return blockPosition;
+            }
+
+            @Override
+            public Point2D getPositionBlockKey() {
+                return keyPosition;
+            }
+
+            @Override
+            public double getWidthBefore() {
+                return size;
+            }
+
+            @Override
+            public double getWidthAfter() {
+                return sizeAfter;
+            }
+        };
     }
 
     public IBlocksPositions add(final Character character, final TrieKeysBlock block, final TrieNode node, Character parentKey) {
@@ -70,6 +103,16 @@ public class LayoutManager {
             @Override
             public Point2D getPositionBlockKey() {
                 return keyPosition;
+            }
+
+            @Override
+            public double getWidthBefore() {
+                return 0;
+            }
+
+            @Override
+            public double getWidthAfter() {
+                return setting.getMinNodeWidth();
             }
         };
     }

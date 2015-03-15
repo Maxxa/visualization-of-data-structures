@@ -28,13 +28,13 @@ public class BuilderInsertNode {
         this.currentCharacter = currentCharacter;
     }
 
-    public Transition getTransition(){
-        SequentialTransition pt=  new SequentialTransition();
+    public Transition getTransition() {
+        SequentialTransition pt = new SequentialTransition();
         pt.getChildren().addAll(
                 BuilderHelper.colorWordChar(keyWord),
                 moveBlock(),
-                new ParallelTransition(BuilderHelper.showBlock(newBlock, 0),showKey()),
-                BuilderHelper.colorKeyAtBlock(newBlock,currentCharacter)
+                new ParallelTransition(BuilderHelper.showBlock(newBlock, 0), showKey()),
+                BuilderHelper.colorKeyAtBlock(newBlock, currentCharacter)
         );
         return pt;
     }
@@ -48,10 +48,8 @@ public class BuilderInsertNode {
         return tt;
     }
 
-
-
     private Animation showKey() {
-        return FadesTransitionBuilder.getTransition(blockKey, Duration.seconds(1), 0,  1);
+        return FadesTransitionBuilder.getTransition(blockKey, Duration.seconds(1), 0, 1);
     }
 
 }

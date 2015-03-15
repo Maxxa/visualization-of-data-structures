@@ -10,4 +10,7 @@ public interface IBlocksPositions {
     Point2D getPositionBlock();
     Point2D getPositionBlockKey();
 
+    double getWidthBefore();
+    double getWidthAfter();
+
 }

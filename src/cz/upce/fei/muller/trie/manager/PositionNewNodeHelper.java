@@ -57,7 +57,7 @@ public class PositionNewNodeHelper extends AbstractPositionHelper {
                 double space = (spaceLeftRight - 2 * setting.getHorizontalSpace()) - width;
                 left.move(space / 2);
                 right.move(-space / 2);
-                moveCurrent(left.maxX - positionX);
+                moveCurrent(left.maxX - positionX-space/2);
             } else {
                 buildIntoItsSpace(width);
             }

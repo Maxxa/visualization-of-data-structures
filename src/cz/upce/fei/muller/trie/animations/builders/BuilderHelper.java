@@ -32,9 +32,13 @@ class BuilderHelper {
     }
 
     public static Transition colorKeyAtBlock(TrieKeysBlock block,Character character) {
+        return colorKeyAtBlock(block.getKey(character));
+    }
+
+    public static Transition colorKeyAtBlock(TrieKey key) {
         StrokeTransition st = StrokeTransitionBuilder.create()
                 .duration(Duration.seconds(2))
-                .shape(block.getKey(character).getRect())
+                .shape(key.getRect())
                 .fromValue(Color.TRANSPARENT)
                 .toValue(Color.RED)
                 .build();

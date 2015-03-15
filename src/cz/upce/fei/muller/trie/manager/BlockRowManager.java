@@ -74,4 +74,14 @@ public class BlockRowManager {
         blocksAtRow.put(id, rootBlock);
     }
 
+    public void addKey(Integer id, Character character) {
+        BlockManager blockManager = get(id);
+        int position = blockManager.calcPositions(character,setting.getMinNodeWidth());
+        PositionNewKeyHelper helper = new PositionNewKeyHelper(blockManager.leftBlock,
+                blockManager.rightBLock,setting,blockManager.blockPosition.getX(),
+                blockManager.blockPosition.getX()+(blockManager.size()+1)*setting.getMinNodeWidth()
+        );
+        helper.build();
+        blockManager.addCharacterInfo(character, position);
+    }
 }

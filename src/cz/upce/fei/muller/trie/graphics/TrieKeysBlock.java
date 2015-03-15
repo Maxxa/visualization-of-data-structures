@@ -44,12 +44,17 @@ public class TrieKeysBlock extends BranchNodeElement implements ITrieNodesSettin
         centerY.bind(Bindings.add(translateYProperty(), 1));
     }
 
-
     public void addKey(Character key,TrieKey node){
+        addKey(key,node,false);
+    }
+
+    public void addKey(Character key,TrieKey node,boolean noResize){
         if(!keys.containsKey(key)){
             keys.put(key,node);
             this.getChildren().add(node);
-            background.setWidth(keys.size()*KEY_WIDTH);
+            if(!noResize){
+                background.setWidth(keys.size()*KEY_WIDTH);
+            }
         }
     }
 

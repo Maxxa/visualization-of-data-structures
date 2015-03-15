@@ -114,4 +114,22 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> implements ITrieNod
         }
         
     }
+
+    public int calcPositions(Character character,double widthElement) {
+        int pos = size();
+        boolean first= true;
+        for (int i = getCharacterPosition(character); i <blocks.length ; i++)
+            if (blocks[i] != null && exist(blocks[i])) {
+                BlockKeyInfo blockKeyInfo = get(blocks[i]);
+                if (first) {
+                    pos = blockKeyInfo.positionAtBlock;
+                    first = false;
+                }
+                Point2D oldPoint = new Point2D(widthElement * blockKeyInfo.positionAtBlock,0);
+                Point2D newPoint = new Point2D(widthElement * (blockKeyInfo.positionAtBlock+1),0);
+                eventBus.post(new MoveKeyEvent(id,blocks[i],oldPoint,newPoint));
+                blockKeyInfo.positionAtBlock++;
+            }
+        return pos;
+    }
 }
