@@ -48,7 +48,7 @@ public class PositionNewNodeHelper extends AbstractPositionHelper {
         }
     }
 
-    private void buildIntoLeftAndRight() { //TODO
+    private void buildIntoLeftAndRight() {
         double width = currentBox.maxX - currentBox.minX;
         double spaceLeftRight = right.minX - left.maxX;
         if (width <= spaceLeftRight) { // mezi oba prvky se vejde(bez nutnych mezer)

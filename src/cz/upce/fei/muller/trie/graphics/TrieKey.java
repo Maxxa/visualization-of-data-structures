@@ -77,6 +77,8 @@ public class TrieKey extends Element implements ITrieNodesSetting,ConnectibleEle
 
     private void doBindings() {
         centerX.bind(Bindings.add(KEY_WIDTH / 2, translateXProperty()));
-        centerY.bind(Bindings.add(HEIGHT, translateYProperty()));
+//        centerY.bind(Bindings.add(HEIGHT, translateYProperty()));
     }
+
+
 }

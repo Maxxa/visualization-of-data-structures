@@ -1,5 +1,6 @@
 package cz.upce.fei.muller.trie.animations.builders;
 
+import cz.commons.graphics.LineElement;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.muller.trie.graphics.TrieKey;
 import cz.upce.fei.muller.trie.graphics.TrieKeysBlock;
@@ -15,17 +16,17 @@ public class BuilderInsertNode {
     private final TrieKeysBlock newBlock;
     private final TrieKey blockKey;
     private final TrieKey keyWord;
-    private final TrieKey parentKey;
     private final IBlocksPositions pointPosition;
     private final Character currentCharacter;
+    private final LineElement lineElement;
 
-    public BuilderInsertNode(TrieKeysBlock newBlock, TrieKey blockKey, TrieKey keyToColoring, TrieKey parentKey, IBlocksPositions pointPosition, Character currentCharacter) {
+    public BuilderInsertNode(TrieKeysBlock newBlock, TrieKey blockKey, TrieKey keyToColoring, IBlocksPositions pointPosition, Character currentCharacter, LineElement lineElement) {
         this.newBlock = newBlock;
         this.blockKey = blockKey;
         this.keyWord = keyToColoring;
-        this.parentKey = parentKey;
         this.pointPosition = pointPosition;
         this.currentCharacter = currentCharacter;
+        this.lineElement = lineElement;
     }
 
     public Transition getTransition() {
@@ -34,9 +35,14 @@ public class BuilderInsertNode {
                 BuilderHelper.colorWordChar(keyWord),
                 moveBlock(),
                 new ParallelTransition(BuilderHelper.showBlock(newBlock, 0), showKey()),
-                BuilderHelper.colorKeyAtBlock(newBlock, currentCharacter)
+                BuilderHelper.colorKeyAtBlock(newBlock, currentCharacter),
+                showLine()
         );
         return pt;
+    }
+
+    private Transition showLine() {
+        return FadesTransitionBuilder.getTransition(lineElement, Duration.seconds(1), 0, 1);
     }
 
     private Transition moveBlock() {

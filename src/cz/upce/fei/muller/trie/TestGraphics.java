@@ -6,14 +6,8 @@ import cz.upce.fei.muller.trie.graphics.ITrieNodesSetting;
 import cz.upce.fei.muller.trie.graphics.TrieKey;
 import cz.upce.fei.muller.trie.graphics.TrieKeysBlock;
 import cz.upce.fei.muller.trie.manager.TrieUtils;
-import javafx.animation.*;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
 /**
  * @author Vojtěch Müller
@@ -24,7 +18,7 @@ public class TestGraphics extends AbstractExample {
     @Override
     protected void initPane(Pane canvas) {
         Character[] upperCaseCharacters = TrieUtils.getUpperCaseCharacters();
-        TrieKeysBlock block = new TrieKeysBlock(1, new Point2D(10, 50));
+        TrieKeysBlock block = new TrieKeysBlock(1, new Point2D(30, 10));
         for (int i = 0; i < upperCaseCharacters.length; i++) {
             block.addKey(upperCaseCharacters[i], new TrieKey(String.valueOf(upperCaseCharacters[i]), i * ITrieNodesSetting.KEY_WIDTH));
         }
@@ -33,7 +27,7 @@ public class TestGraphics extends AbstractExample {
         block2.addKey('A', new TrieKey("A", 0));
         block2.addKey('K', new TrieKey("K", 20));
 
-        Transition t;
+      /*  Transition t;
 
         Timeline timeline = new Timeline();
         Duration duration = Duration.seconds(1);
@@ -46,11 +40,11 @@ public class TestGraphics extends AbstractExample {
 
         ParallelTransition pt = ParallelTransitionBuilder.create().build();
         pt.getChildren().addAll(timeline);
-
-        LineElement lineElement = new LineElement(block.getChildConnector(5), block2);
+*/
+        LineElement lineElement = new LineElement(block.getKey('A'), block2);
         canvas.getChildren().addAll(block, block2, lineElement);
-        pt.play();
-
+       // pt.play();
+/*
         final DoubleProperty a = new SimpleDoubleProperty(1);
         final DoubleProperty b = new ReadOnlyDoubleWrapper();
         Bindings.bindBidirectional(a,b);
@@ -73,7 +67,7 @@ public class TestGraphics extends AbstractExample {
         TrieKey te = new TrieKey("E",20);
         TrieKey tv = new TrieKey("V",30);
         canvas.getChildren().addAll(tl,te,tv);
-
+*/
     }
 
     @Override

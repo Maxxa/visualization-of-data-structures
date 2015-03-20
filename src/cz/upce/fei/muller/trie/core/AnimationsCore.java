@@ -2,11 +2,10 @@ package cz.upce.fei.muller.trie.core;
 
 import com.google.common.eventbus.Subscribe;
 import cz.commons.animation.AnimationControl;
+import cz.commons.graphics.LineElement;
+import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
-import cz.upce.fei.muller.trie.animations.builders.BuilderAnimMoveNode;
-import cz.upce.fei.muller.trie.animations.builders.BuilderGoToNode;
-import cz.upce.fei.muller.trie.animations.builders.BuilderInsertKeyToNode;
-import cz.upce.fei.muller.trie.animations.builders.BuilderInsertNode;
+import cz.upce.fei.muller.trie.animations.builders.*;
 import cz.upce.fei.muller.trie.events.BuildWord;
 import cz.upce.fei.muller.trie.events.EndAction;
 import cz.upce.fei.muller.trie.events.GoToNode;
@@ -20,6 +19,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 import java.util.*;
 
@@ -32,12 +32,13 @@ public class AnimationsCore {
     private final LayoutManager layoutManager;
 
     private List<TrieKey> currentWord = new ArrayList<>();
+    private List<TrieKey> coloredBlockKeys = new ArrayList<>();
     private Set<Shape> coloredShape = new HashSet<>();
     private IEndInitAnimation endAnimationHandler;
     private int counter = 0;
     private Transition lastTransition;
     private List<Transition> moveTransitions = new ArrayList<>();
-    private List<Transition> moveKeysTransitiosn = new ArrayList<>();
+    private List<Transition> moveKeysTransitions = new ArrayList<>();
 
     public AnimationsCore(AnimationControl animationControl, LayoutManager layoutManager) {
         this.animationControl = animationControl;
@@ -50,11 +51,18 @@ public class AnimationsCore {
         String s = word.getWord().getDescription();
         Pane canvas = layoutManager.getCanvas();
         Double beginX = (canvas.getWidth() / 2) - (s.length() * 15 / 2);
+        ParallelTransition pt = new ParallelTransition();
         for (int i = 0; i < s.length(); i++) {
             Character character = s.charAt(i);
             TrieKey k = new TrieKey(character.toString(), (int) (beginX + i * 15));
+            k.setVisible(false);
+            k.setOpacity(0);
             canvas.getChildren().add(k);
             currentWord.add(k);
+            pt.getChildren().add(FadesTransitionBuilder.getTransition(k, Duration.ONE, 0, 1));
+        }
+        if(!pt.getChildren().isEmpty()){
+            animationControl.getTransitions().add(pt);
         }
     }
 
@@ -63,6 +71,7 @@ public class AnimationsCore {
         System.out.println("________HANDLE %% GO TO NODE .... " + event);
         controlLastTransition();
         TrieKeysBlock graphicsBlock = layoutManager.get(event.getNode().getId()).getGraphicsBlock();
+        coloredBlockKeys.add(graphicsBlock.getKey(event.getCurrent()));
         animationControl.getTransitions().add(new BuilderGoToNode(event.getCurrent(), currentWord.get(counter), graphicsBlock).getTransition());
         coloredShape.add(graphicsBlock.getKey(event.getCurrent()).getRect());
         counter++;
@@ -88,9 +97,10 @@ public class AnimationsCore {
                 graphicsBlock = buildNewNode(event);
             }
         }
-        if (graphicsBlock != null)
+        if (graphicsBlock != null) {
             coloredShape.add(graphicsBlock.getKey(event.getCurrentCharacter()).getRect());
-
+            coloredBlockKeys.add(graphicsBlock.getKey(event.getCurrentCharacter()));
+        }
         counter++;
     }
 
@@ -101,11 +111,10 @@ public class AnimationsCore {
         trieKey.setVisible(false);
         trieKey.setOpacity(0);
         block.addKey(event.getCurrentCharacter(), trieKey,true);
-        //TODO add parent key, I DON'T why i need parent key???
         IBlocksPositions blocksPositions = layoutManager.add(event.getCurrentCharacter(), trieKey, event.getInsertedNode());
-        BuilderInsertKeyToNode builder = new BuilderInsertKeyToNode(moveKeysTransitiosn,block,trieKey,blocksPositions,currentWord.get(counter));
+        BuilderInsertKeyToNode builder = new BuilderInsertKeyToNode(moveKeysTransitions,block,trieKey,blocksPositions,currentWord.get(counter));
         lastTransition = builder.getTransition();
-        moveKeysTransitiosn.clear();
+        moveKeysTransitions.clear();
         return block;
     }
 
@@ -113,10 +122,19 @@ public class AnimationsCore {
         TrieKeysBlock block = new TrieKeysBlock(event.getInsertedNode().getId(), new Point2D(0, 0));
         TrieKey trieKey = new TrieKey(event.getCurrentCharacter().toString(), 0);
         block.addKey(event.getCurrentCharacter(), trieKey);
+
+        TrieKeysBlock parentBlock = layoutManager.get(event.getInsertedNode().getParent().getId()).getGraphicsBlock();
+        TrieKey parentKey = parentBlock.getKey(event.getParentKey());
+
+        LineElement lineElement = new LineElement(parentKey,block);
+        lineElement.setOpacity(0);
+        lineElement.setVisible(false);
+        layoutManager.getCanvas().getChildren().addAll(lineElement);
+
         IBlocksPositions pointPosition = layoutManager.add(event.getCurrentCharacter(), block, event.getInsertedNode(), event.getParentKey());
-        BuilderInsertNode builder = new BuilderInsertNode
-                (block, trieKey, currentWord.get(counter), layoutManager.getKey(event.getInsertedNode().getParent(), event.getParentKey()), pointPosition
-                        , event.getCurrentCharacter()
+
+        BuilderInsertNode builder = new BuilderInsertNode(
+                block, trieKey, currentWord.get(counter),pointPosition, event.getCurrentCharacter(),lineElement
                 );
         lastTransition = builder.getTransition();
         return block;
@@ -126,6 +144,10 @@ public class AnimationsCore {
     public void handleEndActionEvent(EndAction event) {
         System.out.println("________HANDLE %% END _" + event);
         controlLastTransition();
+        if(coloredBlockKeys.size()>0){
+            BuilderLastAnimationEvent builder = new BuilderLastAnimationEvent(currentWord,coloredBlockKeys);
+            animationControl.getTransitions().add(builder.getTransition());
+        }
         endAnimationHandler.endAnimation(animationControl.isMarkedAsStepping());
         if (!animationControl.isMarkedAsStepping()) {
             animationControl.playForward();
@@ -143,7 +165,7 @@ public class AnimationsCore {
     public void handleMoveKey(MoveKeyEvent event) {
         System.out.println("____HANDLE MOVE KEY____ " + event);
         TrieKeysBlock graphicsBlock = layoutManager.get(event.getBlockId()).getGraphicsBlock();
-        moveKeysTransitiosn.add(new BuilderAnimMoveNode(
+        moveKeysTransitions.add(new BuilderAnimMoveNode(
                 event.getOldPoint(), event.getNewPoint(), graphicsBlock.getKey(event.getCharacterAtBlock())
         ).getTranslateTransition());
     }
@@ -153,8 +175,9 @@ public class AnimationsCore {
         moveTransitions.clear();
         lastTransition = null;
         counter = 0;
-        moveKeysTransitiosn.clear();
+        moveKeysTransitions.clear();
         animationControl.clear();
+        coloredBlockKeys.clear();
     }
 
     private void controlLastTransition() {
@@ -175,7 +198,8 @@ public class AnimationsCore {
         layoutManager.getCanvas().getChildren().removeAll(currentWord);
         currentWord.clear();
         counter = 0;
-        moveKeysTransitiosn.clear();
+        moveKeysTransitions.clear();
+        coloredBlockKeys.clear();
         for (Iterator<Shape> it = coloredShape.iterator(); it.hasNext(); ) {
             Shape s = it.next();
             s.setStroke(Color.TRANSPARENT);
