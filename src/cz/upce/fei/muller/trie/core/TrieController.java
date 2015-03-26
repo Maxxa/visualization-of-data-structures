@@ -56,6 +56,7 @@ public class TrieController extends Controller{
             public void handle(ActionEvent actionEvent) {
                 PresetsDialog<Word, TriePresetItem> dlg = new PresetsDialog<>("Vzory", new TriePresets());
                 if (dlg.showDialog() == Dialog.Result.OK) {
+                        clear();
                         controlsContainer.getStepControls().setCheckBoxSelected(false);
                         controlsContainer.getAnimationsControls().setSliderValue(1);
                         loadPreset(dlg.getSelectedPresetItems(),new InsertExecute<Word>() {

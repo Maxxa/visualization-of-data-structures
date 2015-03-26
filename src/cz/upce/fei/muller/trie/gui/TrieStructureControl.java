@@ -53,7 +53,9 @@ public final class TrieStructureControl implements IStructureControls {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(5);
-        hBox.getChildren().addAll(label, text,debug, add, search, remove);
+        hBox.getChildren().addAll(label, text,
+//                debug,
+                add, search, remove);
         return hBox;
     }
 
