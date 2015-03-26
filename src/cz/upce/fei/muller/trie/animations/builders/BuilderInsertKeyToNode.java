@@ -50,7 +50,6 @@ public class BuilderInsertKeyToNode {
     }
 
     public Animation getMovingKeys() {
-        System.err.println(moveKeysTransitions.size());
         ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(moveKeysTransitions);
         return pt;

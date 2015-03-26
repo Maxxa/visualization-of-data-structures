@@ -6,10 +6,7 @@ import cz.commons.graphics.LineElement;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.muller.trie.animations.builders.*;
-import cz.upce.fei.muller.trie.events.BuildWord;
-import cz.upce.fei.muller.trie.events.EndAction;
-import cz.upce.fei.muller.trie.events.GoToNode;
-import cz.upce.fei.muller.trie.events.InsertEvent;
+import cz.upce.fei.muller.trie.events.*;
 import cz.upce.fei.muller.trie.graphics.TrieKey;
 import cz.upce.fei.muller.trie.graphics.TrieKeysBlock;
 import cz.upce.fei.muller.trie.manager.*;
@@ -22,11 +19,14 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author Vojtěch Müller
  */
 public class AnimationsCore {
+
+    private final static Logger logger = Logger.getLogger(String.valueOf(AnimationsCore.class));
 
     private final AnimationControl animationControl;
     private final LayoutManager layoutManager;
@@ -39,6 +39,7 @@ public class AnimationsCore {
     private Transition lastTransition;
     private List<Transition> moveTransitions = new ArrayList<>();
     private List<Transition> moveKeysTransitions = new ArrayList<>();
+    private RemoveHelper removedHelper;
 
     public AnimationsCore(AnimationControl animationControl, LayoutManager layoutManager) {
         this.animationControl = animationControl;
@@ -61,7 +62,7 @@ public class AnimationsCore {
             currentWord.add(k);
             pt.getChildren().add(FadesTransitionBuilder.getTransition(k, Duration.ONE, 0, 1));
         }
-        if(!pt.getChildren().isEmpty()){
+        if (!pt.getChildren().isEmpty()) {
             animationControl.getTransitions().add(pt);
         }
     }
@@ -69,12 +70,21 @@ public class AnimationsCore {
     @Subscribe
     public void handleGoToNodeEvent(GoToNode event) {
         System.out.println("________HANDLE %% GO TO NODE .... " + event);
+        try {
         controlLastTransition();
         TrieKeysBlock graphicsBlock = layoutManager.get(event.getNode().getId()).getGraphicsBlock();
-        coloredBlockKeys.add(graphicsBlock.getKey(event.getCurrent()));
-        animationControl.getTransitions().add(new BuilderGoToNode(event.getCurrent(), currentWord.get(counter), graphicsBlock).getTransition());
-        coloredShape.add(graphicsBlock.getKey(event.getCurrent()).getRect());
+        TrieKey key = graphicsBlock.getKey(event.getCurrent());
+        if(key!=null){
+            coloredBlockKeys.add(key);
+            coloredShape.add(graphicsBlock.getKey(event.getCurrent()).getRect());
+        }
+        animationControl.getTransitions().add(
+                new BuilderGoToNode(event.getCurrent(), currentWord.get(counter), graphicsBlock).getTransition());
         counter++;
+
+        }catch (Exception ex){
+            logger.info(ex.getMessage());
+        }
     }
 
     @Subscribe
@@ -104,15 +114,41 @@ public class AnimationsCore {
         counter++;
     }
 
+    @Subscribe
+    public void handleWordNotFound(WordNotFound event) {
+        System.out.println("________HANDLE %% WORD NOT FOUND.... " + event);
+        /** My be ??*/
+    }
+
+    @Subscribe
+    public void handleRemoveNodeKey(RemoveNodeKey event) {
+        System.out.println("________HANDLE %% remove.... " + event);
+        TrieKeysBlock block = layoutManager.get(event.getRemoved().getId()).getGraphicsBlock();
+
+        if (event.getRemoved().getParent() == null) {
+            return;
+        }
+        IBlocksPositions positions = layoutManager.remove(event.getRemoved(), event.getCharacter());
+        if (block.getSizeChild() == 1) {
+            lastTransition = new BuilderRemoveNode(positions, block)//TODO Removing line
+                    .getTransition();
+            removedHelper = new RemoveHelper(layoutManager.getCanvas(),block);
+        } else {
+            lastTransition = new BuilderRemoveNodeKey(positions, block, event.getCharacter(), moveKeysTransitions).getTransition();
+            removedHelper = new RemoveHelper(layoutManager.getCanvas(),block, event.getCharacter());
+            moveKeysTransitions.clear();
+        }
+    }
+
     private TrieKeysBlock buildNewKeyToNode(InsertEvent event) {
         ElementInfo elementInfo = layoutManager.get(event.getInsertedNode().getId());
         TrieKeysBlock block = elementInfo.getGraphicsBlock();
         TrieKey trieKey = new TrieKey(event.getCurrentCharacter().toString(), 0);
         trieKey.setVisible(false);
         trieKey.setOpacity(0);
-        block.addKey(event.getCurrentCharacter(), trieKey,true);
+        block.addKey(event.getCurrentCharacter(), trieKey, true);
         IBlocksPositions blocksPositions = layoutManager.add(event.getCurrentCharacter(), trieKey, event.getInsertedNode());
-        BuilderInsertKeyToNode builder = new BuilderInsertKeyToNode(moveKeysTransitions,block,trieKey,blocksPositions,currentWord.get(counter));
+        BuilderInsertKeyToNode builder = new BuilderInsertKeyToNode(moveKeysTransitions, block, trieKey, blocksPositions, currentWord.get(counter));
         lastTransition = builder.getTransition();
         moveKeysTransitions.clear();
         return block;
@@ -126,7 +162,7 @@ public class AnimationsCore {
         TrieKeysBlock parentBlock = layoutManager.get(event.getInsertedNode().getParent().getId()).getGraphicsBlock();
         TrieKey parentKey = parentBlock.getKey(event.getParentKey());
 
-        LineElement lineElement = new LineElement(parentKey,block);
+        LineElement lineElement = new LineElement(parentKey, block);
         lineElement.setOpacity(0);
         lineElement.setVisible(false);
         layoutManager.getCanvas().getChildren().addAll(lineElement);
@@ -134,8 +170,8 @@ public class AnimationsCore {
         IBlocksPositions pointPosition = layoutManager.add(event.getCurrentCharacter(), block, event.getInsertedNode(), event.getParentKey());
 
         BuilderInsertNode builder = new BuilderInsertNode(
-                block, trieKey, currentWord.get(counter),pointPosition, event.getCurrentCharacter(),lineElement
-                );
+                block, trieKey, currentWord.get(counter), pointPosition, event.getCurrentCharacter(), lineElement
+        );
         lastTransition = builder.getTransition();
         return block;
     }
@@ -144,8 +180,8 @@ public class AnimationsCore {
     public void handleEndActionEvent(EndAction event) {
         System.out.println("________HANDLE %% END _" + event);
         controlLastTransition();
-        if(coloredBlockKeys.size()>0){
-            BuilderLastAnimationEvent builder = new BuilderLastAnimationEvent(currentWord,coloredBlockKeys);
+        if (coloredBlockKeys.size() > 0) {
+            BuilderLastAnimationEvent builder = new BuilderLastAnimationEvent(currentWord, coloredBlockKeys);
             animationControl.getTransitions().add(builder.getTransition());
         }
         endAnimationHandler.endAnimation(animationControl.isMarkedAsStepping());
@@ -178,6 +214,7 @@ public class AnimationsCore {
         moveKeysTransitions.clear();
         animationControl.clear();
         coloredBlockKeys.clear();
+        controlRemoving();
     }
 
     private void controlLastTransition() {
@@ -191,7 +228,6 @@ public class AnimationsCore {
             animationControl.getTransitions().add(lastTransition);
             lastTransition = null;
         }
-
     }
 
     public void clearBeforeNewAction() {
@@ -200,15 +236,22 @@ public class AnimationsCore {
         counter = 0;
         moveKeysTransitions.clear();
         coloredBlockKeys.clear();
+        controlRemoving();
         for (Iterator<Shape> it = coloredShape.iterator(); it.hasNext(); ) {
             Shape s = it.next();
             s.setStroke(Color.TRANSPARENT);
         }
     }
 
+    private void controlRemoving() {
+        if(removedHelper!=null){
+            removedHelper.remove();
+            removedHelper=null;
+        }
+    }
+
     public void setEndAnimationHandler(IEndInitAnimation endAnimationHandler) {
         this.endAnimationHandler = endAnimationHandler;
     }
-
 
 }

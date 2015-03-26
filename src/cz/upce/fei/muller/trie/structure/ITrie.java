@@ -11,9 +11,9 @@ public interface ITrie<T> {
 
     void add(T inserted);
 
-    T remove(String key);
+    T remove(T key);
 
-    List<T> get(String name);
+    List<T> get(T key);
 
     Integer getCount();
 

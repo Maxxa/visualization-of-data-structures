@@ -36,6 +36,9 @@ class BuilderHelper {
     }
 
     public static Transition colorKeyAtBlock(TrieKey key) {
+        if(key==null){
+            return new ParallelTransition();
+        }
         StrokeTransition st = StrokeTransitionBuilder.create()
                 .duration(Duration.seconds(2))
                 .shape(key.getRect())
@@ -46,6 +49,10 @@ class BuilderHelper {
     }
 
     public static Transition showBlock(TrieKeysBlock block,int beginSize) {
+        return resizeBlock(block,beginSize,beginSize+ITrieNodesSetting.KEY_WIDTH);
+    }
+
+    public static Transition resizeBlock(TrieKeysBlock block,int beginSize,int endSize) {
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().addAll(
                 new KeyFrame(
@@ -54,7 +61,7 @@ class BuilderHelper {
                 ),
                 new KeyFrame(
                         Duration.seconds(1)
-                        , new KeyValue(block.widthProperty(), beginSize+ITrieNodesSetting.KEY_WIDTH)
+                        , new KeyValue(block.widthProperty(), endSize)
                 )
         );
         return new ParallelTransition(timeline);

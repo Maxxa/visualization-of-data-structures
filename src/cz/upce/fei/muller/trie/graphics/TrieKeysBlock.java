@@ -92,8 +92,15 @@ public class TrieKeysBlock extends BranchNodeElement implements ITrieNodesSettin
         return backgroundPattern;
     }
 
+    public int getSizeChild(){
+        return keys.size();
+    }
 
     public DoubleProperty widthProperty() {
         return background.widthProperty();
+    }
+
+    public void removeKey(Character character) {
+        keys.remove(character);
     }
 }

@@ -7,7 +7,7 @@ import javafx.geometry.Point2D;
 /**
  * @author Vojtěch Müller
  */
-class BlockManager extends AbstractTrieManager<BlockKeyInfo> implements ITrieNodesSetting{
+class BlockManager extends AbstractTrieManager<BlockKeyInfo> implements ITrieNodesSetting {
 
     private final Integer id;
 
@@ -62,22 +62,22 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> implements ITrieNod
     /**
      * Moving all right block at row
      */
-    protected void moveToLeft(double diffX,double minimalSpace) {
+    protected void moveToLeft(double diffX, double minimalSpace) {
         move(diffX, false);
         if (leftBlock != null) {
-            double dif = blockPosition.getX() -(leftBlock.blockPosition.getX() + leftBlock.getWidth());
+            double dif = blockPosition.getX() - (leftBlock.blockPosition.getX() + leftBlock.getWidth());
             if (dif < minimalSpace) {
                 leftBlock.moveToLeft(dif - minimalSpace, minimalSpace);
             }
         }
     }
 
-    protected void moveToRight(double diffX,double minimalSpace) {
+    protected void moveToRight(double diffX, double minimalSpace) {
         move(diffX, false);
         if (rightBLock != null) {
-            double dif = rightBLock.blockPosition.getX()-(blockPosition.getX()+getWidth());
-            if(dif < minimalSpace){
-                rightBLock.moveToRight(minimalSpace-dif,minimalSpace);
+            double dif = rightBLock.blockPosition.getX() - (blockPosition.getX() + getWidth());
+            if (dif < minimalSpace) {
+                rightBLock.moveToRight(minimalSpace - dif, minimalSpace);
             }
 
         }
@@ -102,34 +102,49 @@ class BlockManager extends AbstractTrieManager<BlockKeyInfo> implements ITrieNod
         blocks[getCharacterPosition(key)] = key;
     }
 
-    public double getWidth(){
-        return size()*KEY_WIDTH;
+    public double getWidth() {
+        return size() * KEY_WIDTH;
     }
 
     public void clear() {
         for (int i = 0; i < blocks.length; i++) {
-            if(exist(blocks[i])){
-                get(blocks[i]).childBlockId=null;
+            if (exist(blocks[i])) {
+                get(blocks[i]).childBlockId = null;
             }
         }
-        
+
     }
 
-    public int calcPositions(Character character,double widthElement) {
+    public int calcPositions(Character character, double widthElement) {
         int pos = size();
-        boolean first= true;
-        for (int i = getCharacterPosition(character); i <blocks.length ; i++)
+        boolean first = true;
+        for (int i = getCharacterPosition(character); i < blocks.length; i++)
             if (blocks[i] != null && exist(blocks[i])) {
                 BlockKeyInfo blockKeyInfo = get(blocks[i]);
                 if (first) {
                     pos = blockKeyInfo.positionAtBlock;
                     first = false;
                 }
-                Point2D oldPoint = new Point2D(widthElement * blockKeyInfo.positionAtBlock,0);
-                Point2D newPoint = new Point2D(widthElement * (blockKeyInfo.positionAtBlock+1),0);
-                eventBus.post(new MoveKeyEvent(id,blocks[i],oldPoint,newPoint));
+                Point2D oldPoint = new Point2D(widthElement * blockKeyInfo.positionAtBlock, 0);
+                Point2D newPoint = new Point2D(widthElement * (blockKeyInfo.positionAtBlock + 1), 0);
+                eventBus.post(new MoveKeyEvent(id, blocks[i], oldPoint, newPoint));
                 blockKeyInfo.positionAtBlock++;
             }
         return pos;
+    }
+
+    public void removeKey(Character character, double widthElement) {
+        int charPos = getCharacterPosition(character);
+        blocks[charPos] = null;
+        remove(character);
+        for (int i = charPos + 1; i < blocks.length; i++) {
+            if (blocks[i] != null && exist(blocks[i])) {
+                BlockKeyInfo blockKeyInfo = get(blocks[i]);
+                Point2D oldPoint = new Point2D(widthElement * blockKeyInfo.positionAtBlock, 0);
+                Point2D newPoint = new Point2D(widthElement * (blockKeyInfo.positionAtBlock - 1), 0);
+                eventBus.post(new MoveKeyEvent(id, blocks[i], oldPoint, newPoint));
+                blockKeyInfo.positionAtBlock--;
+            }
+        }
     }
 }

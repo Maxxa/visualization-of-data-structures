@@ -32,20 +32,22 @@ public class LayoutManager {
         initFirstRow(builder);
     }
 
-    /** Vlozi klic do bloku */
+    /**
+     * Vlozi klic do bloku
+     */
     public IBlocksPositions add(final Character character, TrieKey key, final TrieNode node) {
         ElementInfo elementInfo = elementsInfo.get(node.getId());
 
         final BlockRowManager manager = rowsManagers.get(elementInfo.indexRow);
-        manager.addKey(node.getId(),character);
+        manager.addKey(node.getId(), character);
         //mezmu...
 
         return new IBlocksPositions() {
 
             Point2D blockPosition = manager.get(node.getId()).blockPosition;
             Point2D keyPosition = manager.getPositionKey(node.getId(), character);
-            double sizeAfter = manager.get(node.getId()).size()*setting.getMinNodeWidth();
-            double size = sizeAfter-setting.getMinNodeWidth();
+            double sizeAfter = manager.get(node.getId()).size() * setting.getMinNodeWidth();
+            double size = sizeAfter - setting.getMinNodeWidth();
 
             @Override
             public Point2D getPositionBlock() {
@@ -79,10 +81,10 @@ public class LayoutManager {
         if (infoParent.indexRow + 1 >= rowsManagers.size()) { //add new row
             rowManager = new BlockRowManager(setting);
             rowsManagers.add(rowManager);
-            rowManager.createFirstBlock(node.getId(), rowsManagers.get(infoParent.indexRow).getPositionKey(idParent,parentKey), character);
+            rowManager.createFirstBlock(node.getId(), rowsManagers.get(infoParent.indexRow).getPositionKey(idParent, parentKey), character);
         } else { // add to exist row
             rowManager = rowsManagers.get(infoParent.indexRow + 1);
-            rowManager.insertToRow(node.getId(),rowsManagers.get(infoParent.indexRow).get(idParent),character,parentKey);
+            rowManager.insertToRow(node.getId(), rowsManagers.get(infoParent.indexRow).get(idParent), character, parentKey);
         }
 
         addBlockInfo(node.getId(), infoParent.indexRow + 1, block);
@@ -93,7 +95,7 @@ public class LayoutManager {
         return new IBlocksPositions() {
 
             Point2D blockPosition = rowManager.get(node.getId()).blockPosition;
-            Point2D keyPosition =   rowManager.getPositionKey(node.getId(), character);
+            Point2D keyPosition = rowManager.getPositionKey(node.getId(), character);
 
             @Override
             public Point2D getPositionBlock() {
@@ -185,5 +187,40 @@ public class LayoutManager {
 
     public TrieKey getKey(TrieNode parent, Character key) {
         return get(parent.getId()).getGraphicsBlock().getKey(key);
+    }
+
+    public IBlocksPositions remove(final TrieNode removed, final Character character) {
+        ElementInfo info = get(removed.getId());
+        final BlockRowManager rowManager = rowsManagers.get(info.indexRow);
+        final BlockManager blockManager = rowManager.get(removed.getId());
+        IBlocksPositions result = new IBlocksPositions() {
+
+            Point2D blockPosition = blockManager.blockPosition;
+            Point2D keyPosition = rowManager.getPositionKey(removed.getId(), character);
+            double sizeBefore = getSetting().getMinNodeWidth()*blockManager.size();
+            double sizeAfter = getSetting().getMinNodeWidth()*(blockManager.size()-1);
+
+            @Override
+            public Point2D getPositionBlock() {
+                return blockPosition;
+            }
+
+            @Override
+            public Point2D getPositionBlockKey() {
+                return keyPosition;
+            }
+
+            @Override
+            public double getWidthBefore() {
+                return sizeBefore;
+            }
+
+            @Override
+            public double getWidthAfter() {
+                return sizeAfter;
+            }
+        };
+        rowManager.remove(removed.getId(), character);
+        return result;
     }
 }

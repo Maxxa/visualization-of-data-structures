@@ -96,36 +96,41 @@ public class TrieController extends Controller{
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                clearBeforeNewAction();
-                Word newWord = new Word(controls.getTextValue());
-                animationControl.clear();
-                controls.disableButtons();
+                Word newWord = prepareBeforeNewAction(controls);
                 trie.add(newWord);
             }
         };
     }
 
+    private Word prepareBeforeNewAction(TrieStructureControl controls) {
+        clearBeforeNewAction();
+        Word newWord = new Word(controls.getTextValue());
+        animationControl.clear();
+        controls.disableButtons();
+        return newWord;
+    }
+
     private void clearBeforeNewAction() {
         System.err.println("NEW ACTION---------------------------------------");
         animationCore.clearBeforeNewAction();
-
-
     }
 
-    private EventHandler<ActionEvent> getSearchHandler(TrieStructureControl controls) {
+    private EventHandler<ActionEvent> getSearchHandler(final TrieStructureControl controls) {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
+                Word newWord = prepareBeforeNewAction(controls);
+                trie.get(newWord);
             }
         };
     }
 
-    private EventHandler<ActionEvent> getRemoveHandler(TrieStructureControl controls) {
+    private EventHandler<ActionEvent> getRemoveHandler(final TrieStructureControl controls) {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
+                Word newWord = prepareBeforeNewAction(controls);
+                trie.remove(newWord);
             }
         };
     }

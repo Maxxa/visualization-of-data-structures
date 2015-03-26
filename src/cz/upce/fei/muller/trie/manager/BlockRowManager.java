@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class BlockRowManager {
 
+
     private final LayoutManagerSetting setting;
     private Map<Integer, BlockManager> blocksAtRow = new HashMap<>();
 
@@ -83,5 +84,21 @@ public class BlockRowManager {
         );
         helper.build();
         blockManager.addCharacterInfo(character, position);
+    }
+
+    public void remove(Integer id, Character character) {
+        BlockManager manager = get(id);
+
+        if(manager.size()==1){
+           if(manager.leftBlock!=null){
+               manager.leftBlock=manager.rightBLock;
+           }
+           if(manager.rightBLock!=null){
+               manager.rightBLock=manager.leftBlock;
+           }
+           blocksAtRow.remove(id);
+        }else {
+            manager.removeKey(character,setting.getMinNodeWidth());
+        }
     }
 }
