@@ -45,7 +45,7 @@ public class Trie<T extends Description> implements ITrie<T> {
             temp = (TrieNode) temp.next.get(current);
         }
 
-        if(temp.object.equals(T.EMPTY)){
+        if(temp.object==null||temp.object.equals(T.EMPTY)){
             temp.object=inserted;
             count++;
         }
@@ -108,7 +108,7 @@ public class Trie<T extends Description> implements ITrie<T> {
             return (T) T.EMPTY;
         }
 
-        previous.object = null;
+        previous.object = T.EMPTY;
         int i = value.getDescription().length();
         while (previous != null) {
             i--;
