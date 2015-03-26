@@ -19,7 +19,7 @@ public class TwoDTreeSceneInfo implements SceneInfo {
 
     @Override
     public String getTitle() {
-        return "Znakový strom";
+        return "2D Strom";
     }
 
     @Override

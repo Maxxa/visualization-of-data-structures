@@ -4,9 +4,7 @@ import cz.commons.graphics.IGraphics;
 import cz.upce.fei.common.gui.AbstractApplication;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.common.gui.utils.SceneInfo;
-import cz.upce.fei.muller.trie.core.TrieController;
-import cz.upce.fei.muller.trie.gui.FirstRowBuilder;
-import cz.upce.fei.muller.trie.manager.LayoutManager;
+import cz.upce.fei.muller.TwoDTree.core.TwoDTreeController;
 import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
 import javafx.stage.Stage;
@@ -15,7 +13,7 @@ import javafx.stage.Stage;
 /**
  * @author Vojtěch Müller
  */
-public class TwoDTreeGUI extends AbstractApplication<TrieController> {
+public class TwoDTreeGUI extends AbstractApplication<TwoDTreeController> {
 
     public static final int CANVAS_WIDTH = (int) (1000* IGraphics.PLATFORM_SCALE);
     public static final int CANVAS_HEIGHT = (int) (450* IGraphics.PLATFORM_SCALE);
@@ -29,8 +27,11 @@ public class TwoDTreeGUI extends AbstractApplication<TrieController> {
     }
 
     @Override
-    protected TrieController getController() {
-        return new TrieController(controlsContainer,new LayoutManager(getCanvas(), TrieLayoutSetting.getSetting(),new FirstRowBuilder()));
+    protected TwoDTreeController getController() {
+        return new TwoDTreeController(
+                controlsContainer
+//                ,new LayoutManager(getCanvas(), TrieLayoutSetting.getSetting(),new FirstRowBuilder())
+        );
     }
 
     @Override

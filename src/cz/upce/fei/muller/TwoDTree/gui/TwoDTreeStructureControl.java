@@ -31,11 +31,11 @@ public final class TwoDTreeStructureControl implements IStructureControls {
 
     private void build() {
         x.setAlignment(Pos.CENTER);
-        x.setMaxWidth(75);
+        x.setMaxWidth(50);
         x.addEventFilter(KeyEvent.KEY_TYPED, new NumberValidationHandler(10));
 
         y.setAlignment(Pos.CENTER);
-        y.setMaxWidth(75);
+        y.setMaxWidth(50);
         y.addEventFilter(KeyEvent.KEY_TYPED, new NumberValidationHandler(10));
     }
 
