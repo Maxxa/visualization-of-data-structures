@@ -8,10 +8,12 @@ import cz.upce.fei.muller.trie.structure.TrieNode;
 public class RemoveNodeKey {
     private final TrieNode removed;
     private final char character;
+    private Character parentKey;
 
-    public RemoveNodeKey(TrieNode removed, char character) {
+    public RemoveNodeKey(TrieNode removed, char character, Character parentKey) {
         this.removed = removed;
         this.character = character;
+        this.parentKey = parentKey;
     }
 
     public TrieNode getRemoved() {
@@ -20,5 +22,9 @@ public class RemoveNodeKey {
 
     public char getCharacter() {
         return character;
+    }
+
+    public Character getParentKey() {
+        return parentKey;
     }
 }

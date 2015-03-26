@@ -115,12 +115,14 @@ public class Trie<T extends Description> implements ITrie<T> {
             if (!previous.next.isEmpty()) {
                 break;
             }
-            if (previous.object != null) {
+            if (previous.object!=T.EMPTY && previous.object!=null) {
                 break;
             }
+            if(i<0)break;
             previous = previous.parent;
             Character character = value.getDescription().charAt(i);
-            eventBus.post(new RemoveNodeKey(previous,character));
+            Character parentKey = i>0?value.getDescription().charAt(i-1):null;
+            eventBus.post(new RemoveNodeKey(previous,character, parentKey));
             previous.next.remove(character);
         }
         eventBus.post(new EndAction(previous));

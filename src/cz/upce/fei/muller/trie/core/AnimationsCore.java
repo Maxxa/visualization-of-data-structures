@@ -31,6 +31,7 @@ public class AnimationsCore {
     private final AnimationControl animationControl;
     private final LayoutManager layoutManager;
 
+    private List<List<TrieKey>> wordsToRemove = new ArrayList<>();
     private List<TrieKey> currentWord = new ArrayList<>();
     private List<TrieKey> coloredBlockKeys = new ArrayList<>();
     private Set<Shape> coloredShape = new HashSet<>();
@@ -70,7 +71,6 @@ public class AnimationsCore {
     @Subscribe
     public void handleGoToNodeEvent(GoToNode event) {
         System.out.println("________HANDLE %% GO TO NODE .... " + event);
-        try {
         controlLastTransition();
         TrieKeysBlock graphicsBlock = layoutManager.get(event.getNode().getId()).getGraphicsBlock();
         TrieKey key = graphicsBlock.getKey(event.getCurrent());
@@ -81,10 +81,6 @@ public class AnimationsCore {
         animationControl.getTransitions().add(
                 new BuilderGoToNode(event.getCurrent(), currentWord.get(counter), graphicsBlock).getTransition());
         counter++;
-
-        }catch (Exception ex){
-            logger.info(ex.getMessage());
-        }
     }
 
     @Subscribe
@@ -124,13 +120,15 @@ public class AnimationsCore {
     public void handleRemoveNodeKey(RemoveNodeKey event) {
         System.out.println("________HANDLE %% remove.... " + event);
         TrieKeysBlock block = layoutManager.get(event.getRemoved().getId()).getGraphicsBlock();
-
+        controlLastTransition();
         if (event.getRemoved().getParent() == null) {
             return;
         }
-        IBlocksPositions positions = layoutManager.remove(event.getRemoved(), event.getCharacter());
+        IBlocksPositions positions = layoutManager.remove(event.getRemoved(), event.getCharacter(),event.getParentKey());
         if (block.getSizeChild() == 1) {
-            lastTransition = new BuilderRemoveNode(positions, block)//TODO Removing line
+            TrieKeysBlock parentBlock= layoutManager.get(event.getRemoved().getParent().getId()).getGraphicsBlock();
+            TrieKey key = parentBlock.getKey(event.getParentKey());
+            lastTransition = new BuilderRemoveNode(positions, block,event.getCharacter(),key.getLine())
                     .getTransition();
             removedHelper = new RemoveHelper(layoutManager.getCanvas(),block);
         } else {
@@ -151,6 +149,7 @@ public class AnimationsCore {
         BuilderInsertKeyToNode builder = new BuilderInsertKeyToNode(moveKeysTransitions, block, trieKey, blocksPositions, currentWord.get(counter));
         lastTransition = builder.getTransition();
         moveKeysTransitions.clear();
+
         return block;
     }
 
@@ -165,6 +164,7 @@ public class AnimationsCore {
         LineElement lineElement = new LineElement(parentKey, block);
         lineElement.setOpacity(0);
         lineElement.setVisible(false);
+        parentKey.setLine(lineElement);
         layoutManager.getCanvas().getChildren().addAll(lineElement);
 
         IBlocksPositions pointPosition = layoutManager.add(event.getCurrentCharacter(), block, event.getInsertedNode(), event.getParentKey());
@@ -188,6 +188,10 @@ public class AnimationsCore {
         if (!animationControl.isMarkedAsStepping()) {
             animationControl.playForward();
         }
+        coloredBlockKeys.clear();
+        wordsToRemove.add(currentWord);
+        currentWord.clear();
+        counter=0;
     }
 
     @Subscribe
@@ -231,7 +235,11 @@ public class AnimationsCore {
     }
 
     public void clearBeforeNewAction() {
-        layoutManager.getCanvas().getChildren().removeAll(currentWord);
+        for (List<TrieKey> word : wordsToRemove){
+            layoutManager.getCanvas().getChildren().removeAll(word);
+            word.clear();
+        }
+        wordsToRemove.clear();
         currentWord.clear();
         counter = 0;
         moveKeysTransitions.clear();

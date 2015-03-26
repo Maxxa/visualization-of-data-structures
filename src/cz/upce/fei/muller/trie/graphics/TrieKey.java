@@ -81,4 +81,11 @@ public class TrieKey extends Element implements ITrieNodesSetting,ConnectibleEle
     }
 
 
+    public LineElement getLine() {
+        return lineToChilds;
+    }
+
+    public void setLine(LineElement line) {
+        this.lineToChilds = line;
+    }
 }

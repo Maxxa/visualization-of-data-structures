@@ -40,8 +40,6 @@ public class LayoutManager {
 
         final BlockRowManager manager = rowsManagers.get(elementInfo.indexRow);
         manager.addKey(node.getId(), character);
-        //mezmu...
-
         return new IBlocksPositions() {
 
             Point2D blockPosition = manager.get(node.getId()).blockPosition;
@@ -189,10 +187,11 @@ public class LayoutManager {
         return get(parent.getId()).getGraphicsBlock().getKey(key);
     }
 
-    public IBlocksPositions remove(final TrieNode removed, final Character character) {
+    public IBlocksPositions remove(final TrieNode removed, final Character character, Character parentKey) {
         ElementInfo info = get(removed.getId());
         final BlockRowManager rowManager = rowsManagers.get(info.indexRow);
         final BlockManager blockManager = rowManager.get(removed.getId());
+        //TODO remove must fixin all
         IBlocksPositions result = new IBlocksPositions() {
 
             Point2D blockPosition = blockManager.blockPosition;
@@ -220,7 +219,22 @@ public class LayoutManager {
                 return sizeAfter;
             }
         };
-        rowManager.remove(removed.getId(), character);
+
+        if(rowManager.remove(removed.getId(), character)){
+            elementsInfo.remove(removed.getId());
+            ElementInfo parent = get(removed.getParent().getId());
+            BlockRowManager parentRowManager = rowsManagers.get(parent.indexRow);
+            Integer id = removed.getParent().getId();
+            if(id==idRoot){
+                id=CUSTOM_ROOT;
+            }
+            BlockManager parentBlock = parentRowManager.get(id);
+            parentBlock.get(parentKey).childBlockId=null;
+
+        }
+        if(rowManager.size()==0){
+            rowsManagers.remove(rowManager);
+        }
         return result;
     }
 }
