@@ -84,8 +84,6 @@ public final class TrieStructureControl implements IStructureControls {
             remove.setDisable(isDisable);
     }
 
-
-
     public void addInsertHandler(EventHandler<ActionEvent> handler) {
         add.setOnAction(handler);
     }
