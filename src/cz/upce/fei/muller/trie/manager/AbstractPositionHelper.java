@@ -59,14 +59,12 @@ public abstract class AbstractPositionHelper implements ITrieNodesSetting {
         Box(double minX, double maxX) {
             this.minX = minX;
             this.maxX = maxX;
-            System.out.println("current min: "+minX+" max: "+maxX);
         }
 
         Box(BlockManager manager) {
             this.manager = manager;
             minX = manager.blockPosition.getX();
             maxX = minX + manager.size() * setting.getMinNodeWidth();
-            System.out.println("min: "+minX+" max: "+maxX);
         }
 
         public void move(double diff) {

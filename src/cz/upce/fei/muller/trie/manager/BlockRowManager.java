@@ -56,7 +56,6 @@ public class BlockRowManager {
         helper.build();
 
         addBlock(id, helper.getPoint());
-        System.out.println(helper.getPoint());
         // propojeni na radku...
         if (helper.existLeft()) {
             leftBlock.rightBLock = blocksAtRow.get(id);

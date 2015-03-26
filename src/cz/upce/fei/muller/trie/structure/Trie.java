@@ -102,7 +102,7 @@ public class Trie<T extends Description> implements ITrie<T> {
 
         T returnedValue = (T) previous.object;
 
-        if(!returnedValue.getDescription().equals(value.getDescription())){
+        if(returnedValue==null || !returnedValue.getDescription().equals(value.getDescription())){
             eventBus.post(new WordNotFound(value.getDescription()));
             eventBus.post(new EndAction(previous));
             return (T) T.EMPTY;

@@ -19,14 +19,11 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * @author Vojtěch Müller
  */
 public class AnimationsCore {
-
-    private final static Logger logger = Logger.getLogger(String.valueOf(AnimationsCore.class));
 
     private final AnimationControl animationControl;
     private final LayoutManager layoutManager;
@@ -70,7 +67,6 @@ public class AnimationsCore {
 
     @Subscribe
     public void handleGoToNodeEvent(GoToNode event) {
-        System.out.println("________HANDLE %% GO TO NODE .... " + event);
         controlLastTransition();
         TrieKeysBlock graphicsBlock = layoutManager.get(event.getNode().getId()).getGraphicsBlock();
         TrieKey key = graphicsBlock.getKey(event.getCurrent());
@@ -85,7 +81,6 @@ public class AnimationsCore {
 
     @Subscribe
     public void handleInsertEvent(InsertEvent event) {
-        System.out.println("________HANDLE %% INSERT .... " + event);
         controlLastTransition();
         TrieKeysBlock graphicsBlock;
         if (event.getInsertedNode().getParent() == null) {
@@ -112,13 +107,11 @@ public class AnimationsCore {
 
     @Subscribe
     public void handleWordNotFound(WordNotFound event) {
-        System.out.println("________HANDLE %% WORD NOT FOUND.... " + event);
         /** My be ??*/
     }
 
     @Subscribe
     public void handleRemoveNodeKey(RemoveNodeKey event) {
-        System.out.println("________HANDLE %% remove.... " + event);
         TrieKeysBlock block = layoutManager.get(event.getRemoved().getId()).getGraphicsBlock();
         controlLastTransition();
         if (event.getRemoved().getParent() == null) {
@@ -178,7 +171,6 @@ public class AnimationsCore {
 
     @Subscribe
     public void handleEndActionEvent(EndAction event) {
-        System.out.println("________HANDLE %% END _" + event);
         controlLastTransition();
         if (coloredBlockKeys.size() > 0) {
             BuilderLastAnimationEvent builder = new BuilderLastAnimationEvent(currentWord, coloredBlockKeys);
@@ -196,14 +188,12 @@ public class AnimationsCore {
 
     @Subscribe
     public void handleMoveNodeActionEvent(MoveBlockEvent event) {
-        System.out.println("________HANDLE %% MOVE BLOCK _" + event);
         BuilderAnimMoveNode builder = new BuilderAnimMoveNode(event.getOldPoint(), event.getNewPoint(), layoutManager.get(event.getId()).getGraphicsBlock());
         moveTransitions.add(builder.getAnimation());
     }
 
     @Subscribe
     public void handleMoveKey(MoveKeyEvent event) {
-        System.out.println("____HANDLE MOVE KEY____ " + event);
         TrieKeysBlock graphicsBlock = layoutManager.get(event.getBlockId()).getGraphicsBlock();
         moveKeysTransitions.add(new BuilderAnimMoveNode(
                 event.getOldPoint(), event.getNewPoint(), graphicsBlock.getKey(event.getCharacterAtBlock())
@@ -212,13 +202,9 @@ public class AnimationsCore {
 
     public void clear() {
         layoutManager.clear();
-        moveTransitions.clear();
         lastTransition = null;
-        counter = 0;
-        moveKeysTransitions.clear();
         animationControl.clear();
-        coloredBlockKeys.clear();
-        controlRemoving();
+        clearBeforeNewAction();
     }
 
     private void controlLastTransition() {
@@ -239,6 +225,7 @@ public class AnimationsCore {
             layoutManager.getCanvas().getChildren().removeAll(word);
             word.clear();
         }
+        moveTransitions.clear();
         wordsToRemove.clear();
         currentWord.clear();
         counter = 0;

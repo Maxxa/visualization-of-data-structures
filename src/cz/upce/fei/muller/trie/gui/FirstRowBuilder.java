@@ -20,8 +20,6 @@ public class FirstRowBuilder implements IRootBuilder {
         for (int i = 0; i < characters.length; i++) {
             root.addKey(characters[i], new TrieKey(String.valueOf(characters[i]), i * ITrieNodesSetting.KEY_WIDTH));
         }
-        TrieKey one = root.getKey('a');
-        System.out.println(one);
         return root;
     }
 

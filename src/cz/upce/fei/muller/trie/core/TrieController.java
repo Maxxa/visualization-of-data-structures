@@ -36,7 +36,6 @@ public class TrieController extends Controller{
         eventBus.register(animationCore);
         initStructureHandlers();
         initEndAnimation();
-        toolBarControlsContainer.getAnimationsControls().setSliderValue(10);
     }
 
     @Override
@@ -112,7 +111,6 @@ public class TrieController extends Controller{
     }
 
     private void clearBeforeNewAction() {
-        System.err.println("NEW ACTION---------------------------------------");
         animationCore.clearBeforeNewAction();
     }
 
