@@ -88,4 +88,8 @@ public class TrieKey extends Element implements ITrieNodesSetting,ConnectibleEle
     public void setLine(LineElement line) {
         this.lineToChilds = line;
     }
+
+    public Label getTextLabel() {
+        return textLabel;
+    }
 }

@@ -46,6 +46,8 @@ public class Trie<T extends Description> implements ITrie<T> {
         }
 
         if(temp.object==null||temp.object.equals(T.EMPTY)){
+            eventBus.post(new FinallyAddWord(temp.getParent(),inserted.getDescription().charAt(inserted.getDescription().length()-1)));
+
             temp.object=inserted;
             count++;
         }

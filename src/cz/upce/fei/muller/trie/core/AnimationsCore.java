@@ -2,6 +2,7 @@ package cz.upce.fei.muller.trie.core;
 
 import com.google.common.eventbus.Subscribe;
 import cz.commons.animation.AnimationControl;
+import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.LineElement;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
@@ -12,6 +13,7 @@ import cz.upce.fei.muller.trie.graphics.TrieKeysBlock;
 import cz.upce.fei.muller.trie.manager.*;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Transition;
+import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -70,7 +72,7 @@ public class AnimationsCore {
         controlLastTransition();
         TrieKeysBlock graphicsBlock = layoutManager.get(event.getNode().getId()).getGraphicsBlock();
         TrieKey key = graphicsBlock.getKey(event.getCurrent());
-        if(key!=null){
+        if (key != null) {
             coloredBlockKeys.add(key);
             coloredShape.add(graphicsBlock.getKey(event.getCurrent()).getRect());
         }
@@ -111,22 +113,44 @@ public class AnimationsCore {
     }
 
     @Subscribe
+    public void handleInsertWordToLastNode(FinallyAddWord event) {
+        final TrieKey key = layoutManager.get(event.getWordNode().getId()).getGraphicsBlock().getKey(event.getCharacter());
+        if (lastTransition == null) {
+            lastTransition = new ParallelTransition();
+        }
+        lastTransition.setOnFinished(new StepEventHandler() {
+            @Override
+            protected void handleForward(ActionEvent actionEvent) {
+                key.getTextLabel().setStyle("-fx-font-weight: bold;");
+                key.getTextLabel().setTextFill(Color.BLUE);
+
+            }
+
+            @Override
+            protected void handleBack(ActionEvent actionEvent) {
+                key.getTextLabel().setStyle("-fx-font-weight: normal;");
+                key.getTextLabel().setTextFill(Color.BLACK);
+            }
+        });
+    }
+
+    @Subscribe
     public void handleRemoveNodeKey(RemoveNodeKey event) {
         TrieKeysBlock block = layoutManager.get(event.getRemoved().getId()).getGraphicsBlock();
         controlLastTransition();
         if (event.getRemoved().getParent() == null) {
             return;
         }
-        IBlocksPositions positions = layoutManager.remove(event.getRemoved(), event.getCharacter(),event.getParentKey());
+        IBlocksPositions positions = layoutManager.remove(event.getRemoved(), event.getCharacter(), event.getParentKey());
         if (block.getSizeChild() == 1) {
-            TrieKeysBlock parentBlock= layoutManager.get(event.getRemoved().getParent().getId()).getGraphicsBlock();
+            TrieKeysBlock parentBlock = layoutManager.get(event.getRemoved().getParent().getId()).getGraphicsBlock();
             TrieKey key = parentBlock.getKey(event.getParentKey());
-            lastTransition = new BuilderRemoveNode(positions, block,event.getCharacter(),key.getLine())
+            lastTransition = new BuilderRemoveNode(positions, block, event.getCharacter(), key.getLine())
                     .getTransition();
-            removedHelper = new RemoveHelper(layoutManager.getCanvas(),block);
+            removedHelper = new RemoveHelper(layoutManager.getCanvas(), block);
         } else {
             lastTransition = new BuilderRemoveNodeKey(positions, block, event.getCharacter(), moveKeysTransitions).getTransition();
-            removedHelper = new RemoveHelper(layoutManager.getCanvas(),block, event.getCharacter());
+            removedHelper = new RemoveHelper(layoutManager.getCanvas(), block, event.getCharacter());
             moveKeysTransitions.clear();
         }
     }
@@ -183,7 +207,7 @@ public class AnimationsCore {
         coloredBlockKeys.clear();
         wordsToRemove.add(currentWord);
         currentWord.clear();
-        counter=0;
+        counter = 0;
     }
 
     @Subscribe
@@ -221,7 +245,7 @@ public class AnimationsCore {
     }
 
     public void clearBeforeNewAction() {
-        for (List<TrieKey> word : wordsToRemove){
+        for (List<TrieKey> word : wordsToRemove) {
             layoutManager.getCanvas().getChildren().removeAll(word);
             word.clear();
         }
@@ -239,9 +263,9 @@ public class AnimationsCore {
     }
 
     private void controlRemoving() {
-        if(removedHelper!=null){
+        if (removedHelper != null) {
             removedHelper.remove();
-            removedHelper=null;
+            removedHelper = null;
         }
     }
 
