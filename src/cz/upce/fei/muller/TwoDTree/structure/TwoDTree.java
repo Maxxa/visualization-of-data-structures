@@ -78,14 +78,6 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         return tmp;
     }
 
-    //    void obnov() {
-//        ArrayList<T> prvky = new ArrayList<>();
-//        Iterator<T> it = iterator();
-//        while (it.hasNext()) {
-//            prvky.add(it.next());
-//        }
-//        create(prvky);
-//      }
     private void generateNewNodeEvent(Node newNode, Node parent,boolean isLeftChild){
         eventBus.post(parent==null?new CreateRootEvent(newNode.value):new InsertNodeEvent(newNode.value,parent.value,isLeftChild));
     }
@@ -177,6 +169,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     }
 
     public T odeber(T co) {
+        //TODO
         ArrayList<T> prvky = new ArrayList<>();
         Iterator<T> it = iterator();
         T pom = null;
@@ -194,6 +187,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     }
 
     public T najdi(int x, int y) {
+        //TODO
         boolean rovina = true;
         Node<T> pom = root;
         boolean doprava;
@@ -215,7 +209,6 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             return null;
         }
     }
-
 
     @Override
     public T getRoot() {
@@ -249,6 +242,13 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     @Override
     public boolean isEmpty() {
         return count==0;
+    }
+
+    @Override
+    public void clear() {
+        actual=null;
+        root=null;
+        count=0;
     }
 
 }
