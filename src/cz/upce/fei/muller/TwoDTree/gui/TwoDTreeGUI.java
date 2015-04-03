@@ -31,7 +31,8 @@ public class TwoDTreeGUI extends AbstractApplication<TwoDTreeController> {
         return new TwoDTreeController(
                 controlsContainer
 //                ,new LayoutManager(getCanvas(), TrieLayoutSetting.getSetting(),new FirstRowBuilder())
-        );
+                ,
+                animationCore);
     }
 
     @Override

@@ -7,6 +7,7 @@ import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
+import cz.upce.fei.muller.TwoDTree.animations.RemovePreparation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
@@ -24,7 +25,7 @@ public class AnimationsHandlersCore {
     private IEndInitAnimation endInitAnimation;
 
     private Point2D creatingPoint;
-//    private RemovePreparation removePreparation;
+    private RemovePreparation removePreparation;
 
     private List<TranslateTransition> moveParentsElements = new ArrayList<>();
 
@@ -88,17 +89,17 @@ public class AnimationsHandlersCore {
 //        this.moveParentsElements.add(new BuilderAnimMoveNode(event.getOldPoint(),event.getNewPoint(),getNode(event.getElementId())).getTranslateTransition());
     }
 
-//    public RemovePreparation getRemovePreparation() {
-//        return removePreparation;
-//    }
+    public RemovePreparation getRemovePreparation() {
+        return removePreparation;
+    }
+
+    public void setEndAnimationHandler(IEndInitAnimation handler) {
+        this.endInitAnimation = handler;
+    }
 //
-//    public void setEndAnimationHandler(IEndInitAnimation handler) {
-//        this.endInitAnimation = handler;
-//    }
-//
-//    public void setRemovePreparation(RemovePreparation removePreparation) {
-//        this.removePreparation = removePreparation;
-//    }
+    public void setRemovePreparation(RemovePreparation removePreparation) {
+        this.removePreparation = removePreparation;
+    }
 
 //    private BinaryHeapNode getNode(Integer elementId){
 //        return (BinaryHeapNode) manager.getElementInfo(elementId).getElement();

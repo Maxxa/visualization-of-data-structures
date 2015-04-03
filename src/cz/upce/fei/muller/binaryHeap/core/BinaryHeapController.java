@@ -82,7 +82,6 @@ public class BinaryHeapController extends Controller {
                 heap.removeRoot();
             }
         });
-
     }
 
     @Override

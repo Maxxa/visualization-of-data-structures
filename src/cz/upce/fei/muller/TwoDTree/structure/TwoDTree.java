@@ -25,7 +25,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     }
 
     @Override
-    public void create(ArrayList<T> nodes) {
+    public void create(List<T> nodes) {
         count = nodes.size();
         if (nodes.size() == 1) {
             root = new Node(nodes.get(0));
@@ -165,7 +165,8 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     }
 
-    public void pridej(T co) {
+    public void insert(T co) {
+        //TODO
         ArrayList<T> prvky = new ArrayList<>();
         Iterator<T> it = iterator();
         while (it.hasNext()) {
@@ -243,6 +244,11 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         }
         actual = actual.left;
         return actual.value;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return count==0;
     }
 
 }

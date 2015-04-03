@@ -1,13 +1,13 @@
 package cz.upce.fei.muller.TwoDTree.structure;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Vojtěch Müller
  */
 public interface ITwoDTree<T extends ICoordinate> {
 
-    void create(ArrayList<T> nodes);
+    void create(List<T> nodes);
 
     ICoordinate getRoot();
 
@@ -16,4 +16,8 @@ public interface ITwoDTree<T extends ICoordinate> {
     ICoordinate getRight();
 
     ICoordinate getLeft();
+
+    boolean isEmpty();
+
+    void clear();
 }
