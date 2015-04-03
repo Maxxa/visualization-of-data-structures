@@ -1,9 +1,11 @@
 package cz.upce.fei.muller.TwoDTree.structure;
 
+import cz.upce.fei.common.core.AbstractStructureElement;
+
 /**
-* @author Vojtěch Müller
-*/
-class Node<T extends ICoordinate> {
+ * @author Vojtěch Müller
+ */
+class Node<T extends AbstractStructureElement & ICoordinate> {
 
     public Node left, right;
     T value;
