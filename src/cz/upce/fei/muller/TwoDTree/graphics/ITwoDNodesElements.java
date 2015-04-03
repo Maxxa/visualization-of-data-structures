@@ -8,9 +8,9 @@ import javafx.scene.paint.Color;
  */
 public interface ITwoDNodesElements {
 
-    public static final Integer WIDTH = (int) (60 * IGraphics.PLATFORM_SCALE);
+    public static final Integer WIDTH = (int) (30 * IGraphics.PLATFORM_SCALE);
 
-    public static final Integer HEIGHT = (int) (20 * IGraphics.PLATFORM_SCALE);
+    public static final Integer HEIGHT = (int) (38 * IGraphics.PLATFORM_SCALE);
 
     public static final Color BG_COLOR = Color.LIGHTYELLOW;
 

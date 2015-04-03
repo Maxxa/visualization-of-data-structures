@@ -127,6 +127,7 @@ public class TwoDTreeController extends Controller {
             public void handle(ActionEvent actionEvent) {
                 final PresetsDialog<Coordinate, TwoDTreePresetItem> dlg = new PresetsDialog<>("Vzory", new TwoDTreePresets());
                 if (dlg.showDialog() == Dialog.Result.OK) {
+                    clear();
                     controlsContainer.getStepControls().setCheckBoxSelected(false);
                     controlsContainer.getAnimationsControls().setSliderValue(1);
                     loadPreset(dlg.getSelectedPresetItems(), new InsertExecute<Coordinate>() {

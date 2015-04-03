@@ -5,10 +5,10 @@ import cz.upce.fei.muller.TwoDTree.structure.Coordinate;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -35,7 +35,6 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
 
         VBox labelsBox = new VBox();
         labelsBox.getChildren().addAll(initLabel());
-        labelsBox.setStyle("-fx-padding: 5px;");
         StackPane sp = new StackPane();
         sp.getChildren().addAll(backgroundRectangle, labelsBox);
         doParentBindings();
@@ -49,17 +48,16 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
         backgroundRectangle.setFill(BG_COLOR);
     }
 
-    private HBox initLabel() {
+    private Node initLabel() {
         String x = String.valueOf(node.getX());
         String y = String.valueOf(node.getY());
+        instalTooltip(x, y);
         labelX.setText(x);
         labelY.setText(y);
         Double size = Double.valueOf((WIDTH / 2));
         labelX.setMinWidth(size);
         labelY.setMinWidth(size);
-        this.tooltip = new Tooltip(String.format("[ %s ; %s ]", x, y));
-        Tooltip.install(this, tooltip);
-        HBox hBox = new HBox();
+        VBox hBox = new VBox();
         hBox.setAlignment(Pos.CENTER);
         labelX.setAlignment(Pos.CENTER);
         labelY.setAlignment(Pos.CENTER);
@@ -67,11 +65,16 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
         hBox.setStyle("-fx-font-weight: bold;");
 
         hBox.getChildren().addAll(
-                labelX, new Separator(Orientation.VERTICAL), labelY
+                labelX, new Separator(Orientation.HORIZONTAL), labelY
         );
 
         return hBox;
 
+    }
+
+    private void instalTooltip(String x, String y) {
+        this.tooltip = new Tooltip(String.format("[ %s ; %s ]", x, y));
+        Tooltip.install(this, tooltip);
     }
 
     @Override

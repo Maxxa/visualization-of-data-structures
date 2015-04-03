@@ -13,7 +13,7 @@ public class CreateRootEvent extends AbstractEvent {
         super(element);
     }
 
-    public Coordinate getHeapNode(){
+    public Coordinate getNode(){
         return (Coordinate) element;
     }
 

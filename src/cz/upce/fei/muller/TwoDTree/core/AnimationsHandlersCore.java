@@ -2,12 +2,21 @@ package cz.upce.fei.muller.TwoDTree.core;
 
 import com.google.common.eventbus.Subscribe;
 import cz.commons.animation.AnimationControl;
+import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
+import cz.upce.fei.muller.TwoDTree.animations.InsertPreparation;
 import cz.upce.fei.muller.TwoDTree.animations.RemovePreparation;
+import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAddElement;
+import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAnimMoveNode;
+import cz.upce.fei.muller.TwoDTree.events.CreateRootEvent;
+import cz.upce.fei.muller.TwoDTree.events.InsertNodeEvent;
+import cz.upce.fei.muller.TwoDTree.events.LastActionEvent;
+import cz.upce.fei.muller.TwoDTree.graphics.ITwoDNodesElements;
+import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
@@ -36,32 +45,33 @@ public class AnimationsHandlersCore {
         manager.getDepthManager().addEventConsumer(this);
     }
 
-//    @Subscribe
-//    public void handleEndEvent(LastEvent event) {
-//        initMovingTransition();
-//        endInitAnimation.endAnimation(animationControl.isMarkedAsStepping());
-//        if(!animationControl.isMarkedAsStepping()){
-//            animationControl.playForward();
-//        }
-//    }
+    @Subscribe
+    public void handleEndEvent(LastActionEvent event) {
+        System.out.println("-----------END BUILDING ANIMATION-----------");
+        initMovingTransition();
+        endInitAnimation.endAnimation(animationControl.isMarkedAsStepping());
+        if(!animationControl.isMarkedAsStepping()){
+            animationControl.playForward();
+        }
+    }
 
-//    @Subscribe
-//    public void handleCreateRootEvent(CreateRootEvent event) {
-//        BinaryHeapNode newNode = new BinaryHeapNode(event.getHeapNode(), 0, 0);
-//        newNode.setOpacity(0);
-//        manager.addElement(newNode, null, false);
-//        manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT));
-//        insertTransition(new BuilderAddElement(manager.getNodePosition(event.getHeapNode().getId()), creatingPoint, getNode(event.getHeapNode().getId())));
-//    }
+    @Subscribe
+    public void handleCreateRootEvent(CreateRootEvent event) {
+        TwoDGraphicsNode newNode = new TwoDGraphicsNode(event.getNode(), 0, 0);
+        newNode.setOpacity(0);
+        manager.addElement(newNode, null, false);
+        manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT));
+        insertTransition(new BuilderAddElement(manager.getNodePosition(event.getNode().getId()), creatingPoint, getNode(event.getNode().getId())));
+    }
 
-//    @Subscribe
-//    public void handleInsertNodeEvent(InsertNodeEvent event) {
-//        manager.addElement(new BinaryHeapNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY()), event.getParentNode().getId(), event.isLeftChild());
-//        BinaryHeapNode newNode = getNode(event.getNewNode().getId());
-//        manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT));
-//        InsertPreparation preparation = new InsertPreparation(event,manager,creatingPoint);
-//        insertTransition(preparation.getBuilder());
-//    }
+    @Subscribe
+    public void handleInsertNodeEvent(InsertNodeEvent event) {
+        manager.addElement(new TwoDGraphicsNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY()), event.getParentNode().getId(), event.isLeftChild());
+        TwoDGraphicsNode newNode = getNode(event.getNewNode().getId());
+        manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT));
+        InsertPreparation preparation = new InsertPreparation(event,manager,creatingPoint);
+        insertTransition(preparation.getBuilder());
+    }
 
 //    @Subscribe
 //    public void handleRemoveRootEvent(RemoveRootEvent event) {
@@ -86,7 +96,7 @@ public class AnimationsHandlersCore {
 
     @Subscribe
     public void handleMoveElementNodeEvent(MoveElementEvent event) {
-//        this.moveParentsElements.add(new BuilderAnimMoveNode(event.getOldPoint(),event.getNewPoint(),getNode(event.getElementId())).getTranslateTransition());
+        this.moveParentsElements.add(new BuilderAnimMoveNode(event.getOldPoint(),event.getNewPoint(),getNode(event.getElementId())).getTranslateTransition());
     }
 
     public RemovePreparation getRemovePreparation() {
@@ -101,16 +111,16 @@ public class AnimationsHandlersCore {
         this.removePreparation = removePreparation;
     }
 
-//    private BinaryHeapNode getNode(Integer elementId){
-//        return (BinaryHeapNode) manager.getElementInfo(elementId).getElement();
-//    }
+    private TwoDGraphicsNode getNode(Integer elementId){
+        return (TwoDGraphicsNode) manager.getElementInfo(elementId).getElement();
+    }
 
     private void insertTransition(IAnimationBuilder creator){
         animationControl.getTransitions().add(creator.getAnimation());
     }
 
     private void initCreatingPoint() {
-//        creatingPoint = new Point2D(manager.getCanvas().getWidth()/2- IBinaryNodesElements.WIDTH/2,0);
+        creatingPoint = new Point2D(manager.getCanvas().getWidth()/2- ITwoDNodesElements.WIDTH/2,0);
     }
 
     private void initMovingTransition() {
@@ -124,7 +134,7 @@ public class AnimationsHandlersCore {
 
     public void clear(){
         moveParentsElements.clear();
-//        removePreparation = null;
+        removePreparation = null;
         animationControl.clear();
     }
 }

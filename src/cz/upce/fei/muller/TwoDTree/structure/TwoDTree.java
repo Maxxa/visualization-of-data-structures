@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.muller.TwoDTree.events.CreateRootEvent;
 import cz.upce.fei.muller.TwoDTree.events.InsertNodeEvent;
+import cz.upce.fei.muller.TwoDTree.events.LastActionEvent;
 
 import java.io.Serializable;
 import java.util.*;
@@ -31,6 +32,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             root = new Node(nodes.get(0));
             generateNewNodeEvent(root, null,false);
             actual = root;
+            eventBus.post(new LastActionEvent());
             return;
         }
         Collections.sort(nodes, new ComparatorX());
@@ -50,6 +52,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         } else {
             root.right = null;
         }
+        eventBus.post(new LastActionEvent());
     }
 
     private Node createRecursive(List<T> nodes,Node parent,Boolean leftSubTree, Boolean isSortingX) {

@@ -34,4 +34,9 @@ public class Coordinate extends AbstractStructureElement implements ICoordinate 
     public void setY(Integer y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[%d,%d]]",x,y);
+    }
 }
