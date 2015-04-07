@@ -9,6 +9,8 @@ public interface ITwoDTree<T extends ICoordinate> {
 
     void create(List<T> nodes);
 
+    void insert(T insertedValue);
+
     ICoordinate getRoot();
 
     int getCount();

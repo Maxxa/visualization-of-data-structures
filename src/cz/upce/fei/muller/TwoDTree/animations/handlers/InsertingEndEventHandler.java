@@ -12,11 +12,13 @@ import javafx.event.ActionEvent;
  */
 public class InsertingEndEventHandler extends StepEventHandler {
 
+    private final boolean isLeft;
     private TwoDGraphicsNode parent;
     private TwoDGraphicsNode newElement;
     private LineElement line;
 
     public InsertingEndEventHandler(WorkBinaryNodeInfo currentInformation, boolean isLeft) {
+        this.isLeft = isLeft;
         parent= currentInformation.getParent().getElement();
         newElement = currentInformation.get().getElement();
         line = parent.getChildLine(isLeft? NodePosition.LEFT:NodePosition.RIGHT);
@@ -29,7 +31,7 @@ public class InsertingEndEventHandler extends StepEventHandler {
 
     @Override
     protected void handleBack(ActionEvent actionEvent) {
-        line.setEnd(parent);
+        line.setEnd(!isLeft ? parent.getLeftChildConnector():parent.getRightChildConnector());
         line.setOpacity(0);
         line.setVisible(false);
     }

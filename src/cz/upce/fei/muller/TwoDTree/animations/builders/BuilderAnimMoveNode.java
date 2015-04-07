@@ -53,7 +53,7 @@ public class BuilderAnimMoveNode implements IAnimationBuilder {
         return null;
     }
 
-    protected FadeTransition getFadeTransition() {
+    protected Transition getFadeTransition() {
         return FadesTransitionBuilder.getTransition(element, Duration.millis(500), 0 , 1);
 
     }

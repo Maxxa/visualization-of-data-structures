@@ -161,7 +161,7 @@ public class TwoDTreeController extends Controller {
     private void clear() {
         tree.clear();
         manager.clear();
-        animationCore.setRemovePreparation(null);
+        animationCore.clear();
     }
 
     private void clearBeforeNewAction() {

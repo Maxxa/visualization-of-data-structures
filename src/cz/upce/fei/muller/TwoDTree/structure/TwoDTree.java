@@ -5,6 +5,7 @@ import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.muller.TwoDTree.events.CreateRootEvent;
 import cz.upce.fei.muller.TwoDTree.events.InsertNodeEvent;
 import cz.upce.fei.muller.TwoDTree.events.LastActionEvent;
+import cz.upce.fei.muller.TwoDTree.events.MoveToChild;
 
 import java.io.Serializable;
 import java.util.*;
@@ -30,7 +31,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         count = nodes.size();
         if (nodes.size() == 1) {
             root = new Node(nodes.get(0));
-            generateNewNodeEvent(root, null,false);
+            generateNewNodeEvent(root, null, false);
             actual = root;
             eventBus.post(new LastActionEvent());
             return;
@@ -40,49 +41,49 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         List<T> rightNodes = nodes.subList(median + 1, nodes.size());
         List<T> leftNodes = nodes.subList(0, median);
         root = new Node(nodes.get(median));
-        generateNewNodeEvent(root, null,false);
+        generateNewNodeEvent(root, null, false);
         actual = root;
         if (!leftNodes.isEmpty()) {
-            root.left = createRecursive(leftNodes, root,true, false);
+            root.left = createRecursive(leftNodes, root, true, false);
         } else {
             root.left = null;
         }
         if (!rightNodes.isEmpty()) {
-            root.right = createRecursive(rightNodes, root,false, false);
+            root.right = createRecursive(rightNodes, root, false, false);
         } else {
             root.right = null;
         }
         eventBus.post(new LastActionEvent());
     }
 
-    private Node createRecursive(List<T> nodes,Node parent,Boolean leftSubTree, Boolean isSortingX) {
+    private Node createRecursive(List<T> nodes, Node parent, Boolean leftSubTree, Boolean isSortingX) {
         Node tmp;
         if (nodes.size() == 1) {
-            tmp = new Node(nodes.get(0));
-            generateNewNodeEvent(tmp, parent,leftSubTree);
+            tmp= buildNewNode(nodes.get(0));
+            generateNewNodeEvent(tmp, parent, leftSubTree);
             return tmp;
         }
         Collections.sort(nodes, isSortingX ? new ComparatorX() : new ComparatorY());
         int median = nodes.size() / 2;
         List<T> rightNodes = nodes.subList(median + 1, nodes.size());
         List<T> leftNodes = nodes.subList(0, median);
-        tmp = new Node(nodes.get(median));
-        generateNewNodeEvent(tmp, parent,leftSubTree);
+        tmp= buildNewNode(nodes.get(median));
+        generateNewNodeEvent(tmp, parent, leftSubTree);
         if (!leftNodes.isEmpty()) {
-            tmp.left = createRecursive(leftNodes,tmp,true, !isSortingX);
+            tmp.left = createRecursive(leftNodes, tmp, true, !isSortingX);
         } else {
             tmp.left = null;
         }
         if (!rightNodes.isEmpty()) {
-            tmp.right = createRecursive(rightNodes,tmp,false, !isSortingX);
+            tmp.right = createRecursive(rightNodes, tmp, false, !isSortingX);
         } else {
             tmp.right = null;
         }
         return tmp;
     }
 
-    private void generateNewNodeEvent(Node newNode, Node parent,boolean isLeftChild){
-        eventBus.post(parent==null?new CreateRootEvent(newNode.value):new InsertNodeEvent(newNode.value,parent.value,isLeftChild));
+    private void generateNewNodeEvent(Node newNode, Node parent, boolean isLeftChild) {
+        eventBus.post(parent == null ? new CreateRootEvent(newNode.value) : new InsertNodeEvent(newNode.value, parent.value, isLeftChild));
     }
 
     @Override
@@ -160,15 +161,46 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     }
 
-    public void insert(T co) {
-        //TODO
-        ArrayList<T> prvky = new ArrayList<>();
-        Iterator<T> it = iterator();
-        while (it.hasNext()) {
-            prvky.add(it.next());
+    @Override
+    public void insert(T insertedValue) {
+        if (isEmpty()) {
+            root = buildNewNode(insertedValue);
+            generateNewNodeEvent(root, null, false);
+            actual = root;
+            eventBus.post(new LastActionEvent());
+            return;
         }
-        prvky.add(co);
-        create(prvky);
+        actual = root;
+        boolean compareX = true;
+        boolean isLeft;
+        Node newNode= buildNewNode(insertedValue);
+
+        while (true) {
+            int value = compareX ? actual.value.getX() : actual.value.getY();
+            isLeft = (compareX ? insertedValue.getX() : insertedValue.getY()) < value;
+            System.out.println("MOVE TO CHILD");
+            eventBus.post(new MoveToChild(newNode.value,actual.value,compareX));
+            Node node = isLeft ? actual.left : actual.right;
+            if (node == null) {
+                node = newNode;
+                generateNewNodeEvent(node, actual, isLeft);
+                if(isLeft){
+                    actual.left=node;
+                }else{
+                    actual.right=node;
+                }
+                eventBus.post(new LastActionEvent());
+                break;
+            }
+            compareX=!compareX;
+            actual=node;
+        }
+    }
+
+    private Node buildNewNode(T insertedValue) {
+        Node node = new Node(insertedValue);
+        count++;
+        return node;
     }
 
     public T odeber(T co) {
@@ -244,14 +276,14 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     @Override
     public boolean isEmpty() {
-        return count==0;
+        return count == 0;
     }
 
     @Override
     public void clear() {
-        actual=null;
-        root=null;
-        count=0;
+        actual = null;
+        root = null;
+        count = 0;
     }
 
 }
