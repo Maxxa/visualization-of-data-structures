@@ -48,8 +48,8 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
     private void initBackground(boolean isSearchBlock) {
         backgroundRectangle = new Rectangle(WIDTH, HEIGHT);
         backgroundRectangle.setStrokeType(StrokeType.INSIDE);
-        backgroundRectangle.setStroke(isSearchBlock?BG_COLOR_SEARCH:BG_STROKE);
-        backgroundRectangle.setFill(BG_COLOR);
+        backgroundRectangle.setStroke(BG_STROKE);
+        backgroundRectangle.setFill(isSearchBlock?BG_COLOR_SEARCH:BG_COLOR);
     }
 
     private Node initLabel() {

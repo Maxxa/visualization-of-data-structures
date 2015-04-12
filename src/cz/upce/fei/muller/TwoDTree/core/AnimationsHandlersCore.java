@@ -127,7 +127,8 @@ public class AnimationsHandlersCore {
     @Subscribe
     public void handleStartFinding(StartFindingEvent event){
         System.out.println("Start FINDING node...");
-        findingNode = new TwoDGraphicsNode(event.getCoordinate(),(int)creatingPoint.getX(),(int)creatingPoint.getY());
+        findingNode = new TwoDGraphicsNode(event.getCoordinate(),(int)creatingPoint.getX(),(int)creatingPoint.getY(),true);
+        findingNode.setOpacity(0);
     }
 
     @Subscribe
