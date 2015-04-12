@@ -65,10 +65,8 @@ public class TwoDTreeController extends Controller {
                 Integer parsedValueX;
                 Integer parsedValueY;
                 try {
-                    String x = controls.getX();
-                    String y = controls.getY();
-                    parsedValueX = Integer.parseInt(x.trim());
-                    parsedValueY = Integer.parseInt(y.trim());
+                    parsedValueX = Integer.parseInt(controls.getX());
+                    parsedValueY = Integer.parseInt(controls.getY());
                 } catch (NumberFormatException e) {
                     Dialog.showError("Chyba", "Zadáno neplatné číslo.");
                     return;
@@ -86,12 +84,13 @@ public class TwoDTreeController extends Controller {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+
                 if (showDialogIsEmpty()) {
                     return;
                 }
                 controls.disableButtons();
                 clearBeforeNewAction();
-                //TODO How to remove??
+                // TODO remove
             }
         };
     }
@@ -105,7 +104,16 @@ public class TwoDTreeController extends Controller {
                 }
                 controls.disableButtons();
                 clearBeforeNewAction();
-                //TODO How search??
+                Integer parsedValueX;
+                Integer parsedValueY;
+                try {
+                    parsedValueX = Integer.parseInt(controls.getX());
+                    parsedValueY = Integer.parseInt(controls.getY());
+                } catch (NumberFormatException e) {
+                    Dialog.showError("Chyba", "Zadáno neplatné číslo.");
+                    return;
+                }
+                tree.find(parsedValueX,parsedValueY);
             }
         };
     }

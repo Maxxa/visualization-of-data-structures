@@ -14,6 +14,8 @@ public interface ITwoDNodesElements {
 
     public static final Color BG_COLOR = Color.LIGHTYELLOW;
 
+    public static final Color BG_COLOR_SEARCH = Color.YELLOW;
+
     public static final Color BG_STROKE = Color.BLACK;
 
 }

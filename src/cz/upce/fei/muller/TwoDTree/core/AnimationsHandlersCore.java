@@ -6,6 +6,7 @@ import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
+import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.muller.TwoDTree.animations.FindPlacePreparation;
@@ -13,15 +14,14 @@ import cz.upce.fei.muller.TwoDTree.animations.InsertPreparation;
 import cz.upce.fei.muller.TwoDTree.animations.RemovePreparation;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAnimMoveNode;
-import cz.upce.fei.muller.TwoDTree.events.CreateRootEvent;
-import cz.upce.fei.muller.TwoDTree.events.InsertNodeEvent;
-import cz.upce.fei.muller.TwoDTree.events.LastActionEvent;
-import cz.upce.fei.muller.TwoDTree.events.MoveToChild;
+import cz.upce.fei.muller.TwoDTree.events.*;
 import cz.upce.fei.muller.TwoDTree.graphics.ITwoDNodesElements;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
+import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +39,7 @@ public class AnimationsHandlersCore {
     private RemovePreparation removePreparation;
     private FindPlacePreparation findPlacePreparator;
     private List<TranslateTransition> moveParentsElements = new ArrayList<>();
+    private TwoDGraphicsNode findingNode;
 
     public AnimationsHandlersCore(AnimationControl animationControl, ITreeLayoutManager manager) {
         this.animationControl = animationControl;
@@ -51,10 +52,20 @@ public class AnimationsHandlersCore {
     public void handleEndEvent(LastActionEvent event) {
         System.out.println("-----------END BUILDING ANIMATION-----------");
         initMovingTransition();
+
+        if(findPlacePreparator!=null && findingNode!=null){
+            buildFindEnd();
+        }
+
         endInitAnimation.endAnimation(animationControl.isMarkedAsStepping());
         if (!animationControl.isMarkedAsStepping()) {
             animationControl.playForward();
         }
+    }
+
+    private void buildFindEnd() {
+        animationControl.getTransitions().addAll(findPlacePreparator.getMovings());
+        animationControl.getTransitions().add(getFadeTransition());
     }
 
     @Subscribe
@@ -74,31 +85,30 @@ public class AnimationsHandlersCore {
         TwoDGraphicsNode newNode;
         boolean insertToCanvas = true;
         try {
-        if (findPlacePreparator == null) {
-            newNode = new TwoDGraphicsNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
-        } else {
-            insertToCanvas=false;
-            toPoint = findPlacePreparator.getLastPosition();
-            newNode = findPlacePreparator.getInsertedNode();
+            if (findPlacePreparator == null) {
+                newNode = new TwoDGraphicsNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
+            } else {
+                insertToCanvas = false;
+                toPoint = findPlacePreparator.getLastPosition();
+                newNode = findPlacePreparator.getInsertedNode();
+            }
 
-        }
+            manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
+            manager.addElement(newNode, event.getParentNode().getId(), event.isLeftChild(), insertToCanvas);
 
-        manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
-        manager.addElement(newNode, event.getParentNode().getId(), event.isLeftChild(),insertToCanvas);
-
-        InsertPreparation preparation = new InsertPreparation(event, manager, toPoint, findPlacePreparator);
-        insertTransition(preparation.getBuilder());
-        initMovingTransition();
-        }catch (Exception ex){
+            InsertPreparation preparation = new InsertPreparation(event, manager, toPoint, findPlacePreparator);
+            insertTransition(preparation.getBuilder());
+            initMovingTransition();
+        } catch (Exception ex) {
             System.err.println(ex);
-            for (int i = 0; i< ex.getStackTrace().length;i++){
+            for (int i = 0; i < ex.getStackTrace().length; i++) {
                 System.err.println(ex.getStackTrace()[i]);
             }
         }
     }
 
     @Subscribe
-    public void handleMovingChilds(MoveToChild event) {
+    public void handleMovingChilds(MoveToChildEvent event) {
         System.out.println("EVENT iterable....");
         if (this.findPlacePreparator == null) {
             TwoDGraphicsNode newNode = new TwoDGraphicsNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
@@ -111,6 +121,32 @@ public class AnimationsHandlersCore {
         findPlacePreparator.addMove(
                 manager.getNodePosition(event.getComparingNode().getId()),
                 getNode(event.getComparingNode().getId()), event.isCompareX());
+
+    }
+
+    @Subscribe
+    public void handleStartFinding(StartFindingEvent event){
+        System.out.println("Start FINDING node...");
+        findingNode = new TwoDGraphicsNode(event.getCoordinate(),(int)creatingPoint.getX(),(int)creatingPoint.getY());
+    }
+
+    @Subscribe
+    public void handleFindChilds(FindEvent event) {
+        try {
+            if(findPlacePreparator==null){
+                manager.getCanvas().getChildren().addAll(findingNode);
+                findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
+            }
+        } catch (Exception ex) {
+            System.err.println(ex);
+            for (int i = 0; i < ex.getStackTrace().length; i++) {
+                System.err.println(ex.getStackTrace()[i]);
+            }
+        }
+
+        findPlacePreparator.addMove(
+                manager.getNodePosition(event.getComparedNodeId()),
+                getNode(event.getComparedNodeId()), event.isCompareX());
 
     }
 
@@ -176,9 +212,17 @@ public class AnimationsHandlersCore {
 
     public void clear() {
         System.out.println("_____________________CLEAR______________________\n\n");
+        if(findingNode!=null){
+            manager.getCanvas().getChildren().remove(findingNode);
+        }
+        findPlacePreparator = null;
         moveParentsElements.clear();
         removePreparation = null;
+        findingNode = null;
         animationControl.clear();
-        findPlacePreparator = null;
+    }
+
+    public FadeTransition getFadeTransition() {
+        return FadesTransitionBuilder.getTransition(findPlacePreparator.getInsertedNode(), Duration.millis(500),1,0);
     }
 }

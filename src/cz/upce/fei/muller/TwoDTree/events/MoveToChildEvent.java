@@ -6,12 +6,12 @@ import cz.upce.fei.muller.TwoDTree.structure.Coordinate;
 /**
  * @author Vojtěch Müller
  */
-public class MoveToChild {
+public class MoveToChildEvent {
     private final Coordinate newNode;
     private final Coordinate comparingNode;
     private final boolean isCompareX;
 
-    public MoveToChild(AbstractStructureElement newNode, AbstractStructureElement comparingNode, boolean isCompareX) {
+    public MoveToChildEvent(AbstractStructureElement newNode, AbstractStructureElement comparingNode, boolean isCompareX) {
         this.newNode = (Coordinate) newNode;
         this.comparingNode = (Coordinate) comparingNode;
         this.isCompareX = isCompareX;

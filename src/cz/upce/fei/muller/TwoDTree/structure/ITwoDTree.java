@@ -11,6 +11,10 @@ public interface ITwoDTree<T extends ICoordinate> {
 
     void insert(T insertedValue);
 
+    T remove(T co);
+
+    T find(int x, int y);
+
     ICoordinate getRoot();
 
     int getCount();

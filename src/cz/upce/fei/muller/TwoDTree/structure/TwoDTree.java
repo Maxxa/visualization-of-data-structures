@@ -2,18 +2,15 @@ package cz.upce.fei.muller.TwoDTree.structure;
 
 import com.google.common.eventbus.EventBus;
 import cz.upce.fei.common.core.AbstractStructureElement;
-import cz.upce.fei.muller.TwoDTree.events.CreateRootEvent;
-import cz.upce.fei.muller.TwoDTree.events.InsertNodeEvent;
-import cz.upce.fei.muller.TwoDTree.events.LastActionEvent;
-import cz.upce.fei.muller.TwoDTree.events.MoveToChild;
+import cz.upce.fei.muller.TwoDTree.events.*;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Vojtěch Müller
  */
-public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implements Iterable<T>, ITwoDTree<T> {
+public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implements ITwoDTree<T> {
 
     private final EventBus eventBus;
     private Node<T> actual;
@@ -33,7 +30,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             root = new Node(nodes.get(0));
             generateNewNodeEvent(root, null, false);
             actual = root;
-            eventBus.post(new LastActionEvent());
+            generateLastEvent();
             return;
         }
         Collections.sort(nodes, new ComparatorX());
@@ -53,7 +50,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         } else {
             root.right = null;
         }
-        eventBus.post(new LastActionEvent());
+        generateLastEvent();
     }
 
     private Node createRecursive(List<T> nodes, Node parent, Boolean leftSubTree, Boolean isSortingX) {
@@ -86,79 +83,8 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         eventBus.post(parent == null ? new CreateRootEvent(newNode.value) : new InsertNodeEvent(newNode.value, parent.value, isLeftChild));
     }
 
-    @Override
-    public Iterator<T> iterator() {
-        return new MujIterator();
-    }
-
-    public List<T> najdi(int x1, int y1, int x2, int y2) {
-        if (count == 0) return null;
-        List<T> pom = new ArrayList<>();
-        pom.addAll(najdiR(x1, y1, x2, y2, root, true));
-        if (pom == null) return null;
-        return pom;
-    }
-
-    private List<T> najdiR(int x1, int y1, int x2, int y2, Node<T> pr, boolean podleX) {
-        ArrayList<T> pomm = new ArrayList<>();
-        if (x1 <= pr.value.getX() && x2 >= pr.value.getX() && y1 <= pr.value.getY() && y2 >= pr.value.getY()) {
-
-            pomm.add(pr.value);
-        }
-        boolean doprava, doleva;
-        doprava = doleva = false;
-        if (podleX) {
-            doprava = pr.value.getX() < x2;
-            doleva = pr.value.getX() > x1;
-        } else {
-            doprava = pr.value.getY() < y2;
-            doleva = pr.value.getY() > y1;
-        }
-        if (pr.right != null && doprava) {
-            pomm.addAll(najdiR(x1, y1, x2, y2, pr.right, !podleX));
-        }
-        if (pr.left != null && doleva) {
-            pomm.addAll(najdiR(x1, y1, x2, y2, pr.left, !podleX));
-        }
-        return pomm;
-    }
-
-    private class MujIterator implements Iterator<T>, Serializable {
-        private LinkedList<Node> fifo = new LinkedList<>();
-
-        private Node<T> pom;
-
-        public MujIterator() {
-            pom = null;
-            if (root == null) return;
-            fifo.add(root);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !fifo.isEmpty();
-        }
-
-        @Override
-        public T next() {
-            if (fifo.isEmpty()) {
-                return null;
-            }
-            pom = fifo.removeFirst();
-            if (pom.right != null) {
-                fifo.add(pom.right);
-            }
-            if (pom.left != null) {
-                fifo.add(pom.left);
-            }
-            return pom.value;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
+    private void generateLastEvent(){
+        eventBus.post(new LastActionEvent());
     }
 
     @Override
@@ -167,7 +93,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             root = buildNewNode(insertedValue);
             generateNewNodeEvent(root, null, false);
             actual = root;
-            eventBus.post(new LastActionEvent());
+            generateLastEvent();
             return;
         }
         actual = root;
@@ -178,8 +104,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         while (true) {
             int value = compareX ? actual.value.getX() : actual.value.getY();
             isLeft = (compareX ? insertedValue.getX() : insertedValue.getY()) < value;
-            System.out.println("MOVE TO CHILD");
-            eventBus.post(new MoveToChild(newNode.value,actual.value,compareX));
+            eventBus.post(new MoveToChildEvent(newNode.value,actual.value,compareX));
             Node node = isLeft ? actual.left : actual.right;
             if (node == null) {
                 node = newNode;
@@ -189,7 +114,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
                 }else{
                     actual.right=node;
                 }
-                eventBus.post(new LastActionEvent());
+                generateLastEvent();
                 break;
             }
             compareX=!compareX;
@@ -203,9 +128,10 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         return node;
     }
 
-    public T odeber(T co) {
+    @Override
+    public T remove(T co) {
         //TODO
-        ArrayList<T> prvky = new ArrayList<>();
+       /* ArrayList<T> prvky = new ArrayList<>();
         Iterator<T> it = iterator();
         T pom = null;
         T zpet = null;
@@ -218,29 +144,35 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             }
         }
         create(prvky);
-        return pom;
+        return pom;*/
+
+        return null;
     }
 
-    public T najdi(int x, int y) {
-        //TODO
-        boolean rovina = true;
-        Node<T> pom = root;
-        boolean doprava;
+    @Override
+    public T find(int x, int y) {
+        boolean isCompareX = true;
+        Node<T> temp = root;
+        eventBus.post(new StartFindingEvent(x,y));
+        boolean right;
         while (true) {
-            if (pom.value.getX() == x && pom.value.getY() == y) {
-                return pom.value;
+            eventBus.post(new FindEvent(temp.value,isCompareX));
+            if (temp.value.getX() == x && temp.value.getY() == y) {
+                generateLastEvent();
+                return temp.value;
             }
-            doprava = rovina ? pom.value.getX() < x : pom.value.getY() < y;
-            if (pom.right != null && doprava == true) {
-                pom = pom.right;
-                rovina = !rovina;
+            right = isCompareX ? temp.value.getX() < x : temp.value.getY() < y;
+            if (temp.right != null && right == true) {
+                temp = temp.right;
+                isCompareX = !isCompareX;
                 continue;
             }
-            if (pom.left != null && doprava == false) {
-                pom = pom.left;
-                rovina = !rovina;
+            if (temp.left != null && right == false) {
+                temp = temp.left;
+                isCompareX = !isCompareX;
                 continue;
             }
+            generateLastEvent();
             return null;
         }
     }

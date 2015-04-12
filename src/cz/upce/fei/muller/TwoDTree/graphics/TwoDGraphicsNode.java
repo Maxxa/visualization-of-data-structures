@@ -27,11 +27,15 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
     private Tooltip tooltip;
 
     public TwoDGraphicsNode(Coordinate node, int x, int y) {
+        this(node,x,y,false);
+    }
+
+    public TwoDGraphicsNode(Coordinate node, int x, int y,boolean isSearchBlock) {
         super(node.getId(), WIDTH, HEIGHT);
         this.node = node;
         setTranslateX(x);
         setTranslateY(y);
-        initBackground();
+        initBackground(isSearchBlock);
 
         VBox labelsBox = new VBox();
         labelsBox.getChildren().addAll(initLabel());
@@ -41,10 +45,10 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
         this.getChildren().add(sp);
     }
 
-    private void initBackground() {
+    private void initBackground(boolean isSearchBlock) {
         backgroundRectangle = new Rectangle(WIDTH, HEIGHT);
         backgroundRectangle.setStrokeType(StrokeType.INSIDE);
-        backgroundRectangle.setStroke(BG_STROKE);
+        backgroundRectangle.setStroke(isSearchBlock?BG_COLOR_SEARCH:BG_STROKE);
         backgroundRectangle.setFill(BG_COLOR);
     }
 
