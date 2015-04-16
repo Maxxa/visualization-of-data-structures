@@ -129,46 +129,43 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     }
 
     @Override
-    public T remove(T co) {
-        //TODO
-       /* ArrayList<T> prvky = new ArrayList<>();
-        Iterator<T> it = iterator();
-        T pom = null;
-        T zpet = null;
-        while (it.hasNext()) {
-            pom = it.next();
-            if (!pom.equals(co)) {
-                prvky.add(pom);
-            } else {
-                zpet = pom;
-            }
+    public T remove(int x,int y) {
+        eventBus.post(new StartRemoving());
+        T returnValue = find(x,y);
+        if(returnValue==null){
+            // removed element not found...
+            generateLastEvent();
+            return null;
         }
-        create(prvky);
-        return pom;*/
 
-        return null;
+
+
+
+
+        return returnValue;
     }
 
     @Override
     public T find(int x, int y) {
         boolean isCompareX = true;
-        Node<T> temp = root;
+        actual = root;
         eventBus.post(new StartFindingEvent(x,y));
         boolean right;
         while (true) {
-            eventBus.post(new FindEvent(temp.value,isCompareX));
-            if (temp.value.getX() == x && temp.value.getY() == y) {
+            eventBus.post(new FindEvent(actual.value,isCompareX));
+            if (actual.value.getX() == x && actual.value.getY() == y) {
+                eventBus.post(new ElementFindEvent(actual.value));
                 generateLastEvent();
-                return temp.value;
+                return actual.value;
             }
-            right = isCompareX ? temp.value.getX() < x : temp.value.getY() < y;
-            if (temp.right != null && right == true) {
-                temp = temp.right;
+            right = isCompareX ? actual.value.getX() < x : actual.value.getY() < y;
+            if (actual.right != null && right == true) {
+                actual = actual.right;
                 isCompareX = !isCompareX;
                 continue;
             }
-            if (temp.left != null && right == false) {
-                temp = temp.left;
+            if (actual.left != null && right == false) {
+                actual = actual.left;
                 isCompareX = !isCompareX;
                 continue;
             }

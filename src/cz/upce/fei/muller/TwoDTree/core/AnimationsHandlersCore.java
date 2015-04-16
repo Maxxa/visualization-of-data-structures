@@ -15,12 +15,12 @@ import cz.upce.fei.muller.TwoDTree.animations.InsertPreparation;
 import cz.upce.fei.muller.TwoDTree.animations.RemovePreparation;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAnimMoveNode;
+import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderShowFindElement;
 import cz.upce.fei.muller.TwoDTree.events.*;
 import cz.upce.fei.muller.TwoDTree.graphics.ITwoDNodesElements;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
-import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
@@ -104,7 +104,7 @@ public class AnimationsHandlersCore {
             InsertPreparation preparation = new InsertPreparation(event, manager, toPoint,findPlacePreparator!=null);
             editFindingPlacePreparator();
             insertTransition(preparation.getBuilder());
-            initAfterInsertPreparration(depth);
+            initAfterInsertPreparation(depth);
             initMovingTransition();
         } catch (Exception ex) {
             System.err.println(ex);
@@ -114,7 +114,7 @@ public class AnimationsHandlersCore {
         }
     }
 
-    private void initAfterInsertPreparration(final int depth) {
+    private void initAfterInsertPreparation(final int depth) {
         if(findPlacePreparator!=null){
             ParallelTransition pt = new ParallelTransition();
             pt.setOnFinished(
@@ -138,8 +138,7 @@ public class AnimationsHandlersCore {
 
     private void editFindingPlacePreparator() {
         if(findPlacePreparator!=null){
-            List<Transition> movings = findPlacePreparator.getMovings();
-            animationControl.getTransitions().addAll(movings);
+            animationControl.getTransitions().addAll(findPlacePreparator.getMovings());
         }
     }
 
@@ -185,6 +184,12 @@ public class AnimationsHandlersCore {
 
     }
 
+    @Subscribe
+    public void handleEndFind(ElementFindEvent event){
+        System.out.println("ELEMENT FIND");
+        TwoDGraphicsNode node = manager.getElementInfo(event.getFindNode().getId()).getElement();
+        findPlacePreparator.addTransition(new BuilderShowFindElement(node).getAnimation());
+    }
 
 //    @Subscribe
 //    public void handleRemoveRootEvent(RemoveRootEvent event) {

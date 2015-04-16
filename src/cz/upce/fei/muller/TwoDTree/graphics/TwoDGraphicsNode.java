@@ -12,6 +12,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeType;
 
 /**
@@ -114,6 +115,10 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
         }else{
             label.setStyle("-fx-font-weight: normal");
         }
+    }
+
+    public Shape getRect(){
+        return backgroundRectangle;
     }
 
 

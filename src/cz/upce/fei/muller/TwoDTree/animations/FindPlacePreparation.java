@@ -45,4 +45,8 @@ public class FindPlacePreparation {
     public TwoDGraphicsNode getInsertedNode() {
         return insertedNode;
     }
+
+    public void addTransition(Transition animation) {
+        movings.add(animation);
+    }
 }
