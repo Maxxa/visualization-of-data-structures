@@ -2,6 +2,7 @@ package cz.upce.fei.muller.TwoDTree.core;
 
 import com.google.common.eventbus.Subscribe;
 import cz.commons.animation.AnimationControl;
+import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
@@ -19,7 +20,9 @@ import cz.upce.fei.muller.TwoDTree.graphics.ITwoDNodesElements;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
@@ -72,6 +75,7 @@ public class AnimationsHandlersCore {
     public void handleCreateRootEvent(CreateRootEvent event) {
         System.out.println("------------EVENT CREATE ROOT-------------");
         TwoDGraphicsNode newNode = new TwoDGraphicsNode(event.getNode(), 0, 0);
+        newNode.setLabelBold(true,true);
         newNode.setOpacity(0);
         manager.addElement(newNode, null, false);
         manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
@@ -85,19 +89,22 @@ public class AnimationsHandlersCore {
         TwoDGraphicsNode newNode;
         boolean insertToCanvas = true;
         try {
+            Integer depth = manager.getElementInfo(event.getParentNode().getId()).getDepth()+1;
             if (findPlacePreparator == null) {
                 newNode = new TwoDGraphicsNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
+                newNode.setLabelBold(depth % 2 > 0 ? false : true, true);
             } else {
                 insertToCanvas = false;
                 toPoint = findPlacePreparator.getLastPosition();
                 newNode = findPlacePreparator.getInsertedNode();
             }
-
             manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
             manager.addElement(newNode, event.getParentNode().getId(), event.isLeftChild(), insertToCanvas);
 
-            InsertPreparation preparation = new InsertPreparation(event, manager, toPoint, findPlacePreparator);
+            InsertPreparation preparation = new InsertPreparation(event, manager, toPoint,findPlacePreparator!=null);
+            editFindingPlacePreparator();
             insertTransition(preparation.getBuilder());
+            initAfterInsertPreparration(depth);
             initMovingTransition();
         } catch (Exception ex) {
             System.err.println(ex);
@@ -107,14 +114,41 @@ public class AnimationsHandlersCore {
         }
     }
 
+    private void initAfterInsertPreparration(final int depth) {
+        if(findPlacePreparator!=null){
+            ParallelTransition pt = new ParallelTransition();
+            pt.setOnFinished(
+                    new StepEventHandler() {
+                        boolean isX = depth % 2 > 0 ? false : true;
+                        @Override
+                        protected void handleForward(ActionEvent actionEvent) {
+                            findPlacePreparator.getInsertedNode().setLabelBold(isX, true);
+                        }
+
+                        @Override
+                        protected void handleBack(ActionEvent actionEvent) {
+                            findPlacePreparator.getInsertedNode().setLabelBold(isX, false);
+                        }
+                    }
+
+            );
+            animationControl.getTransitions().add(pt);
+        }
+    }
+
+    private void editFindingPlacePreparator() {
+        if(findPlacePreparator!=null){
+            List<Transition> movings = findPlacePreparator.getMovings();
+            animationControl.getTransitions().addAll(movings);
+        }
+    }
+
     @Subscribe
     public void handleMovingChilds(MoveToChildEvent event) {
         System.out.println("EVENT iterable....");
         if (this.findPlacePreparator == null) {
             TwoDGraphicsNode newNode = new TwoDGraphicsNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
-            manager.getCanvas().getChildren().addAll(newNode
-                    /*,newNode.getChildLine(NodePosition.LEFT),newNode.getChildLine(NodePosition.RIGHT)*/);
-            System.out.println("create and insert...");
+            manager.getCanvas().getChildren().addAll(newNode);
             findPlacePreparator = new FindPlacePreparation(newNode, creatingPoint);
         }
 

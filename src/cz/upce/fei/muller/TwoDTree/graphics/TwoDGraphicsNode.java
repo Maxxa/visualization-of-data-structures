@@ -66,7 +66,6 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
         labelX.setAlignment(Pos.CENTER);
         labelY.setAlignment(Pos.CENTER);
         hBox.setMaxWidth(WIDTH);
-        hBox.setStyle("-fx-font-weight: bold;");
 
         hBox.getChildren().addAll(
                 labelX, new Separator(Orientation.HORIZONTAL), labelY
@@ -107,5 +106,17 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
 
         }
     }
+
+    public void setLabelBold(boolean x,boolean bold){
+        Label label = x?labelX:labelY;
+        if(bold){
+            label.setStyle("-fx-font-weight: bold");
+        }else{
+            label.setStyle("-fx-font-weight: normal");
+        }
+    }
+
+
+
 
 }
