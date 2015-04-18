@@ -1,5 +1,6 @@
 package cz.upce.fei.muller.TwoDTree.gui;
 
+import cz.commons.utils.ViewSwitchButton;
 import cz.commons.utils.handlers.NumberValidationHandler;
 import cz.upce.fei.common.gui.structure.IStructureControls;
 import javafx.event.ActionEvent;
@@ -25,6 +26,8 @@ public final class TwoDTreeStructureControl implements IStructureControls {
     Button search = new Button("Najít");
     Button remove = new Button("Odebrat");
 
+    ViewSwitchButton viewSwitchButton = new ViewSwitchButton();
+
     public TwoDTreeStructureControl() {
         build();
     }
@@ -44,16 +47,16 @@ public final class TwoDTreeStructureControl implements IStructureControls {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(5);
-        hBox.getChildren().addAll(labelX, x,labelY,y,
-                add, search, remove);
+        hBox.getChildren().addAll(labelX, x, labelY, y,
+                add, search, remove, viewSwitchButton);
         return hBox;
     }
 
     @Override
     public void toggleEnableButtons() {
-        if(add.isDisable()){
+        if (add.isDisable()) {
             enableButtons();
-        }else{
+        } else {
             disableButtons();
         }
     }
@@ -68,10 +71,10 @@ public final class TwoDTreeStructureControl implements IStructureControls {
         setEnablingBtn(true);
     }
 
-    private void setEnablingBtn(boolean isDisable){
-            add.setDisable(isDisable);
-            search.setDisable(isDisable);
-            remove.setDisable(isDisable);
+    private void setEnablingBtn(boolean isDisable) {
+        add.setDisable(isDisable);
+        search.setDisable(isDisable);
+        remove.setDisable(isDisable);
     }
 
     public void addInsertHandler(EventHandler<ActionEvent> handler) {
@@ -84,6 +87,10 @@ public final class TwoDTreeStructureControl implements IStructureControls {
 
     public void addSearchHandler(EventHandler<ActionEvent> handler) {
         search.setOnAction(handler);
+    }
+
+    public void addViewSwitchHandler(EventHandler<ActionEvent> handler) {
+        viewSwitchButton.setOnAction(handler);
     }
 
     public String getX() {

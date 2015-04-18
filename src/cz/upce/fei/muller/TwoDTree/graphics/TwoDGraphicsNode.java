@@ -104,7 +104,6 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
             label.setStyle("-webkit-fx-color: black;-moz-fx-color: black;-ms-fx-color: black;-o-fx-color: black;fx-color: black;");
         } else {
             label.setStyle("-webkit-fx-color: red;-moz-fx-color: red;-ms-fx-color: red;-o-fx-color: red;fx-color: red;");
-
         }
     }
 
@@ -120,8 +119,5 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
     public Shape getRect(){
         return backgroundRectangle;
     }
-
-
-
 
 }

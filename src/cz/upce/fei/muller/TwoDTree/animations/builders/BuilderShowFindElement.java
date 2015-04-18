@@ -21,8 +21,6 @@ public class BuilderShowFindElement implements IAnimationBuilder{
 
     @Override
     public Transition getAnimation() {
-        System.out.println("build");
-
         ParallelTransition transition = new ParallelTransition();
         transition.setDelay(Duration.seconds(1));
         return new SequentialTransition(

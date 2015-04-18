@@ -138,7 +138,9 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             return null;
         }
 
-
+        //have right? find min on right
+        //have only left? find max on left
+        //is leaf remove...
 
 
 

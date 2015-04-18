@@ -11,6 +11,7 @@ import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.muller.TwoDTree.TwoDTreePresetItem;
 import cz.upce.fei.muller.TwoDTree.TwoDTreePresets;
 import cz.upce.fei.muller.TwoDTree.animations.RemovePreparation;
+import cz.upce.fei.muller.TwoDTree.gui.CanvasChangeImpl;
 import cz.upce.fei.muller.TwoDTree.gui.HelpDialog;
 import cz.upce.fei.muller.TwoDTree.gui.TwoDTreeStructureControl;
 import cz.upce.fei.muller.TwoDTree.structure.Coordinate;
@@ -28,12 +29,13 @@ public class TwoDTreeController extends Controller {
     private final EventBus eventBus = new EventBus();
     private ITreeLayoutManager manager;
     private TwoDTree<Coordinate> tree = new TwoDTree<>(eventBus);
-
+    private final GridViewController gridViewController;
     private final AnimationsHandlersCore animationCore;
 
-    public TwoDTreeController(ToolBarControlsContainer controlsContainer, ITreeLayoutManager manager) {
+    public TwoDTreeController(ToolBarControlsContainer controlsContainer, ITreeLayoutManager manager, CanvasChangeImpl canvasChange) {
         super(controlsContainer);
         this.manager = manager;
+        gridViewController = new GridViewController(tree,canvasChange);
         this.initStructureControls(controlsContainer);
         animationCore = new AnimationsHandlersCore(animationControl, manager);
         eventBus.register(animationCore);
@@ -53,26 +55,23 @@ public class TwoDTreeController extends Controller {
 
     private void initStructureControls(ToolBarControlsContainer controlsContainer) {
         final TwoDTreeStructureControl controls = (TwoDTreeStructureControl) controlsContainer.getStructureControls();
-        controls.addInsertHandler(getInsertHandler(controls));
-        controls.addSearchHandler(getSearchHandler(controls));
-        controls.addRemoveHandler(getRemoveHandler(controls));
+        ParserInputData dataParser = new ParserInputData(controls);
+        controls.addInsertHandler(getInsertHandler(controls,dataParser));
+        controls.addSearchHandler(getSearchHandler(controls,dataParser));
+        controls.addRemoveHandler(getRemoveHandler(controls,dataParser));
+        controls.addViewSwitchHandler(gridViewController);
     }
 
-    private EventHandler<ActionEvent> getInsertHandler(final TwoDTreeStructureControl controls) {
+    private EventHandler<ActionEvent> getInsertHandler(final TwoDTreeStructureControl controls,final ParserInputData dataParser) {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Integer parsedValueX;
-                Integer parsedValueY;
-                try {
-                    parsedValueX = Integer.parseInt(controls.getX());
-                    parsedValueY = Integer.parseInt(controls.getY());
-                } catch (NumberFormatException e) {
-                    Dialog.showError("Chyba", "Zadáno neplatné číslo.");
+                clearBeforeNewAction();
+                CoordinateHelper helper = dataParser.action();
+                if(helper==null){
                     return;
                 }
-                clearBeforeNewAction();
-                Coordinate coordinate = new Coordinate(parsedValueX, parsedValueY);
+                Coordinate coordinate = new Coordinate(helper.getX(), helper.getY());
                 controls.disableButtons();
                 tree.insert(coordinate);
 
@@ -80,22 +79,25 @@ public class TwoDTreeController extends Controller {
         };
     }
 
-    private EventHandler<ActionEvent> getRemoveHandler(final TwoDTreeStructureControl controls) {
+    private EventHandler<ActionEvent> getRemoveHandler(final TwoDTreeStructureControl controls, final ParserInputData dataParser) {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
                 if (showDialogIsEmpty()) {
                     return;
                 }
                 controls.disableButtons();
                 clearBeforeNewAction();
-                // TODO remove
+                CoordinateHelper helper = dataParser.action();
+                if(helper==null){
+                    return;
+                }
+                tree.remove(helper.getX(),helper.getY());
             }
         };
     }
 
-    private EventHandler<ActionEvent> getSearchHandler(final TwoDTreeStructureControl controls) {
+    private EventHandler<ActionEvent> getSearchHandler(final TwoDTreeStructureControl controls, final ParserInputData dataParser) {
         return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -104,16 +106,11 @@ public class TwoDTreeController extends Controller {
                 }
                 controls.disableButtons();
                 clearBeforeNewAction();
-                Integer parsedValueX;
-                Integer parsedValueY;
-                try {
-                    parsedValueX = Integer.parseInt(controls.getX());
-                    parsedValueY = Integer.parseInt(controls.getY());
-                } catch (NumberFormatException e) {
-                    Dialog.showError("Chyba", "Zadáno neplatné číslo.");
+                CoordinateHelper helper = dataParser.action();
+                if(helper==null){
                     return;
                 }
-                tree.find(parsedValueX,parsedValueY);
+                tree.find(helper.getX(), helper.getY());
             }
         };
     }
