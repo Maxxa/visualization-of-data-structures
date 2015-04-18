@@ -86,12 +86,12 @@ public class TwoDTreeController extends Controller {
                 if (showDialogIsEmpty()) {
                     return;
                 }
-                controls.disableButtons();
                 clearBeforeNewAction();
                 CoordinateHelper helper = dataParser.action();
                 if(helper==null){
                     return;
                 }
+                controls.disableButtons();
                 tree.remove(helper.getX(),helper.getY());
             }
         };
@@ -104,12 +104,12 @@ public class TwoDTreeController extends Controller {
                 if (showDialogIsEmpty()) {
                     return;
                 }
-                controls.disableButtons();
                 clearBeforeNewAction();
                 CoordinateHelper helper = dataParser.action();
                 if(helper==null){
                     return;
                 }
+                controls.disableButtons();
                 tree.find(helper.getX(), helper.getY());
             }
         };
@@ -175,6 +175,7 @@ public class TwoDTreeController extends Controller {
             removePreparation.executeRemove();
         }
         animationCore.clear();
+
     }
 
     private boolean showDialogIsEmpty() {

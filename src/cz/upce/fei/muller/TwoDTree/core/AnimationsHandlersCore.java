@@ -17,16 +17,17 @@ import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAnimMoveNode;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderShowFindElement;
 import cz.upce.fei.muller.TwoDTree.events.*;
+import cz.upce.fei.muller.TwoDTree.graphics.FlashMessageViewer;
 import cz.upce.fei.muller.TwoDTree.graphics.ITwoDNodesElements;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -43,11 +44,15 @@ public class AnimationsHandlersCore {
     private FindPlacePreparation findPlacePreparator;
     private List<TranslateTransition> moveParentsElements = new ArrayList<>();
     private TwoDGraphicsNode findingNode;
+    private final Point2D flashMessagePosition;
+    private List<FlashMessageViewer> viewers = new LinkedList<>();
 
     public AnimationsHandlersCore(AnimationControl animationControl, ITreeLayoutManager manager) {
         this.animationControl = animationControl;
         this.manager = (BinaryTreeLayoutManager) manager;
         initCreatingPoint();
+        flashMessagePosition = new Point2D(manager.getCanvas().getWidth() / 2 + 100, 10);
+
         manager.getDepthManager().addEventConsumer(this);
     }
 
@@ -56,7 +61,7 @@ public class AnimationsHandlersCore {
         System.out.println("-----------END BUILDING ANIMATION-----------");
         initMovingTransition();
 
-        if(findPlacePreparator!=null && findingNode!=null){
+        if (findPlacePreparator != null && findingNode != null) {
             buildFindEnd();
         }
 
@@ -75,7 +80,7 @@ public class AnimationsHandlersCore {
     public void handleCreateRootEvent(CreateRootEvent event) {
         System.out.println("------------EVENT CREATE ROOT-------------");
         TwoDGraphicsNode newNode = new TwoDGraphicsNode(event.getNode(), 0, 0);
-        newNode.setLabelBold(true,true);
+        newNode.setLabelBold(true, true);
         newNode.setOpacity(0);
         manager.addElement(newNode, null, false);
         manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
@@ -89,7 +94,7 @@ public class AnimationsHandlersCore {
         TwoDGraphicsNode newNode;
         boolean insertToCanvas = true;
         try {
-            Integer depth = manager.getElementInfo(event.getParentNode().getId()).getDepth()+1;
+            Integer depth = manager.getElementInfo(event.getParentNode().getId()).getDepth() + 1;
             if (findPlacePreparator == null) {
                 newNode = new TwoDGraphicsNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
                 newNode.setLabelBold(depth % 2 > 0 ? false : true, true);
@@ -101,7 +106,7 @@ public class AnimationsHandlersCore {
             manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
             manager.addElement(newNode, event.getParentNode().getId(), event.isLeftChild(), insertToCanvas);
 
-            InsertPreparation preparation = new InsertPreparation(event, manager, toPoint,findPlacePreparator!=null);
+            InsertPreparation preparation = new InsertPreparation(event, manager, toPoint, findPlacePreparator != null);
             editFindingPlacePreparator();
             insertTransition(preparation.getBuilder());
             initAfterInsertPreparation(depth);
@@ -115,11 +120,12 @@ public class AnimationsHandlersCore {
     }
 
     private void initAfterInsertPreparation(final int depth) {
-        if(findPlacePreparator!=null){
+        if (findPlacePreparator != null) {
             ParallelTransition pt = new ParallelTransition();
             pt.setOnFinished(
                     new StepEventHandler() {
                         boolean isX = depth % 2 > 0 ? false : true;
+
                         @Override
                         protected void handleForward(ActionEvent actionEvent) {
                             findPlacePreparator.getInsertedNode().setLabelBold(isX, true);
@@ -137,7 +143,7 @@ public class AnimationsHandlersCore {
     }
 
     private void editFindingPlacePreparator() {
-        if(findPlacePreparator!=null){
+        if (findPlacePreparator != null) {
             animationControl.getTransitions().addAll(findPlacePreparator.getMovings());
         }
     }
@@ -158,16 +164,16 @@ public class AnimationsHandlersCore {
     }
 
     @Subscribe
-    public void handleStartFinding(StartFindingEvent event){
+    public void handleStartFinding(StartFindingEvent event) {
         System.out.println("Start FINDING node...");
-        findingNode = new TwoDGraphicsNode(event.getCoordinate(),(int)creatingPoint.getX(),(int)creatingPoint.getY(),true);
+        findingNode = new TwoDGraphicsNode(event.getCoordinate(), (int) creatingPoint.getX(), (int) creatingPoint.getY(), true);
         findingNode.setOpacity(0);
     }
 
     @Subscribe
     public void handleFindChilds(FindEvent event) {
         try {
-            if(findPlacePreparator==null){
+            if (findPlacePreparator == null) {
                 manager.getCanvas().getChildren().addAll(findingNode);
                 findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
             }
@@ -185,32 +191,15 @@ public class AnimationsHandlersCore {
     }
 
     @Subscribe
-    public void handleEndFind(ElementFindEvent event){
+    public void handleEndFind(ElementFindEndEvent event) {
         System.out.println("ELEMENT FIND");
-        TwoDGraphicsNode node = manager.getElementInfo(event.getFindNode().getId()).getElement();
-        findPlacePreparator.addTransition(new BuilderShowFindElement(node).getAnimation());
+        if (event.isFind()) {
+            TwoDGraphicsNode node = manager.getElementInfo(event.getFindNode().getId()).getElement();
+            findPlacePreparator.addTransition(new BuilderShowFindElement(node).getAnimation());
+        } else {
+            findPlacePreparator.addTransition(showViewer(buildViewer("Bod nebyl nalezen.")));
+        }
     }
-
-//    @Subscribe
-//    public void handleRemoveRootEvent(RemoveRootEvent event) {
-//        removePreparation = new RemovePreparation(event.getRootNode().getId(),manager);
-//        manager.removeElement(event.getRootNode().getId(),false);
-//        insertTransition(new BuilderRemoveRoot(removePreparation));
-//        initMovingTransition();
-//    }
-
-//    @Subscribe
-//    public void handleSwapNodeEvent(SwapNodeEvent event) {
-//        initMovingTransition();
-//        if(event.getFirstNode().getId()!=event.getSecondNode().getId()) {
-//            SwapPreparation handler = new SwapPreparation(manager,WorkBinaryNodeInfoBuilder.getWorkInfo(event.getFirstNode().getId(),manager),
-//                                                           WorkBinaryNodeInfoBuilder.getWorkInfo(event.getSecondNode().getId(),manager));
-//            IAnimationBuilder creator = handler.getBuilder();
-//            manager.swapElement(event.getFirstNode().getId(), event.getSecondNode().getId());
-//            insertTransition(creator);
-//        }
-
-//    }
 
     @Subscribe
     public void handleMoveElementNodeEvent(MoveElementEvent event) {
@@ -252,7 +241,7 @@ public class AnimationsHandlersCore {
 
     public void clear() {
         System.out.println("_____________________CLEAR______________________\n\n");
-        if(findingNode!=null){
+        if (findingNode != null) {
             manager.getCanvas().getChildren().remove(findingNode);
         }
         findPlacePreparator = null;
@@ -260,9 +249,45 @@ public class AnimationsHandlersCore {
         removePreparation = null;
         findingNode = null;
         animationControl.clear();
+        manager.getCanvas().getChildren().removeAll(viewers);
+        viewers.clear();
     }
 
     public FadeTransition getFadeTransition() {
-        return FadesTransitionBuilder.getTransition(findPlacePreparator.getInsertedNode(), Duration.millis(500),1,0);
+        return FadesTransitionBuilder.getTransition(findPlacePreparator.getInsertedNode(), Duration.millis(500), 1, 0);
     }
+
+    private FlashMessageViewer buildViewer(String text) {
+        FlashMessageViewer viewer = new FlashMessageViewer(text);
+        viewer.setTranslateX(flashMessagePosition.getX());
+        viewer.setTranslateY(flashMessagePosition.getY());
+        manager.getCanvas().getChildren().addAll(viewer);
+        viewer.setOpacity(0);
+        viewers.add(viewer);
+        return viewer;
+    }
+
+    private Transition showViewer(Node element) {
+        SequentialTransition st = new SequentialTransition();
+        System.out.println("SHOW VIEW?");
+        st.getChildren().addAll(
+                FadesTransitionBuilder.getTransition(element, Duration.ONE, 0, 1),
+                ParallelTransitionBuilder.create().delay(Duration.seconds(2)).build(),
+                FadesTransitionBuilder.getTransition(element, Duration.ONE, 1, 0)
+        );
+        st.setOnFinished(new StepEventHandler() {
+            @Override
+            protected void handleForward(ActionEvent actionEvent) {
+                System.out.println("for");
+            }
+
+            @Override
+            protected void handleBack(ActionEvent actionEvent) {
+                System.out.println("back");
+
+            }
+        });
+        return st;
+    }
+
 }

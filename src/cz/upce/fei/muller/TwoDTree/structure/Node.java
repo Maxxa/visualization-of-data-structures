@@ -22,4 +22,12 @@ class Node<T extends AbstractStructureElement & ICoordinate> {
         this.right = null;
     }
 
+    public boolean hasLeft(){
+        return left!=null;
+    }
+
+    public boolean hasRight(){
+        return right!=null;
+    }
+
 }

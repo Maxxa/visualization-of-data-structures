@@ -1,8 +1,8 @@
 package cz.upce.fei.muller.TwoDTree.animations.builders;
 
 import cz.commons.animation.StepEventHandler;
-import javafx.animation.StrokeTransition;
-import javafx.animation.StrokeTransitionBuilder;
+import javafx.animation.FillTransition;
+import javafx.animation.FillTransitionBuilder;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
@@ -15,7 +15,7 @@ import javafx.util.Duration;
 public class BuilderHelper {
 
     public static Transition getColorinShape(Shape rect,Color fromColor,Color toColor){
-        StrokeTransition st = StrokeTransitionBuilder.create()
+        FillTransition st = FillTransitionBuilder.create()
                 .duration(Duration.seconds(1))
                 .shape(rect)
                 .fromValue(fromColor)
@@ -24,6 +24,7 @@ public class BuilderHelper {
         st.setOnFinished(new StepEventHandler() {
             @Override
             protected void handleForward(ActionEvent actionEvent) {
+
                 System.out.println("for");
             }
 

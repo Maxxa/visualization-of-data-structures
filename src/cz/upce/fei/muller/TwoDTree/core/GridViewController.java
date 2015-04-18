@@ -46,6 +46,11 @@ public class GridViewController implements EventHandler<ActionEvent> {
     }
 
     private void buildGrid() {
+
+        for (Coordinate cord:tree){
+            System.out.println(cord);
+        }
+
         //TODO build grid ...
     }
 }

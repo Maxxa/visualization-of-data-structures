@@ -5,12 +5,14 @@ import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.muller.TwoDTree.events.*;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author Vojtěch Müller
  */
-public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implements ITwoDTree<T> {
+public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implements Iterable<T>, ITwoDTree<T> {
 
     private final EventBus eventBus;
     private Node<T> actual;
@@ -56,7 +58,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     private Node createRecursive(List<T> nodes, Node parent, Boolean leftSubTree, Boolean isSortingX) {
         Node tmp;
         if (nodes.size() == 1) {
-            tmp= buildNewNode(nodes.get(0));
+            tmp = buildNewNode(nodes.get(0));
             generateNewNodeEvent(tmp, parent, leftSubTree);
             return tmp;
         }
@@ -64,7 +66,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         int median = nodes.size() / 2;
         List<T> rightNodes = nodes.subList(median + 1, nodes.size());
         List<T> leftNodes = nodes.subList(0, median);
-        tmp= buildNewNode(nodes.get(median));
+        tmp = buildNewNode(nodes.get(median));
         generateNewNodeEvent(tmp, parent, leftSubTree);
         if (!leftNodes.isEmpty()) {
             tmp.left = createRecursive(leftNodes, tmp, true, !isSortingX);
@@ -83,7 +85,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         eventBus.post(parent == null ? new CreateRootEvent(newNode.value) : new InsertNodeEvent(newNode.value, parent.value, isLeftChild));
     }
 
-    private void generateLastEvent(){
+    private void generateLastEvent() {
         eventBus.post(new LastActionEvent());
     }
 
@@ -99,26 +101,26 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         actual = root;
         boolean compareX = true;
         boolean isLeft;
-        Node newNode= buildNewNode(insertedValue);
+        Node newNode = buildNewNode(insertedValue);
 
         while (true) {
             int value = compareX ? actual.value.getX() : actual.value.getY();
             isLeft = (compareX ? insertedValue.getX() : insertedValue.getY()) < value;
-            eventBus.post(new MoveToChildEvent(newNode.value,actual.value,compareX));
+            eventBus.post(new MoveToChildEvent(newNode.value, actual.value, compareX));
             Node node = isLeft ? actual.left : actual.right;
             if (node == null) {
                 node = newNode;
                 generateNewNodeEvent(node, actual, isLeft);
-                if(isLeft){
-                    actual.left=node;
-                }else{
-                    actual.right=node;
+                if (isLeft) {
+                    actual.left = node;
+                } else {
+                    actual.right = node;
                 }
                 generateLastEvent();
                 break;
             }
-            compareX=!compareX;
-            actual=node;
+            compareX = !compareX;
+            actual = node;
         }
     }
 
@@ -129,19 +131,19 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     }
 
     @Override
-    public T remove(int x,int y) {
+    public T remove(int x, int y) {
         eventBus.post(new StartRemoving());
-        T returnValue = find(x,y);
-        if(returnValue==null){
+        T returnValue = find(x, y);
+        if (returnValue == null) {
             // removed element not found...
             generateLastEvent();
             return null;
         }
+        //eventBus.post(new FlashMessageEvent("Hledam minimum/maxim v podstromu."));
 
         //have right? find min on right
         //have only left? find max on left
         //is leaf remove...
-
 
 
         return returnValue;
@@ -151,12 +153,12 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     public T find(int x, int y) {
         boolean isCompareX = true;
         actual = root;
-        eventBus.post(new StartFindingEvent(x,y));
+        eventBus.post(new StartFindingEvent(x, y));
         boolean right;
         while (true) {
-            eventBus.post(new FindEvent(actual.value,isCompareX));
+            eventBus.post(new FindEvent(actual.value, isCompareX));
             if (actual.value.getX() == x && actual.value.getY() == y) {
-                eventBus.post(new ElementFindEvent(actual.value));
+                eventBus.post(new ElementFindEndEvent(actual.value));
                 generateLastEvent();
                 return actual.value;
             }
@@ -171,6 +173,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
                 isCompareX = !isCompareX;
                 continue;
             }
+            eventBus.post(new ElementFindEndEvent());
             generateLastEvent();
             return null;
         }
@@ -189,7 +192,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     @Override
     public T getRight() {
-        if (actual.right == null) {
+        if (!actual.right.hasRight()) {
             return null;
         }
         actual = actual.right;
@@ -198,7 +201,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     @Override
     public T getLeft() {
-        if (actual.left == null) {
+        if (!actual.left.hasLeft()) {
             return null;
         }
         actual = actual.left;
@@ -215,6 +218,49 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         actual = null;
         root = null;
         count = 0;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new WidthIterator();
+    }
+
+    private class WidthIterator implements Iterator<T> {
+        private LinkedList<Node> fifo = new LinkedList<>();
+
+        private Node<T> temp;
+
+        public WidthIterator() {
+            temp = null;
+            if (root == null) return;
+            fifo.add(root);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !fifo.isEmpty();
+        }
+
+        @Override
+        public T next() {
+            if (fifo.isEmpty()) {
+                return null;
+            }
+            temp = fifo.removeFirst();
+            if (temp.left.hasLeft()) {
+                fifo.add(temp.left);
+            }
+            if (temp.right.hasRight()) {
+                fifo.add(temp.right);
+            }
+            return temp.value;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
     }
 
 }
