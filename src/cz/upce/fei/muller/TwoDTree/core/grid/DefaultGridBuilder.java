@@ -11,11 +11,13 @@ import javafx.scene.shape.Rectangle;
 public class DefaultGridBuilder {
 
     private final Pane gridView;
+    private final Label label;
 
     private final int paddingTop = 50;
 
-    public DefaultGridBuilder(Pane gridView) {
+    public DefaultGridBuilder(Pane gridView, Label label) {
         this.gridView = gridView;
+        this.label = label;
     }
 
     public GridPositionCalc build() {
@@ -23,7 +25,14 @@ public class DefaultGridBuilder {
         int x = (int) ((gridView.getPrefWidth()/2)-width/2);
         initRect(width, x);
         initLabels(width,x);
-        return new GridPositionCalc(); // TODO calc
+        initLabelText(x,width);
+        return new GridPositionCalc(x,paddingTop,width);
+    }
+
+    private void initLabelText(int x, int width) {
+        label.setTranslateX(x+width/2-10);
+        label.setTranslateY(paddingTop/4);
+        gridView.getChildren().addAll(label);
     }
 
     private void initLabels(int width, int x) {

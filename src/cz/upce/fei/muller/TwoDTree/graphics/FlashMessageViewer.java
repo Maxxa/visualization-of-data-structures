@@ -51,10 +51,6 @@ public class FlashMessageViewer extends Element{
         textMessage.setText(text);
     }
 
-    public boolean isSetText(){
-        return textMessage.getText()!="";
-    }
-
     public void clear(){
         setOpacity(0);
         setText("");

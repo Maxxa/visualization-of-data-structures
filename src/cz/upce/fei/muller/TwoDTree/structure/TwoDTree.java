@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Vojtěch Müller
  */
-public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implements Iterable<T>, ITwoDTree<T> {
+public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implements Iterable<ExtendData<T>>, ITwoDTree<T> {
 
     private final EventBus eventBus;
     private Node<T> actual;
@@ -221,19 +221,19 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public Iterator<ExtendData<T>> iterator() {
         return new WidthIterator();
     }
 
-    private class WidthIterator implements Iterator<T> {
-        private LinkedList<Node> fifo = new LinkedList<>();
+    private class WidthIterator implements Iterator<ExtendData<T>> {
+        private LinkedList<IteratorHelper> fifo = new LinkedList<>();
 
-        private Node<T> temp;
+        private IteratorHelper temp;
 
         public WidthIterator() {
             temp = null;
             if (root == null) return;
-            fifo.add(root);
+            fifo.add(new IteratorHelper(root, 1));
         }
 
         @Override
@@ -242,23 +242,35 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         }
 
         @Override
-        public T next() {
+        public ExtendData<T> next() {
             if (fifo.isEmpty()) {
                 return null;
             }
             temp = fifo.removeFirst();
-            if (temp.left.hasLeft()) {
-                fifo.add(temp.left);
+            if (temp.node.hasLeft()) {
+                fifo.add(new IteratorHelper(temp.node.left,temp.depth+1));
             }
-            if (temp.right.hasRight()) {
-                fifo.add(temp.right);
+            if (temp.node.hasRight()) {
+                fifo.add(new IteratorHelper(temp.node.right,temp.depth+1));
             }
-            return temp.value;
+            ExtendData.Dimension dimension = temp.depth%2==0? ExtendData.Dimension.DIMENSION_Y: ExtendData.Dimension.DIMENSION_X;
+            boolean isLeaf = !temp.node.hasRight() && !temp.node.hasLeft();
+            return new ExtendData<>(temp.node.value,dimension,isLeaf);
         }
 
         @Override
         public void remove() {
             throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        private class IteratorHelper {
+            Node<T> node;
+            int depth;
+
+            private IteratorHelper(Node<T> node, int depth) {
+                this.node = node;
+                this.depth = depth;
+            }
         }
 
     }

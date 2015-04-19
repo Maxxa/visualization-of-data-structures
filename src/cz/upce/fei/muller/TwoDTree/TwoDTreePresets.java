@@ -50,7 +50,11 @@ public class TwoDTreePresets implements Preset<Coordinate, TwoDTreePresetItem> {
 
     private Coordinate[] getSet2() {
         return new Coordinate[]{
-
+                new Coordinate(100,100),
+                new Coordinate(50,100),
+                new Coordinate(150,10),
+                new Coordinate(15,10),
+                new Coordinate(190,10),
         };
     }
 

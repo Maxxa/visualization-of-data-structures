@@ -16,7 +16,7 @@ public class ParserInputData {
         this.control = control;
     }
 
-    public CoordinateHelper action(){
+    public CoordinateHelper action() {
         Integer x = null;
         Integer y = null;
         try {
@@ -26,7 +26,7 @@ public class ParserInputData {
             Dialog.showError("Chyba", "Zadáno neplatné číslo.");
             return null;
         }
-        if( (x|y) < 0 || (x|y) > 200 ){
+        if (x < 0 || x > 200 || y < 0 || y > 200) {
             Dialog.showError("Chyba", "Neplatný rozsah hodnot! Povolené hodnoty 1-200.");
             return null;
         }
@@ -47,8 +47,6 @@ public class ParserInputData {
         };
 
     }
-
-
 
 
 }
