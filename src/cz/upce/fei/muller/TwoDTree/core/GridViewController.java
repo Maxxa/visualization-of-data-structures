@@ -1,12 +1,14 @@
 package cz.upce.fei.muller.TwoDTree.core;
 
 import cz.commons.utils.ViewSwitchButton;
+import cz.upce.fei.common.gui.structure.IStructureControls;
 import cz.upce.fei.muller.TwoDTree.core.grid.DefaultGridBuilder;
 import cz.upce.fei.muller.TwoDTree.core.grid.GridMouseHandler;
 import cz.upce.fei.muller.TwoDTree.core.grid.GridPositionCalc;
 import cz.upce.fei.muller.TwoDTree.core.grid.LinesContainer;
 import cz.upce.fei.muller.TwoDTree.graphics.CircleWithData;
 import cz.upce.fei.muller.TwoDTree.gui.CanvasChangeImpl;
+import cz.upce.fei.muller.TwoDTree.gui.TwoDTreeStructureControl;
 import cz.upce.fei.muller.TwoDTree.structure.Coordinate;
 import cz.upce.fei.muller.TwoDTree.structure.ExtendData;
 import cz.upce.fei.muller.TwoDTree.structure.TwoDTree;
@@ -52,14 +54,18 @@ public class GridViewController implements EventHandler<ActionEvent> {
             if (btn.isTreeView()) {
                 buildGrid();
             } else {
-                canvasChange.getGridView().getChildren().removeAll(elements);
-                elements.clear();
-                linesContainer.clear();
-                circles.clear();
-                label.setText("");
+                clear();
             }
             canvasChange.swapCanvas();
         }
+    }
+
+    private void clear() {
+        canvasChange.getGridView().getChildren().removeAll(elements);
+        elements.clear();
+        linesContainer.clear();
+        circles.clear();
+        label.setText("");
     }
 
     private void buildGrid() {
@@ -127,5 +133,12 @@ public class GridViewController implements EventHandler<ActionEvent> {
 
     public Label getLabel() {
         return label;
+    }
+
+    public void clearBeforeNewAction(IStructureControls structureControls){
+        if(canvasChange.getGridView().isVisible()){
+            TwoDTreeStructureControl control = (TwoDTreeStructureControl) structureControls;
+            control.simulateClickChangeView();
+        }
     }
 }

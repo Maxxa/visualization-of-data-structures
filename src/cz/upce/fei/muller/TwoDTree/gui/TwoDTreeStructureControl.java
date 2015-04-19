@@ -75,6 +75,7 @@ public final class TwoDTreeStructureControl implements IStructureControls {
         add.setDisable(isDisable);
         search.setDisable(isDisable);
         remove.setDisable(isDisable);
+        viewSwitchButton.setDisable(isDisable);
     }
 
     public void addInsertHandler(EventHandler<ActionEvent> handler) {
@@ -98,6 +99,10 @@ public final class TwoDTreeStructureControl implements IStructureControls {
     }
     public String getY() {
         return y.getText();
+    }
+
+    public void simulateClickChangeView(){
+        viewSwitchButton.fire();
     }
 
 }

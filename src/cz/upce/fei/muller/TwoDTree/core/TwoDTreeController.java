@@ -167,6 +167,7 @@ public class TwoDTreeController extends Controller {
         tree.clear();
         manager.clear();
         animationCore.clear();
+        gridViewController.clearBeforeNewAction(controlsContainer.getStructureControls());
     }
 
     private void clearBeforeNewAction() {
@@ -174,6 +175,7 @@ public class TwoDTreeController extends Controller {
         if (removePreparation != null) {
             removePreparation.executeRemove();
         }
+        gridViewController.clearBeforeNewAction(controlsContainer.getStructureControls());
         animationCore.clear();
 
     }
