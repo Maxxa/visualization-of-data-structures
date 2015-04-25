@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -26,6 +27,7 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
     private final ScrollPane scrollPane = new ScrollPane();
     private final Pane canvas = new Pane();
     private ToolBar toolbar;
+    private final StackPane stackPane = new StackPane();
     private final ZoomHandler zoomHandler = new ZoomHandler(scrollPane, canvas);
 
     @Override
@@ -48,8 +50,8 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
         scrollPane.setStyle("-fx-background-color: transparent; -fx-control-inner-background: transparent;");
         scrollPane.setContent(new Group(canvas));
         scrollPane.setPannable(true);
-
-        layout.setCenter(scrollPane);
+        stackPane.getChildren().addAll(scrollPane);
+        layout.setCenter(stackPane);
     }
 
     private void startStage(Stage stage) {
@@ -88,6 +90,10 @@ public abstract class AbstractApplication<T extends Controller> extends Applicat
 
     public ScrollPane getScrollPane() {
         return scrollPane;
+    }
+
+    public StackPane getStackPane() {
+        return stackPane;
     }
 
     public Pane getCanvas() {

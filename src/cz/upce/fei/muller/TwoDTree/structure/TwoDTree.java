@@ -6,7 +6,6 @@ import cz.upce.fei.muller.TwoDTree.events.*;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -16,6 +15,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     private final EventBus eventBus;
     private Node<T> actual;
+    private boolean isXCoordinate = true;
     private Node<T> root;
     private int count;
 
@@ -89,8 +89,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         eventBus.post(new LastActionEvent());
     }
 
-    @Override
-    public void insert(T insertedValue) {
+    @Override    public void insert(T insertedValue) {
         if (isEmpty()) {
             root = buildNewNode(insertedValue);
             generateNewNodeEvent(root, null, false);
@@ -133,44 +132,105 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     @Override
     public T remove(int x, int y) {
         eventBus.post(new StartRemoving());
-        T returnValue = find(x, y);
+        System.out.println("Start removing");
+        T returnValue = find(x, y); // finding removed element
         if (returnValue == null) {
             // removed element not found...
             generateLastEvent();
             return null;
         }
-        //eventBus.post(new FlashMessageEvent("Hledam minimum/maxim v podstromu."));
-
-        //have right? find min on right
-        //have only left? find max on left
-        //is leaf remove...
-
-
+        removeRecursive();
+        eventBus.post(new RemoveElement(returnValue));
+        generateLastEvent();
         return returnValue;
+    }
+
+    private void removeRecursive() {
+        if(!actual.hasLeft() && !actual.hasRight()){ // is leaf
+            // i must remove
+            System.out.println("LEAF REMOVE "+actual.value);
+            clearReference();
+            return;
+        }
+        RemoveHelper helper = find(actual.hasRight());
+        eventBus.post(new SwapNodeEvent(actual.value,helper.node.value));
+        actual.swapValue(helper.node);
+        actual=helper.node;
+        isXCoordinate=helper.isX;
+        removeRecursive();
+    }
+
+    private void clearReference() {
+        WidthIterator iterator = new WidthIterator(root,true);
+        if(root.value.getId()==actual.value.getId()){
+            System.out.println("Mazu root");
+            clear();
+            return;
+        }
+
+        while (iterator.hasNext()){
+            Node<T> data =iterator.next().getNode();
+
+            if(data.hasLeft()){
+                if(data.left.value.getId()==actual.value.getId()){
+                    System.out.println("Mazu leveho syna");
+                    data.left=null;
+                }
+            }
+            if(data.hasRight()){
+                if(data.right.value.getId()==actual.value.getId()){
+                    System.out.println("Mazu praveho syna");
+                    data.right=null;
+                }
+            }
+        }
+    }
+
+    // method find min or max at subtree
+    private RemoveHelper find(boolean isMin){
+        eventBus.post(new FindingMinMaxEvent(isMin));
+        System.out.println("Finding in subtree... "+(isMin?"RIGHT":"LEFT")+" coord "+(isXCoordinate?"X":"Y"));
+        Node<T> temp = isMin?actual.right:actual.left;
+        WidthIterator iterator = new WidthIterator(temp,isXCoordinate);
+        Boolean isX = isXCoordinate;
+        while (iterator.hasNext()) {
+            ExtendData<T> data = iterator.next();
+            System.out.println(data.getData());
+            int current = isXCoordinate ? temp.value.getX() : temp.value.getY();
+            int iterateValue = isXCoordinate ? data.getData().getX() : data.getData().getY();
+            if (isMin && iterateValue <= current ||
+                !isMin && iterateValue >= current) {
+                temp=data.getNode();
+                isX=data.getDimension().equals(ExtendData.Dimension.DIMENSION_X);
+            }
+        }
+
+        System.out.println((isMin?"MIN":"MAX")+" "+temp.value);
+        return new RemoveHelper(temp,isX);
     }
 
     @Override
     public T find(int x, int y) {
-        boolean isCompareX = true;
+        isXCoordinate = true;
         actual = root;
         eventBus.post(new StartFindingEvent(x, y));
         boolean right;
         while (true) {
-            eventBus.post(new FindEvent(actual.value, isCompareX));
+            eventBus.post(new FindEvent(actual.value, isXCoordinate));
             if (actual.value.getX() == x && actual.value.getY() == y) {
                 eventBus.post(new ElementFindEndEvent(actual.value));
                 generateLastEvent();
                 return actual.value;
             }
-            right = isCompareX ? actual.value.getX() < x : actual.value.getY() < y;
+            right = isXCoordinate ? actual.value.getX() < x : actual.value.getY() < y;
             if (actual.right != null && right == true) {
                 actual = actual.right;
-                isCompareX = !isCompareX;
+                isXCoordinate = !isXCoordinate;
                 continue;
             }
             if (actual.left != null && right == false) {
                 actual = actual.left;
-                isCompareX = !isCompareX;
+                isXCoordinate = !isXCoordinate;
                 continue;
             }
             eventBus.post(new ElementFindEndEvent());
@@ -182,6 +242,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     @Override
     public T getRoot() {
         actual = root;
+        isXCoordinate=true;
         return root.value;
     }
 
@@ -196,6 +257,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             return null;
         }
         actual = actual.right;
+        isXCoordinate =!isXCoordinate;
         return actual.value;
     }
 
@@ -205,6 +267,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             return null;
         }
         actual = actual.left;
+        isXCoordinate =!isXCoordinate;
         return actual.value;
     }
 
@@ -218,61 +281,23 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         actual = null;
         root = null;
         count = 0;
+        isXCoordinate=true;
     }
 
     @Override
     public Iterator<ExtendData<T>> iterator() {
-        return new WidthIterator();
+        return new WidthIterator(root,true);
     }
 
-    private class WidthIterator implements Iterator<ExtendData<T>> {
-        private LinkedList<IteratorHelper> fifo = new LinkedList<>();
+    class RemoveHelper{
 
-        private IteratorHelper temp;
+        Node<T> node;
+        boolean isX;
 
-        public WidthIterator() {
-            temp = null;
-            if (root == null) return;
-            fifo.add(new IteratorHelper(root, 1));
+        RemoveHelper(Node<T> node, boolean isX) {
+            this.node = node;
+            this.isX = isX;
         }
-
-        @Override
-        public boolean hasNext() {
-            return !fifo.isEmpty();
-        }
-
-        @Override
-        public ExtendData<T> next() {
-            if (fifo.isEmpty()) {
-                return null;
-            }
-            temp = fifo.removeFirst();
-            if (temp.node.hasLeft()) {
-                fifo.add(new IteratorHelper(temp.node.left,temp.depth+1));
-            }
-            if (temp.node.hasRight()) {
-                fifo.add(new IteratorHelper(temp.node.right,temp.depth+1));
-            }
-            ExtendData.Dimension dimension = temp.depth%2==0? ExtendData.Dimension.DIMENSION_Y: ExtendData.Dimension.DIMENSION_X;
-            boolean isLeaf = !temp.node.hasRight() && !temp.node.hasLeft();
-            return new ExtendData<>(temp.node.value,dimension,isLeaf);
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        private class IteratorHelper {
-            Node<T> node;
-            int depth;
-
-            private IteratorHelper(Node<T> node, int depth) {
-                this.node = node;
-                this.depth = depth;
-            }
-        }
-
     }
 
 }

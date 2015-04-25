@@ -7,12 +7,12 @@ import cz.upce.fei.common.core.AbstractStructureElement;
  */
 public class ExtendData<T  extends AbstractStructureElement & ICoordinate> {
 
-    T data;
+    Node<T> node;
     Dimension dimension;
     boolean isLeaf;
 
-    public ExtendData(T data, Dimension dimension, boolean isLeaf) {
-        this.data = data;
+    public ExtendData(Node<T> node, Dimension dimension, boolean isLeaf) {
+        this.node = node;
         this.dimension = dimension;
         this.isLeaf=isLeaf;
     }
@@ -22,7 +22,11 @@ public class ExtendData<T  extends AbstractStructureElement & ICoordinate> {
     }
 
     public T getData() {
-        return data;
+        return node.value;
+    }
+
+    Node<T> getNode() {
+        return node;
     }
 
     public boolean isLeaf() {

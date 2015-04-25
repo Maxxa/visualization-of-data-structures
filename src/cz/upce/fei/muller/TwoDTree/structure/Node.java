@@ -30,4 +30,10 @@ class Node<T extends AbstractStructureElement & ICoordinate> {
         return right!=null;
     }
 
+    protected void swapValue(Node<T> swapNode){
+        T tmp = value;
+        value=swapNode.value;
+        swapNode.value=tmp;
+    }
+
 }
