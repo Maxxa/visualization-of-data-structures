@@ -89,7 +89,8 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         eventBus.post(new LastActionEvent());
     }
 
-    @Override    public void insert(T insertedValue) {
+    @Override
+    public void insert(T insertedValue) {
         if (isEmpty()) {
             root = buildNewNode(insertedValue);
             generateNewNodeEvent(root, null, false);
