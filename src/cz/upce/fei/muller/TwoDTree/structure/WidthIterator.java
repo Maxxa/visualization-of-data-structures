@@ -13,7 +13,7 @@ class WidthIterator<T extends AbstractStructureElement & ICoordinate> implements
 
     private IteratorHelper temp = null;
 
-    WidthIterator(Node root,boolean isX){
+    WidthIterator(Node<T> root,boolean isX){
         temp=null;
         if (root==null)return;
         fifo.add(new IteratorHelper(root,isX?1:2));

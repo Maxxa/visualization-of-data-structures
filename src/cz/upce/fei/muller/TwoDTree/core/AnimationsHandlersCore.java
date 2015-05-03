@@ -7,12 +7,14 @@ import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
+import cz.commons.layoutManager.WorkBinaryNodeInfoBuilder;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.muller.TwoDTree.animations.FindPlacePreparation;
 import cz.upce.fei.muller.TwoDTree.animations.InsertPreparation;
 import cz.upce.fei.muller.TwoDTree.animations.RemovePreparation;
+import cz.upce.fei.muller.TwoDTree.animations.SwapPreparation;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAnimMoveNode;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderShowFindElement;
@@ -46,6 +48,7 @@ public class AnimationsHandlersCore {
     private TwoDGraphicsNode findingNode;
     private final Point2D flashMessagePosition;
     private List<FlashMessageViewer> viewers = new LinkedList<>();
+    private boolean isRemovingEnd = false;
 
     public AnimationsHandlersCore(AnimationControl animationControl, ITreeLayoutManager manager) {
         this.animationControl = animationControl;
@@ -59,12 +62,11 @@ public class AnimationsHandlersCore {
     @Subscribe
     public void handleEndEvent(LastActionEvent event) {
         System.out.println("-----------END BUILDING ANIMATION-----------");
-        initMovingTransition();
 
-        if (findPlacePreparator != null && findingNode != null) {
+        initMovingTransition();
+        if (findPlacePreparator != null && findingNode != null && !isRemovingEnd) {
             buildFindEnd();
         }
-
         endInitAnimation.endAnimation(animationControl.isMarkedAsStepping());
         if (!animationControl.isMarkedAsStepping()) {
             animationControl.playForward();
@@ -97,7 +99,7 @@ public class AnimationsHandlersCore {
             Integer depth = manager.getElementInfo(event.getParentNode().getId()).getDepth() + 1;
             if (findPlacePreparator == null) {
                 newNode = new TwoDGraphicsNode(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
-                newNode.setLabelBold(depth % 2 > 0 ? false : true, true);
+                newNode.setLabelBold(depth % 2 <= 0, true);
             } else {
                 insertToCanvas = false;
                 toPoint = findPlacePreparator.getLastPosition();
@@ -124,7 +126,7 @@ public class AnimationsHandlersCore {
             ParallelTransition pt = new ParallelTransition();
             pt.setOnFinished(
                     new StepEventHandler() {
-                        boolean isX = depth % 2 > 0 ? false : true;
+                        boolean isX = depth % 2 <= 0;
 
                         @Override
                         protected void handleForward(ActionEvent actionEvent) {
@@ -160,6 +162,45 @@ public class AnimationsHandlersCore {
         findPlacePreparator.addMove(
                 manager.getNodePosition(event.getComparingNode().getId()),
                 getNode(event.getComparingNode().getId()), event.isCompareX());
+
+    }
+
+    @Subscribe
+    public void handleStartRemoving(StartRemoving event){
+        System.out.println("__________START REMOVE__________");
+    }
+
+    @Subscribe
+    public void handleEndRemoving(RemoveElement event){
+        System.out.println("__________END REMOVE__________");
+        isRemovingEnd =true;
+        //TODO build remove...
+    }
+
+    @Subscribe
+    public void handleFindMinMax(FindingMinMaxEvent event){
+        System.out.println("finding min max: isMin="+event.isMin());
+        String message;
+        if(event.isMin()){
+            message="Hledám minimum v pravém podstromu, dle ";
+        }else{
+            message="Hledám maximum v levém podstromu, dle ";
+        }
+        message+= event.isXCoordinate()?"X":"Y";
+        animationControl.getTransitions().add(showViewer(buildViewer(message)));
+    }
+
+    @Subscribe
+      public void handleSwapElement(SwapNodeEvent event){
+        System.out.println("swap element "+event.getSecondNode()+" "+event.getFirstNode());
+        if(!event.getFirstNode().getId().equals(event.getSecondNode().getId())) {
+            SwapPreparation handler = new SwapPreparation(manager,
+                    WorkBinaryNodeInfoBuilder.getWorkInfo(event.getFirstNode().getId(), manager),
+                    WorkBinaryNodeInfoBuilder.getWorkInfo(event.getSecondNode().getId(),manager));
+            IAnimationBuilder creator = handler.getBuilder();
+            manager.swapElement(event.getFirstNode().getId(), event.getSecondNode().getId());
+            insertTransition(creator);
+        }
 
     }
 
@@ -248,6 +289,7 @@ public class AnimationsHandlersCore {
         moveParentsElements.clear();
         removePreparation = null;
         findingNode = null;
+        isRemovingEnd =false;
         animationControl.clear();
         manager.getCanvas().getChildren().removeAll(viewers);
         viewers.clear();
@@ -269,24 +311,11 @@ public class AnimationsHandlersCore {
 
     private Transition showViewer(Node element) {
         SequentialTransition st = new SequentialTransition();
-        System.out.println("SHOW VIEW?");
         st.getChildren().addAll(
                 FadesTransitionBuilder.getTransition(element, Duration.ONE, 0, 1),
                 ParallelTransitionBuilder.create().delay(Duration.seconds(2)).build(),
                 FadesTransitionBuilder.getTransition(element, Duration.ONE, 1, 0)
         );
-        st.setOnFinished(new StepEventHandler() {
-            @Override
-            protected void handleForward(ActionEvent actionEvent) {
-                System.out.println("for");
-            }
-
-            @Override
-            protected void handleBack(ActionEvent actionEvent) {
-                System.out.println("back");
-
-            }
-        });
         return st;
     }
 

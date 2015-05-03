@@ -7,10 +7,10 @@ import cz.upce.fei.common.core.AbstractStructureElement;
  */
 class Node<T extends AbstractStructureElement & ICoordinate> {
 
-    public Node left, right;
+    public Node<T> left, right;
     T value;
 
-    public Node(Node left, Node right, T value) {
+    public Node(Node<T> left, Node<T> right, T value) {
         this.left = left;
         this.right = right;
         this.value = value;

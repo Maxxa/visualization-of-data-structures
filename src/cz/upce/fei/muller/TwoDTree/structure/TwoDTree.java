@@ -29,17 +29,17 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     public void create(List<T> nodes) {
         count = nodes.size();
         if (nodes.size() == 1) {
-            root = new Node(nodes.get(0));
+            root = new Node<>(nodes.get(0));
             generateNewNodeEvent(root, null, false);
             actual = root;
             generateLastEvent();
             return;
         }
-        Collections.sort(nodes, new ComparatorX());
+        Collections.sort(nodes, new ComparatorX<>());
         int median = nodes.size() / 2;
         List<T> rightNodes = nodes.subList(median + 1, nodes.size());
         List<T> leftNodes = nodes.subList(0, median);
-        root = new Node(nodes.get(median));
+        root = new Node<>(nodes.get(median));
         generateNewNodeEvent(root, null, false);
         actual = root;
         if (!leftNodes.isEmpty()) {
@@ -55,14 +55,14 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         generateLastEvent();
     }
 
-    private Node createRecursive(List<T> nodes, Node parent, Boolean leftSubTree, Boolean isSortingX) {
-        Node tmp;
+    private Node<T> createRecursive(List<T> nodes, Node<T> parent, Boolean leftSubTree, Boolean isSortingX) {
+        Node<T> tmp;
         if (nodes.size() == 1) {
             tmp = buildNewNode(nodes.get(0));
             generateNewNodeEvent(tmp, parent, leftSubTree);
             return tmp;
         }
-        Collections.sort(nodes, isSortingX ? new ComparatorX() : new ComparatorY());
+        Collections.sort(nodes, isSortingX ? new ComparatorX<>() : new ComparatorY<>());
         int median = nodes.size() / 2;
         List<T> rightNodes = nodes.subList(median + 1, nodes.size());
         List<T> leftNodes = nodes.subList(0, median);
@@ -81,7 +81,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         return tmp;
     }
 
-    private void generateNewNodeEvent(Node newNode, Node parent, boolean isLeftChild) {
+    private void generateNewNodeEvent(Node<T> newNode, Node<T> parent, boolean isLeftChild) {
         eventBus.post(parent == null ? new CreateRootEvent(newNode.value) : new InsertNodeEvent(newNode.value, parent.value, isLeftChild));
     }
 
@@ -101,13 +101,13 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         actual = root;
         boolean compareX = true;
         boolean isLeft;
-        Node newNode = buildNewNode(insertedValue);
+        Node<T> newNode = buildNewNode(insertedValue);
 
         while (true) {
             int value = compareX ? actual.value.getX() : actual.value.getY();
             isLeft = (compareX ? insertedValue.getX() : insertedValue.getY()) < value;
             eventBus.post(new MoveToChildEvent(newNode.value, actual.value, compareX));
-            Node node = isLeft ? actual.left : actual.right;
+            Node<T> node = isLeft ? actual.left : actual.right;
             if (node == null) {
                 node = newNode;
                 generateNewNodeEvent(node, actual, isLeft);
@@ -124,8 +124,8 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         }
     }
 
-    private Node buildNewNode(T insertedValue) {
-        Node node = new Node(insertedValue);
+    private Node<T> buildNewNode(T insertedValue) {
+        Node<T> node = new Node<>(insertedValue);
         count++;
         return node;
     }
@@ -136,8 +136,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         System.out.println("Start removing");
         T returnValue = find(x, y); // finding removed element
         if (returnValue == null) {
-            // removed element not found...
-            generateLastEvent();
+            // removed element not found...`
             return null;
         }
         removeRecursive();
@@ -162,8 +161,8 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     }
 
     private void clearReference() {
-        WidthIterator iterator = new WidthIterator(root,true);
-        if(root.value.getId()==actual.value.getId()){
+        WidthIterator<T> iterator = new WidthIterator<>(root,true);
+        if(root.value.getId().equals(actual.value.getId())){
             System.out.println("Mazu root");
             clear();
             return;
@@ -173,13 +172,13 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             Node<T> data =iterator.next().getNode();
 
             if(data.hasLeft()){
-                if(data.left.value.getId()==actual.value.getId()){
+                if(data.left.value.getId().equals(actual.value.getId())){
                     System.out.println("Mazu leveho syna");
                     data.left=null;
                 }
             }
             if(data.hasRight()){
-                if(data.right.value.getId()==actual.value.getId()){
+                if(data.right.value.getId().equals(actual.value.getId())){
                     System.out.println("Mazu praveho syna");
                     data.right=null;
                 }
@@ -189,10 +188,10 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     // method find min or max at subtree
     private RemoveHelper find(boolean isMin){
-        eventBus.post(new FindingMinMaxEvent(isMin));
+        eventBus.post(new FindingMinMaxEvent(isMin,isXCoordinate));
         System.out.println("Finding in subtree... "+(isMin?"RIGHT":"LEFT")+" coord "+(isXCoordinate?"X":"Y"));
         Node<T> temp = isMin?actual.right:actual.left;
-        WidthIterator iterator = new WidthIterator(temp,isXCoordinate);
+        WidthIterator<T> iterator = new WidthIterator<>(temp,isXCoordinate);
         Boolean isX = isXCoordinate;
         while (iterator.hasNext()) {
             ExtendData<T> data = iterator.next();
@@ -224,12 +223,12 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
                 return actual.value;
             }
             right = isXCoordinate ? actual.value.getX() < x : actual.value.getY() < y;
-            if (actual.right != null && right == true) {
+            if (actual.right != null && right) {
                 actual = actual.right;
                 isXCoordinate = !isXCoordinate;
                 continue;
             }
-            if (actual.left != null && right == false) {
+            if (actual.left != null && !right) {
                 actual = actual.left;
                 isXCoordinate = !isXCoordinate;
                 continue;
@@ -287,7 +286,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     @Override
     public Iterator<ExtendData<T>> iterator() {
-        return new WidthIterator(root,true);
+        return new WidthIterator<>(root,true);
     }
 
     class RemoveHelper{
