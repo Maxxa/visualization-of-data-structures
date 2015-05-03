@@ -13,7 +13,7 @@ public class RemoveElement extends AbstractEvent{
         super(removedElement);
     }
 
-    public Coordinate getRemovedELement(){
+    public Coordinate getRemovedElement(){
         return (Coordinate) element;
     }
 

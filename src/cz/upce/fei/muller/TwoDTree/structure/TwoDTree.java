@@ -163,7 +163,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     private void clearReference() {
         WidthIterator<T> iterator = new WidthIterator<>(root,true);
         if(root.value.getId().equals(actual.value.getId())){
-            System.out.println("Mazu root");
+            System.out.println("Mažu root");
             clear();
             return;
         }

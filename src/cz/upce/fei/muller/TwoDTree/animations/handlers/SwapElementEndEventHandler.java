@@ -1,7 +1,10 @@
 package cz.upce.fei.muller.TwoDTree.animations.handlers;
 
 import cz.commons.animation.StepEventHandler;
+import cz.commons.layoutManager.ElementInfo;
+import cz.upce.fei.muller.TwoDTree.animations.builders.DefaultSwapInformation;
 import cz.upce.fei.muller.TwoDTree.animations.builders.SwapHelper;
+import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 import javafx.event.ActionEvent;
 
 import java.util.List;
@@ -13,19 +16,23 @@ public class SwapElementEndEventHandler extends StepEventHandler {
 
 
     private final List<SwapHelper> helperList;
+    private final DefaultSwapInformation swapInformation;
 
-    public SwapElementEndEventHandler(List<SwapHelper> helperList) {
+    public SwapElementEndEventHandler(List<SwapHelper> helperList,DefaultSwapInformation swapInformation) {
         this.helperList = helperList;
+        this.swapInformation = swapInformation;
     }
 
     @Override
     protected void handleForward(ActionEvent actionEvent) {
         buildHandle(true);
+        controlAndChange(true);
     }
 
     @Override
     protected void handleBack(ActionEvent actionEvent) {
         buildHandle(false);
+        controlAndChange(false);
     }
 
     private void buildHandle(boolean isForward){
@@ -36,6 +43,15 @@ public class SwapElementEndEventHandler extends StepEventHandler {
                  helper.setBack();
              }
         }
+    }
+
+    private void controlAndChange(boolean isForward) {
+        ElementInfo infoFirst = swapInformation.infoFirstElement.get();
+        ElementInfo infoSecond = swapInformation.infoSecondElement.get();
+        boolean isXNew = infoFirst.getDepth()%2<=0;
+        boolean isXOld = infoSecond.getDepth()%2<=0;
+        ((TwoDGraphicsNode)infoFirst.getElement()).setLabelBold(isForward?isXNew:isXOld, true);
+        ((TwoDGraphicsNode)infoSecond.getElement()).setLabelBold(isForward?isXOld:isXNew, true);
     }
 
 }

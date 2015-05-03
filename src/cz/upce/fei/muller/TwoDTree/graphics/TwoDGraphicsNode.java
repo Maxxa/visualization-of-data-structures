@@ -108,7 +108,11 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
     }
 
     public void setLabelBold(boolean x,boolean bold){
-        Label label = x?labelX:labelY;
+        changeLabelBold(bold,x?labelX:labelY);
+        changeLabelBold(!bold,x?labelY:labelX);
+    }
+
+    private void changeLabelBold(boolean bold,Label label){
         if(bold){
             label.setStyle("-fx-font-weight: bold");
         }else{

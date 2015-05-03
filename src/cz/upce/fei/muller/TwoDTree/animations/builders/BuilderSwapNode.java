@@ -32,40 +32,40 @@ public class BuilderSwapNode implements IAnimationBuilder {
     @Override
     public ParallelTransition getAnimation() {
         ParallelTransition pt = getMovingElements();
-        SequentialTransition sq = new SequentialTransition(getLinesFades(true),pt, getLinesFades(false));
+        SequentialTransition sq = new SequentialTransition(getLinesFades(true), pt, getLinesFades(false));
         pt.setOnFinished(setFinishedHandler());
         return new ParallelTransition(sq);
     }
 
     private EventHandler<ActionEvent> setFinishedHandler() {
-        return new SwapElementEndEventHandler(helpers);
+        return new SwapElementEndEventHandler(helpers,information);
     }
 
     private ParallelTransition getLinesFades(boolean visibility) {
         ParallelTransition pt = new ParallelTransition();
 
-        for (SwapHelper element: helpers) {
-                addFadeToTransition(pt,element.getLine(), visibility);
+        for (SwapHelper element : helpers) {
+            addFadeToTransition(pt, element.getLine(), visibility);
         }
 
-        pt.setOnFinished(new FadesTransitionHandler(helpers,visibility));
+        pt.setOnFinished(new FadesTransitionHandler(helpers, visibility));
         return pt;
     }
 
-    private void addFadeToTransition(ParallelTransition pt, LineElement element,boolean visibility){
+    private void addFadeToTransition(ParallelTransition pt, LineElement element, boolean visibility) {
         pt.getChildren().add(getFadeTransition(element, visibility));
     }
 
     private FadeTransition getFadeTransition(LineElement element, boolean visibility) {
-        int from = visibility?1:0;
-        int to = visibility?0:1;
-        return FadesTransitionBuilder.getTransition(element,Duration.ONE,from ,to);
+        int from = visibility ? 1 : 0;
+        int to = visibility ? 0 : 1;
+        return FadesTransitionBuilder.getTransition(element, Duration.ONE, from, to);
     }
 
-    protected ParallelTransition getMovingElements(){
-        TranslateTransition t1= RelativeTranslateTransition.build(information.infoSecondElement.get().getElement(), information.secondNodePosition,information.firstNodePosition, new Duration(1000));
-        TranslateTransition t2= RelativeTranslateTransition.build(information.infoFirstElement.get().getElement(),information.firstNodePosition,information.secondNodePosition,new Duration(1000));
-        return new ParallelTransition(t1,t2);
+    protected ParallelTransition getMovingElements() {
+        TranslateTransition t1 = RelativeTranslateTransition.build(information.infoSecondElement.get().getElement(), information.secondNodePosition, information.firstNodePosition, new Duration(1000));
+        TranslateTransition t2 = RelativeTranslateTransition.build(information.infoFirstElement.get().getElement(), information.firstNodePosition, information.secondNodePosition, new Duration(1000));
+        return new ParallelTransition(t1, t2);
     }
 
 

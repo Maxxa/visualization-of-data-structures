@@ -28,7 +28,6 @@ public class FindPlacePreparation {
     public void addMove(Point2D point, TwoDGraphicsNode comparingNode, boolean compareX){
         Point2D pointTo = new Point2D(point.getX(),point.getY()- ITwoDNodesElements.HEIGHT-10);
         BuilderAnimMoveNode builder = new BuilderAnimMoveNode(creatingPoint,pointTo,insertedNode);
-        System.out.println("FROM: "+creatingPoint+" TO: "+pointTo);
         creatingPoint=pointTo;
         Transition transition = movings.isEmpty()?builder.getAnimation():builder.getTranslateTransition();
         movings.add(transition);

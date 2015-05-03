@@ -31,29 +31,24 @@ public class SwapPreparation implements IPreparation {
                 manager.getNodePosition(infoFirstElement.get().getElement().getElementId()),
                 manager.getNodePosition(infoSecondElement.get().getElement().getElementId())
         );
-        System.out.println(infoFirstElement);
-        System.out.println(infoSecondElement);
         initParent(infoFirstElement, infoSecondElement);
         initParent(infoSecondElement, infoFirstElement);
         initChilds();
     }
 
     private void initParent(WorkBinaryNodeInfo first, WorkBinaryNodeInfo second) {
-        System.out.print(first.hasParent() + "  " + second.get().getElement().getElementId() + "   ");
-        System.out.println(first.hasParent() ? first.get().getIdParent() : "");
-        if (!first.hasParent() && first.get().getIdParent().equals(second.get().getElement().getElementId())) {
+        if (first.hasParent() && first.get().getIdParent()!= second.get().getElement().getElementId()) {
             NodePosition position = getParentPosition(first.getParent().getIndexAtRow(), first.get().getIndexAtRow());
             SwapHelper helper = new SwapHelper(first.getParent(), position,
                     new ConnectorHelper(
                             (ConnectibleElement) second.get().getElement(),
                             (ConnectibleElement) first.get().getElement()));
             helpers.add(helper);
-            System.out.println("has parent");
         }
 
     }
 
-    //THIS METHOD IS BIG SHIT>...>but i dont now how to create easy:(
+    //THIS METHOD IS BIG SHIT>...>but i dont know how to create easy:(
     private void initChilds() {
         WorkBinaryNodeInfo first = information.infoFirstElement;
         WorkBinaryNodeInfo second = information.infoSecondElement;
@@ -61,19 +56,15 @@ public class SwapPreparation implements IPreparation {
         SwapHelper helpFirstRight = new SwapHelper(first.get(), NodePosition.RIGHT);
         SwapHelper helpSecondLeft = new SwapHelper(second.get(), NodePosition.LEFT);
         SwapHelper helpSecondRight = new SwapHelper(second.get(), NodePosition.RIGHT);
-        System.out.println("%%INIT lines...");
         ///////////////////////////
         /// FIRST LEFT first-back second-forward,
         ///////////////////////////
         if (first.hasLeft()) {
-            System.out.println(String.format("%s %s", first.getLeftChild().getElement().getElementId(), second.get().getElement().getElementId()));
             if (first.getLeftChild().getElement().getElementId() == second.get().getElement().getElementId()) {
                 //jedna se o leveho syna stejny atp
                 helpFirstLeft.getConnectors().back = ((TwoDGraphicsNode) second.get().getElement());
                 helpSecondLeft.getConnectors().forward = ((TwoDGraphicsNode) first.get().getElement());
-                System.out.println("FIRST HAS LEFT AND ITS SWAPING ELEMENT");
             } else {
-                System.out.println("FIRST HAS LEFT AND ITS NOT SWAPING ELEMENT");
                 helpFirstLeft.getConnectors().back = ((TwoDGraphicsNode) first.getLeftChild().getElement());
                 helpSecondLeft.getConnectors().forward = ((TwoDGraphicsNode) first.getLeftChild().getElement());
             }
@@ -83,22 +74,18 @@ public class SwapPreparation implements IPreparation {
             helpSecondLeft.getConnectors().forward = ((TwoDGraphicsNode) second.get().getElement()).getRightChildConnector();
             helpFirstLeft.disableVisibleBack();
             helpSecondLeft.disableVisibleForward();
-            System.out.println("no child first left");
         }
 
         ///////////////////////////
         /// FIRST RIGHT first-back second-forward,
         ///////////////////////////
         if (first.hasRight()) {
-            System.out.println(String.format("%s %s",first.getRightChild().getElement().getElementId(), second.get().getElement().getElementId()));
             if (first.getRightChild().getElement().getElementId() == second.get().getElement().getElementId()) {
                 helpFirstRight.getConnectors().back = ((TwoDGraphicsNode) second.get().getElement());
                 helpSecondRight.getConnectors().forward = ((TwoDGraphicsNode) first.get().getElement());
-                System.out.println("FIRST HAS RIGHT AND ITS SWAPING ELEMENT");
             } else {
                 helpFirstRight.getConnectors().back = ((TwoDGraphicsNode) first.getRightChild().getElement());
                 helpSecondRight.getConnectors().forward = ((TwoDGraphicsNode) first.getRightChild().getElement());
-                System.out.println("FIRST HAS RIGHT AND ITS NOT SWAPING ELEMENT");
             }
         } else {
             // pokud nema syna tak se spoji s druhym koncem a naopak
@@ -106,7 +93,6 @@ public class SwapPreparation implements IPreparation {
             helpSecondRight.getConnectors().forward = ((TwoDGraphicsNode) second.get().getElement()).getLeftChildConnector();
             helpFirstRight.disableVisibleBack();
             helpSecondRight.disableVisibleForward();
-            System.out.println("no child first right");
         }
 
 
@@ -116,11 +102,9 @@ public class SwapPreparation implements IPreparation {
         if (second.hasLeft()) {
             if (second.getLeftChild().getElement().getElementId() == first.get().getElement().getElementId()) {
                 //jedna se o leveho syna stejny atp
-                System.out.println("SECOND HAS LEFT AND ITS SWAPING ELEMENT");
                 helpFirstLeft.getConnectors().forward = ((TwoDGraphicsNode) first.get().getElement());
                 helpSecondLeft.getConnectors().back = ((TwoDGraphicsNode) second.get().getElement());
             } else {
-                System.out.println("SECOND HAS LEFT AND ITS NOT SWAPING ELEMENT");
                 helpFirstLeft.getConnectors().forward = ((TwoDGraphicsNode) second.getLeftChild().getElement());
                 helpSecondLeft.getConnectors().back = ((TwoDGraphicsNode) second.getLeftChild().getElement());
             }
@@ -130,18 +114,15 @@ public class SwapPreparation implements IPreparation {
             helpSecondLeft.getConnectors().back = ((TwoDGraphicsNode) second.get().getElement()).getRightChildConnector();
             helpFirstLeft.disableVisibleForward();
             helpSecondLeft.disableVisibleBack();
-            System.out.println("no child second left");
         }
         ///////////////////////////
         /// SECOND RIGHT first-forward second-back,
         ///////////////////////////
         if (second.hasRight()) {
             if (second.getRightChild().getElement().getElementId() == first.get().getElement().getElementId()) {
-                System.out.println("SECOND HAS RIGHT AND ITS SWAPING ELEMENT");
                 helpFirstRight.getConnectors().forward = ((TwoDGraphicsNode) first.get().getElement());
                 helpSecondRight.getConnectors().back = ((TwoDGraphicsNode) second.get().getElement());
             } else {
-                System.out.println("SECOND HAS RIGHT AND ITS NOT SWAPING ELEMENT");
                 helpFirstRight.getConnectors().forward = ((TwoDGraphicsNode) second.getRightChild().getElement());
                 helpSecondRight.getConnectors().back = ((TwoDGraphicsNode) second.getRightChild().getElement());
             }
@@ -151,16 +132,12 @@ public class SwapPreparation implements IPreparation {
             helpSecondRight.getConnectors().back = ((TwoDGraphicsNode) second.get().getElement()).getLeftChildConnector();
             helpFirstRight.disableVisibleForward();
             helpSecondRight.disableVisibleBack();
-            System.out.println("no child second right");
         }
 
         helpers.add(helpFirstLeft);
         helpers.add(helpFirstRight);
         helpers.add(helpSecondLeft);
         helpers.add(helpSecondRight);
-        System.out.println(helpers.size());
-
-        System.out.println("%%%%%%%");
     }
 
     @Override
