@@ -4,6 +4,7 @@ import cz.commons.graphics.LineElement;
 import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.WorkBinaryNodeInfo;
 import cz.commons.utils.FadesTransitionBuilder;
+import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
 import cz.upce.fei.muller.TwoDTree.animations.handlers.InsertingEndEventHandler;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 import javafx.animation.FadeTransition;

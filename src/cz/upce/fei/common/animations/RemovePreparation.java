@@ -1,12 +1,12 @@
-package cz.upce.fei.muller.TwoDTree.animations;
+package cz.upce.fei.common.animations;
 
+import cz.commons.graphics.BinaryNodeWithLine;
 import cz.commons.graphics.LineElement;
 import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.BinaryTreeHelper;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.WorkBinaryNodeInfo;
 import cz.commons.layoutManager.WorkBinaryNodeInfoBuilder;
-import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 
 /**
  * @author Vojtěch Müller
@@ -24,12 +24,12 @@ public class RemovePreparation {
         this.manager = manager;
         if(isLineToRemoved()){
             isLeftLine = BinaryTreeHelper.getLeftChildIndex(workerInfo.getParent().getIndexAtRow())== workerInfo.get().getIndexAtRow();
-            lineElement =((TwoDGraphicsNode) workerInfo.getParent().getElement()).getChildLine(isLeftLine ?NodePosition.LEFT:NodePosition.RIGHT);
+            lineElement =((BinaryNodeWithLine) workerInfo.getParent().getElement()).getChildLine(isLeftLine ?NodePosition.LEFT:NodePosition.RIGHT);
         }
     }
 
-    public TwoDGraphicsNode getRemovedElement(){
-        return (TwoDGraphicsNode) workerInfo.get().getElement();
+    public BinaryNodeWithLine getRemovedElement(){
+        return (BinaryNodeWithLine) workerInfo.get().getElement();
     }
 
     public boolean isLineToRemoved(){
@@ -47,12 +47,12 @@ public class RemovePreparation {
                 LineElement lineFromParentToRemoved =getLineToRemoved();
                 lineFromParentToRemoved.setVisible(false);
                 lineFromParentToRemoved.setOpacity(0);
-                lineFromParentToRemoved.setEnd((TwoDGraphicsNode) workerInfo.getParent().getElement());
+                lineFromParentToRemoved.setEnd((BinaryNodeWithLine) workerInfo.getParent().getElement());
             }
         }
         manager.getCanvas().getChildren().remove(workerInfo.get().getElement());
-        manager.getCanvas().getChildren().remove(((TwoDGraphicsNode) workerInfo.get().getElement()).getChildLine(NodePosition.LEFT));
-        manager.getCanvas().getChildren().remove(((TwoDGraphicsNode) workerInfo.get().getElement()).getChildLine(NodePosition.RIGHT));
+        manager.getCanvas().getChildren().remove(((BinaryNodeWithLine) workerInfo.get().getElement()).getChildLine(NodePosition.LEFT));
+        manager.getCanvas().getChildren().remove(((BinaryNodeWithLine) workerInfo.get().getElement()).getChildLine(NodePosition.RIGHT));
     }
 
 }

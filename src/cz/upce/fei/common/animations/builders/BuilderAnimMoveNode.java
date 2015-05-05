@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.TwoDTree.animations.builders;
+package cz.upce.fei.common.animations.builders;
 
 import cz.commons.graphics.Element;
 import cz.commons.utils.FadesTransitionBuilder;

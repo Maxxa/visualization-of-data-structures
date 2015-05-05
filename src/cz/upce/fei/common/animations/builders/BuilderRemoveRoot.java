@@ -1,8 +1,8 @@
-package cz.upce.fei.muller.TwoDTree.animations.builders;
+package cz.upce.fei.common.animations.builders;
 
 import cz.commons.utils.FadesTransitionBuilder;
+import cz.upce.fei.common.animations.RemovePreparation;
 import cz.upce.fei.common.core.IAnimationBuilder;
-import cz.upce.fei.muller.TwoDTree.animations.RemovePreparation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Transition;
 import javafx.util.Duration;

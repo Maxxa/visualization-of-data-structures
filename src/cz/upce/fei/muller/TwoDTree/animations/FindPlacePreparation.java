@@ -1,6 +1,6 @@
 package cz.upce.fei.muller.TwoDTree.animations;
 
-import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAnimMoveNode;
+import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
 import cz.upce.fei.muller.TwoDTree.graphics.ITwoDNodesElements;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 import javafx.animation.Transition;

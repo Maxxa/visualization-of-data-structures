@@ -5,6 +5,7 @@ import cz.commons.animation.AnimationControl;
 import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.LineElement;
 import cz.commons.utils.FadesTransitionBuilder;
+import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
 import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.muller.trie.animations.builders.*;
 import cz.upce.fei.muller.trie.events.*;
