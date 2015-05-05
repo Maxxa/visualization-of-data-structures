@@ -1,0 +1,46 @@
+package cz.upce.fei.muller.treap.structure;
+
+import cz.upce.fei.common.core.AbstractStructureElement;
+
+import java.util.Comparator;
+import java.util.Random;
+
+/**
+ * @author Vojtěch Müller
+ */
+public class TreapNodeImpl extends AbstractStructureElement implements IPriorityKeyContainer<Integer> {
+
+    private final static Random priorityGenerator = new Random();
+
+    private final Integer key;
+    private final Integer priority = priorityGenerator.nextInt();
+
+    public TreapNodeImpl(Integer key) {
+        this.key = key;
+    }
+
+    @Override
+    public Integer getPriority() {
+        return priority;
+    }
+
+    @Override
+    public Integer getKey() {
+        return key;
+    }
+
+    @Override
+    public Comparator<Integer> getComparator() {
+        return new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        };
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Key: %s - Priority: %s",key,priority);
+    }
+}

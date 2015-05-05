@@ -3,7 +3,9 @@ package cz.upce.fei.muller.treap.core;
 import cz.commons.animation.AnimationControl;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
-import cz.upce.fei.muller.treap.graphics.IBinaryNodesElements;
+import cz.upce.fei.common.animations.RemovePreparation;
+import cz.upce.fei.common.core.IEndInitAnimation;
+import cz.upce.fei.muller.treap.graphics.ITreapBinaryNodesElements;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 
@@ -17,12 +19,13 @@ public class AnimationsEventsHandlersCore {
 
     private final AnimationControl animationControl;
     private final BinaryTreeLayoutManager manager;
-    private IEndAnimation endHandler;
+    private IEndInitAnimation endHandler;
 
     private Point2D creatingPoint;
     private Integer removeElementId;
 
     private List<TranslateTransition> moveParentsElements = new ArrayList<>();
+    private RemovePreparation removePreparation;
 
     public AnimationsEventsHandlersCore(AnimationControl animationControl, ITreeLayoutManager manager) {
         this.animationControl = animationControl;
@@ -33,12 +36,20 @@ public class AnimationsEventsHandlersCore {
 
     private void initCreatingPoint() {
         creatingPoint = new Point2D(
-                manager.getCanvas().getWidth()/2- IBinaryNodesElements.WIDTH/2,
+                manager.getCanvas().getWidth()/2- ITreapBinaryNodesElements.WIDTH/2,
                 0
         );
     }
 
-    public void setEndAnimationHandler(IEndAnimation handler) {
+    public void setEndAnimationHandler(IEndInitAnimation handler) {
         this.endHandler = handler;
+    }
+
+    public RemovePreparation getRemovePreparation() {
+        return removePreparation;
+    }
+
+    public void clear() {
+        //TODO
     }
 }

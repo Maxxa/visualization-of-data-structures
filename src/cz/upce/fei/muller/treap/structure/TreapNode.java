@@ -5,20 +5,30 @@ import cz.upce.fei.common.core.AbstractStructureElement;
 /**
  * @author Vojtěch Müller
  */
-public class TreapNode extends AbstractStructureElement {
+public class TreapNode<K extends Comparable<K>,T extends AbstractStructureElement & IPriorityKeyContainer<K>> {
 
-    private Integer value;
+    protected T key;
 
-    public TreapNode(Integer value) {
-        this.value = value;
+    protected TreapNode<K,T> parent;
+    protected TreapNode<K,T> left;
+    protected TreapNode<K,T> right;
+
+    public TreapNode(T key,  TreapNode<K,T> parent) {
+        this.key = key;
+        this.parent = parent;
     }
 
-    @Override
-    public int compareTo(Object o) {
-        return Integer.compare(value,((TreapNode)o).value);
+    public boolean isRoot() {
+        return parent == null;
     }
 
-    public Integer getValue() {
-        return value;
+    public boolean hasLeft() {
+        return left != null;
     }
+
+    public boolean hasRight() {
+        return right != null;
+    }
+
 }
+
