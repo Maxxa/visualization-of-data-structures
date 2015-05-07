@@ -29,7 +29,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     public void create(List<T> nodes) {
         count = nodes.size();
         if (nodes.size() == 1) {
-            root = new Node<>(nodes.get(0));
+            root = buildNewNode(nodes.get(0));
             generateNewNodeEvent(root, null, false);
             actual = root;
             generateLastEvent();
@@ -39,7 +39,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
         int median = nodes.size() / 2;
         List<T> rightNodes = nodes.subList(median + 1, nodes.size());
         List<T> leftNodes = nodes.subList(0, median);
-        root = new Node<>(nodes.get(median));
+        root = buildNewNode(nodes.get(median));
         generateNewNodeEvent(root, null, false);
         actual = root;
         if (!leftNodes.isEmpty()) {
