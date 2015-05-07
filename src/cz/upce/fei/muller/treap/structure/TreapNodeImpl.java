@@ -2,13 +2,12 @@ package cz.upce.fei.muller.treap.structure;
 
 import cz.upce.fei.common.core.AbstractStructureElement;
 
-import java.util.Comparator;
 import java.util.Random;
 
 /**
  * @author Vojtěch Müller
  */
-public class TreapNodeImpl extends AbstractStructureElement implements IPriorityKeyContainer<Integer> {
+public class TreapNodeImpl extends AbstractStructureElement implements IPriorityKeyContainer<Integer>{
 
     private final static Random priorityGenerator = new Random();
 
@@ -29,18 +28,9 @@ public class TreapNodeImpl extends AbstractStructureElement implements IPriority
         return key;
     }
 
-    @Override
-    public Comparator<Integer> getComparator() {
-        return new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1.compareTo(o2);
-            }
-        };
-    }
 
     @Override
     public String toString() {
-        return String.format("Key: %s - Priority: %s",key,priority);
+        return String.format("[ %s , %s ]",key,priority);
     }
 }

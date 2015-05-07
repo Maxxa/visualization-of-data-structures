@@ -2,15 +2,16 @@ package cz.upce.fei.muller.treap.structure;
 
 import com.google.common.eventbus.EventBus;
 import cz.upce.fei.common.core.AbstractStructureElement;
+import cz.upce.fei.muller.treap.events.*;
 
 /**
  * @author Vojtěch Müller
  */
-public class Treap<K extends Comparable<K>,T extends AbstractStructureElement & IPriorityKeyContainer<K>> implements ITreap<K,T> {
+public class Treap<K extends Comparable<K>, T extends AbstractStructureElement & IPriorityKeyContainer<K>> implements ITreap<K, T> {
 
     private final EventBus eventBus;
-    private TreapNode<K,T> root;
-    private TreapNode<K,T> actual;
+    private TreapNode<K, T> root;
+    private TreapNode<K, T> actual;
     private Integer count;
 
     public Treap(EventBus eventBus) {
@@ -21,49 +22,71 @@ public class Treap<K extends Comparable<K>,T extends AbstractStructureElement & 
     @Override
     public void insert(T inserted) {
         if (isEmpty()) {
-            root = new TreapNode<>(inserted, null);
-            //TODO create root... event
+            System.out.println("CREATE ROOT");
+            root = buildNewNode(inserted, null);
+            generateNewNodeEvent(root, null, false);
+            actual = root;
+            generateLastEvent();
             return;
         }
-//        TreapNode<T> p = root;
-//        TreapNode<T> insertedNode = new TreapNode<>(inserted, null);
-//        count++;
-        do {
-//            //TODO prochazeni podstromu a hledani mista...
-//            if (p.key.getComparator().compare(p.key, inserted) > 0) {
-//                if (p.hasLeft()) {
-//                    p = p.left;
-//                } else {
-//                    p.left = insertedNode;
-//                    insertedNode.parent = p;
-//                    actual = insertedNode;
-//                    zarovnatNahoru();
-//                    break;
-//                }
-//            } else {
-//                if (p.hasRight()) {
-//                    p = p.right;
-//                } else {
-//                    p.right = insertedNode;
-//                    insertedNode.parent = p;
-//                    actual = insertedNode;
-//                    zarovnatNahoru();
-//                    break;
-//                }
-//            }
-        } while (true);
+        TreapNode<K, T> insertedNode = buildNewNode(inserted, null);
+        actual = root;
+        boolean isLeft;
 
-        //TODO generate last event...
+        while (true) {
+            int compare = insertedNode.compareKey(actual);
+            eventBus.post(new MoveToChildEvent(inserted, actual.key));
+            if (compare == 0) {
+                System.out.println("ELEMENT EXIST NOT INSERTED");
+                eventBus.post(new ElementKeyExistEvent(inserted));
+                break;
+            } else if (compare < 0) {
+                System.out.println("LEFT");
+                isLeft=true;
+                if (actual.hasLeft()) {
+                    actual = actual.left;
+                } else {
+                    actual.left = insertedNode;
+                    insertedNode.parent = actual;
+                    actual = insertedNode;
+                    generateNewNodeEvent(insertedNode, actual, isLeft);
+                    alignTop();
+                }
+                break;
+            } else {
+                System.out.println("RIGHT");
+                isLeft=false;
+                if (actual.hasRight()) {
+                    actual = actual.right;
+                } else {
+                    actual.right = insertedNode;
+                    insertedNode.parent = actual;
+                    actual = insertedNode;
+                    generateNewNodeEvent(insertedNode, actual, isLeft);
+                    alignTop();
+                    break;
+                }
+            }
+        }
+        generateLastEvent();
+    }
+
+    private void generateLastEvent() {
+        eventBus.post(new LastActionEvent());
+    }
+
+    private void generateNewNodeEvent(TreapNode<K,T> newNode, TreapNode<K,T> parent, boolean isLeftChild) {
+        eventBus.post(parent == null ? new CreateRootEvent(newNode.key) : new InsertNodeEvent(newNode.key, parent.key, isLeftChild));
     }
 
     @Override
     public void find(K element) {
-
+        //TODO
     }
 
     @Override
     public void remove(K element) {
-
+        //TODO
     }
 
     @Override
@@ -78,8 +101,8 @@ public class Treap<K extends Comparable<K>,T extends AbstractStructureElement & 
         return count == 0;
     }
 
-    private void zarovnatNahoru() {
-        TreapNode<K,T> p = actual;
+    private void alignTop() {
+        TreapNode<K, T> p = actual;
         while (true) {
             if (p.isRoot()) {
                 return;
@@ -100,7 +123,7 @@ public class Treap<K extends Comparable<K>,T extends AbstractStructureElement & 
         }
     }
 
-    private void zarovnatDolu(TreapNode<K,T> p) {
+    private void zarovnatDolu(TreapNode<K, T> p) {
         while (true) {
 //            if (p.levy == null && p.pravy == null) {
 //                return;
@@ -136,7 +159,7 @@ public class Treap<K extends Comparable<K>,T extends AbstractStructureElement & 
         }
     }
 
-    private void rotaceL(TreapNode<K,T> p) {
+    private void rotaceL(TreapNode<K, T> p) {
 //        PrvekStromu rodic = p.parent;
 //        p.rodic = p.rodic.rodic;
 //        if (p.rodic != null) {
@@ -161,7 +184,7 @@ public class Treap<K extends Comparable<K>,T extends AbstractStructureElement & 
 //        }
     }
 
-    private void rotaceP(TreapNode<K,T> p) {
+    private void rotaceP(TreapNode<K, T> p) {
 //        PrvekStromu rodic = p.rodic;
 //        p.rodic = p.rodic.rodic;
 //        if (p.rodic != null) {
@@ -184,6 +207,12 @@ public class Treap<K extends Comparable<K>,T extends AbstractStructureElement & 
 //        if (p.rodic == null) {
 //            koren = p;
 //        }
+    }
+
+    private TreapNode<K, T> buildNewNode(T insertedValue, TreapNode<K, T> parent) {
+        TreapNode<K, T> node = new TreapNode<>(insertedValue, parent);
+        count++;
+        return node;
     }
 
 }

@@ -30,5 +30,13 @@ public class TreapNode<K extends Comparable<K>,T extends AbstractStructureElemen
         return right != null;
     }
 
+    protected int compareKey(TreapNode<K,T> node){
+        return key.getKey().compareTo(node.key.getKey());
+    }
+
+    protected int comparePriority(TreapNode<K,T> node){
+        return key.getPriority().compareTo(node.key.getPriority());
+    }
+
 }
 
