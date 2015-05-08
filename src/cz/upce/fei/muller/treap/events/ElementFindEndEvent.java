@@ -12,7 +12,7 @@ public class ElementFindEndEvent extends AbstractEvent{
 
     public ElementFindEndEvent(AbstractStructureElement value) {
         super(value);
-        isFind=value==null;
+        isFind=value!=null;
     }
 
     public AbstractStructureElement getFindNode(){

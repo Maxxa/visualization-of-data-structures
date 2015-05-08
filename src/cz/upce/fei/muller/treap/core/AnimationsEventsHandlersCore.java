@@ -15,9 +15,11 @@ import cz.upce.fei.common.gui.FlashMessageViewer;
 import cz.upce.fei.muller.treap.animations.FindPlacePreparation;
 import cz.upce.fei.muller.treap.animations.InsertPreparation;
 import cz.upce.fei.muller.treap.animations.builders.BuilderAddElement;
+import cz.upce.fei.muller.treap.animations.builders.BuilderShowFindElement;
 import cz.upce.fei.muller.treap.events.*;
 import cz.upce.fei.muller.treap.graphics.ITreapBinaryNodesElements;
 import cz.upce.fei.muller.treap.graphics.TreapGraphicElement;
+import cz.upce.fei.muller.treap.structure.TreapNodeImpl;
 import javafx.animation.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -137,6 +139,34 @@ public class AnimationsEventsHandlersCore {
 
     }
 
+    @Subscribe
+    public void handleStartFinding(StartFindingEvent event) {
+        TreapNodeImpl tmp = new TreapNodeImpl(event.getKey());
+        findingNode = new TreapGraphicElement(tmp, (int) creatingPoint.getX(), (int) creatingPoint.getY(), true);
+        findingNode.setOpacity(0);
+    }
+
+    @Subscribe
+    public void handleFindChilds(FindEvent event) {
+        if (findPlacePreparator == null) {
+            manager.getCanvas().getChildren().addAll(findingNode);
+            findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
+        }
+
+        findPlacePreparator.addMove(
+                manager.getNodePosition(event.getComparedNodeId()));
+
+    }
+
+    @Subscribe
+    public void handleEndFind(ElementFindEndEvent event) {
+        if (event.isFind()) {
+            TreapGraphicElement node = manager.getElementInfo(event.getFindNode().getId()).getElement();
+            findPlacePreparator.addTransition(new BuilderShowFindElement(node).getAnimation());
+        } else {
+            findPlacePreparator.addTransition(showViewer(buildViewer("Bod nebyl nalezen.")));
+        }
+    }
 
     private void editFindingPlacePreparator() {
         if (findPlacePreparator != null) {
