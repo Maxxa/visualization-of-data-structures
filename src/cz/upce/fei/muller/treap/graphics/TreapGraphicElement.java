@@ -56,7 +56,7 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
     }
 
     private void initLabel() {
-        String text = String.valueOf(node);
+        String text = String.valueOf(node.getKey());
         label.setText(text);
         label.setMaxWidth(WIDTH);
         label.setAlignment(Pos.CENTER);

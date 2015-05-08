@@ -6,7 +6,6 @@ import cz.upce.fei.common.gui.AbstractApplication;
 import cz.upce.fei.common.gui.toolBars.ToolBarControlsContainer;
 import cz.upce.fei.common.gui.utils.SceneInfo;
 import cz.upce.fei.muller.treap.core.TreapController;
-import cz.upce.fei.muller.treap.structure.TreapNodeImpl;
 import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
 import javafx.stage.Stage;
@@ -51,15 +50,6 @@ public class TreapGUI extends AbstractApplication<TreapController> {
     }
 
     protected void onShow() {
-
-        TreapNodeImpl treapNode = new TreapNodeImpl(10);
-        TreapNodeImpl treapNode2 = new TreapNodeImpl(5);
-
-        System.out.println(treapNode);
-        System.out.println(treapNode2);
-        System.out.println(treapNode.getKey().compareTo(treapNode2.getKey()));
-//        System.out.println(treapNode.compareTo(treapNode2));
-
 
     }
 

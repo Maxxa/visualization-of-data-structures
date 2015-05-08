@@ -9,7 +9,7 @@ public interface ITreap<K extends Comparable<K>,T extends AbstractStructureEleme
 
     public void insert(T inserted);
 
-    public void find(K element);
+    public T find(K element);
 
     public void remove(K element);
 

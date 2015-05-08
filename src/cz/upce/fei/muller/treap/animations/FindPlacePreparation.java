@@ -25,8 +25,8 @@ public class FindPlacePreparation {
         this.creatingPoint = creatingPoint;
     }
 
-    public void addMove(Point2D point, TreapGraphicElement comparingNode, boolean compareX){
-        Point2D pointTo = new Point2D(point.getX(),point.getY()- ITreapBinaryNodesElements.HEIGHT-10);
+    public void addMove(Point2D point){
+        Point2D pointTo = new Point2D(point.getX(),point.getY()- ITreapBinaryNodesElements.HEIGHT-5);
         BuilderAnimMoveNode builder = new BuilderAnimMoveNode(creatingPoint,pointTo,insertedNode);
         creatingPoint=pointTo;
         Transition transition = movings.isEmpty()?builder.getAnimation():builder.getTranslateTransition();

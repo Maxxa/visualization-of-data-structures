@@ -14,13 +14,13 @@ import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
 import cz.upce.fei.common.animations.builders.BuilderRemoveRoot;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
+import cz.upce.fei.common.gui.FlashMessageViewer;
 import cz.upce.fei.muller.TwoDTree.animations.FindPlacePreparation;
 import cz.upce.fei.muller.TwoDTree.animations.InsertPreparation;
 import cz.upce.fei.muller.TwoDTree.animations.SwapPreparation;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderShowFindElement;
 import cz.upce.fei.muller.TwoDTree.events.*;
-import cz.upce.fei.muller.TwoDTree.graphics.FlashMessageViewer;
 import cz.upce.fei.muller.TwoDTree.graphics.ITwoDNodesElements;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 import javafx.animation.*;
@@ -182,19 +182,12 @@ public class AnimationsHandlersCore {
     @Subscribe
     public void handleSwapElement(SwapNodeEvent event) {
         if (!event.getFirstNode().getId().equals(event.getSecondNode().getId())) {
-            try {
-                SwapPreparation handler = new SwapPreparation(manager,
-                        WorkBinaryNodeInfoBuilder.getWorkInfo(event.getFirstNode().getId(), manager),
-                        WorkBinaryNodeInfoBuilder.getWorkInfo(event.getSecondNode().getId(), manager));
-                IAnimationBuilder creator = handler.getBuilder();
-                manager.swapElement(event.getFirstNode().getId(), event.getSecondNode().getId());
-                insertTransition(creator);
-            } catch (Exception ex) {
-                System.err.println(ex);
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            SwapPreparation handler = new SwapPreparation(manager,
+                    WorkBinaryNodeInfoBuilder.getWorkInfo(event.getFirstNode().getId(), manager),
+                    WorkBinaryNodeInfoBuilder.getWorkInfo(event.getSecondNode().getId(), manager));
+            IAnimationBuilder creator = handler.getBuilder();
+            manager.swapElement(event.getFirstNode().getId(), event.getSecondNode().getId());
+            insertTransition(creator);
         }
 
     }
@@ -207,16 +200,9 @@ public class AnimationsHandlersCore {
 
     @Subscribe
     public void handleFindChilds(FindEvent event) {
-        try {
-            if (findPlacePreparator == null) {
-                manager.getCanvas().getChildren().addAll(findingNode);
-                findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
-            }
-        } catch (Exception ex) {
-            System.err.println(ex);
-            for (int i = 0; i < ex.getStackTrace().length; i++) {
-                System.err.println(ex.getStackTrace()[i]);
-            }
+        if (findPlacePreparator == null) {
+            manager.getCanvas().getChildren().addAll(findingNode);
+            findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
         }
 
         findPlacePreparator.addMove(

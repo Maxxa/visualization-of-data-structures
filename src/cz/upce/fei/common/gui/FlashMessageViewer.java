@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.TwoDTree.graphics;
+package cz.upce.fei.common.gui;
 
 import cz.commons.graphics.Element;
 import javafx.geometry.Pos;

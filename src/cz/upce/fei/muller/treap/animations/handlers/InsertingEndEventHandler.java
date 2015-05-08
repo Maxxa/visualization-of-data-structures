@@ -4,7 +4,7 @@ import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.LineElement;
 import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.WorkBinaryNodeInfo;
-import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
+import cz.upce.fei.muller.treap.graphics.TreapGraphicElement;
 import javafx.event.ActionEvent;
 
 /**
@@ -13,8 +13,8 @@ import javafx.event.ActionEvent;
 public class InsertingEndEventHandler extends StepEventHandler {
 
     private final boolean isLeft;
-    private TwoDGraphicsNode parent;
-    private TwoDGraphicsNode newElement;
+    private TreapGraphicElement parent;
+    private TreapGraphicElement newElement;
     private LineElement line;
 
     public InsertingEndEventHandler(WorkBinaryNodeInfo currentInformation, boolean isLeft) {

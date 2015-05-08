@@ -129,6 +129,7 @@ public class TreapController extends Controller {
                 if (dlg.showDialog() == Dialog.Result.OK) {
                     controlsContainer.getStepControls().setCheckBoxSelected(false);
                     controlsContainer.getAnimationsControls().setSliderValue(1);
+                    clear();
                     loadPreset(dlg.getSelectedPresetItems(), new InsertExecute<TreapNodeImpl>() {
                         @Override
                         public void insert(TreapNodeImpl value) {

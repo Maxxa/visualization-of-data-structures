@@ -211,6 +211,9 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
     @Override
     public T find(int x, int y) {
+        if(isEmpty()){
+            return null;
+        }
         isXCoordinate = true;
         actual = root;
         eventBus.post(new StartFindingEvent(x, y));

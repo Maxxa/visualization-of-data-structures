@@ -42,27 +42,27 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
                 break;
             } else if (compare < 0) {
                 System.out.println("LEFT");
-                isLeft=true;
+                isLeft = true;
                 if (actual.hasLeft()) {
                     actual = actual.left;
                 } else {
                     actual.left = insertedNode;
                     insertedNode.parent = actual;
-                    actual = insertedNode;
                     generateNewNodeEvent(insertedNode, actual, isLeft);
+                    actual = insertedNode;
                     alignTop();
+                    break;
                 }
-                break;
             } else {
                 System.out.println("RIGHT");
-                isLeft=false;
+                isLeft = false;
                 if (actual.hasRight()) {
                     actual = actual.right;
                 } else {
                     actual.right = insertedNode;
                     insertedNode.parent = actual;
-                    actual = insertedNode;
                     generateNewNodeEvent(insertedNode, actual, isLeft);
+                    actual = insertedNode;
                     alignTop();
                     break;
                 }
@@ -75,13 +75,39 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         eventBus.post(new LastActionEvent());
     }
 
-    private void generateNewNodeEvent(TreapNode<K,T> newNode, TreapNode<K,T> parent, boolean isLeftChild) {
+    private void generateNewNodeEvent(TreapNode<K, T> newNode, TreapNode<K, T> parent, boolean isLeftChild) {
         eventBus.post(parent == null ? new CreateRootEvent(newNode.key) : new InsertNodeEvent(newNode.key, parent.key, isLeftChild));
     }
 
     @Override
-    public void find(K element) {
-        //TODO
+    public T find(K element) {
+        if (isEmpty()) {
+            return null;
+        }
+        actual = root;
+        T result = null;
+        eventBus.post(new StartFindingEvent(element));
+        while (true) {
+            eventBus.post(new FindEvent(actual.key));
+            int compare = actual.key.getKey().compareTo(element);
+            if (compare == 0) {
+                result= actual.key;
+            }else if (compare > 0) {
+                if (actual.hasLeft()) {
+                    actual = actual.left;
+                    continue;
+                }
+            } else {
+                if (actual.hasRight()) {
+                    actual=actual.right;
+                    continue;
+                }
+            }
+            break;
+        }
+        eventBus.post(new ElementFindEndEvent(result));
+        generateLastEvent();
+        return result;
     }
 
     @Override
