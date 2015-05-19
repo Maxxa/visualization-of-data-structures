@@ -11,7 +11,7 @@ public interface ITreap<K extends Comparable<K>,T extends AbstractStructureEleme
 
     public T find(K element);
 
-    public void remove(K element);
+    public T remove(K element);
 
     public void clear();
     public boolean isEmpty();

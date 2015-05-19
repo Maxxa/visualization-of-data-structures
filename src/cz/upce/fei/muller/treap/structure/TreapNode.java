@@ -38,5 +38,15 @@ public class TreapNode<K extends Comparable<K>,T extends AbstractStructureElemen
         return key.getPriority().compareTo(node.key.getPriority());
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null) return false;
+        if(TreapNode.class.isInstance(obj)){
+            TreapNode<K,T> tmp = (TreapNode<K, T>) obj;
+            return key.getPriority()==tmp.key.getPriority() &&
+                   key.getKey().compareTo(tmp.key.getKey())==0;
+        }
+        return false;
+    }
 }
 

@@ -9,6 +9,7 @@ import cz.commons.layoutManager.MoveElementEvent;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.animations.RemovePreparation;
 import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
+import cz.upce.fei.common.animations.builders.BuilderRemoveRoot;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.common.gui.FlashMessageViewer;
@@ -182,6 +183,16 @@ public class AnimationsEventsHandlersCore {
                 0
         );
     }
+
+    @Subscribe
+    public void handleRemoveElement(RemoveElementEvent event) {
+        isRemovingEnd = true;
+        removePreparation = new RemovePreparation(event.getRemoved().getId(), manager);
+        manager.removeElement(event.getRemoved().getId(), false);
+        insertTransition(new BuilderRemoveRoot(removePreparation));
+        initMovingTransition();
+    }
+
 
     @Subscribe
     public void handleMoveElementNodeEvent(MoveElementEvent event) {
