@@ -140,7 +140,7 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
             return null;
         }
         removeRecursive();
-        eventBus.post(new RemoveElement(returnValue));
+        eventBus.post(new RemoveElementEvent(returnValue));
         generateLastEvent();
         return returnValue;
     }

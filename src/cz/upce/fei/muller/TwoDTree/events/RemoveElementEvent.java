@@ -7,9 +7,9 @@ import cz.upce.fei.muller.TwoDTree.structure.Coordinate;
 /**
  * @author Vojtěch Müller
  */
-public class RemoveElement extends AbstractEvent{
+public class RemoveElementEvent extends AbstractEvent{
 
-    public RemoveElement(AbstractStructureElement removedElement) {
+    public RemoveElementEvent(AbstractStructureElement removedElement) {
         super(removedElement);
     }
 

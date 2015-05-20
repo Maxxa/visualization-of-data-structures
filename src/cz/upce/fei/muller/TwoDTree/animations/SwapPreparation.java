@@ -5,12 +5,12 @@ import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.BinaryTreeHelper;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.WorkBinaryNodeInfo;
+import cz.upce.fei.common.animations.ConnectorHelper;
+import cz.upce.fei.common.animations.SwitchConnectorHelper;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IPreparation;
 import cz.upce.fei.muller.TwoDTree.animations.builders.BuilderSwapNode;
-import cz.upce.fei.muller.TwoDTree.animations.builders.ConnectorHelper;
 import cz.upce.fei.muller.TwoDTree.animations.builders.DefaultSwapInformation;
-import cz.upce.fei.muller.TwoDTree.animations.builders.SwapHelper;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class SwapPreparation implements IPreparation {
 
     private final DefaultSwapInformation information;
 
-    private final List<SwapHelper> helpers = new ArrayList<>();
+    private final List<SwitchConnectorHelper> helpers = new ArrayList<>();
 
     public SwapPreparation(ITreeLayoutManager manager, WorkBinaryNodeInfo infoFirstElement, WorkBinaryNodeInfo infoSecondElement) {
         information = new DefaultSwapInformation(
@@ -39,7 +39,7 @@ public class SwapPreparation implements IPreparation {
     private void initParent(WorkBinaryNodeInfo first, WorkBinaryNodeInfo second) {
         if (first.hasParent() && first.get().getIdParent()!= second.get().getElement().getElementId()) {
             NodePosition position = getParentPosition(first.getParent().getIndexAtRow(), first.get().getIndexAtRow());
-            SwapHelper helper = new SwapHelper(first.getParent(), position,
+            SwitchConnectorHelper helper = new SwitchConnectorHelper(first.getParent(), position,
                     new ConnectorHelper(
                             (ConnectibleElement) second.get().getElement(),
                             (ConnectibleElement) first.get().getElement()));
@@ -52,10 +52,10 @@ public class SwapPreparation implements IPreparation {
     private void initChilds() {
         WorkBinaryNodeInfo first = information.infoFirstElement;
         WorkBinaryNodeInfo second = information.infoSecondElement;
-        SwapHelper helpFirstLeft = new SwapHelper(first.get(), NodePosition.LEFT);
-        SwapHelper helpFirstRight = new SwapHelper(first.get(), NodePosition.RIGHT);
-        SwapHelper helpSecondLeft = new SwapHelper(second.get(), NodePosition.LEFT);
-        SwapHelper helpSecondRight = new SwapHelper(second.get(), NodePosition.RIGHT);
+        SwitchConnectorHelper helpFirstLeft = new SwitchConnectorHelper(first.get(), NodePosition.LEFT);
+        SwitchConnectorHelper helpFirstRight = new SwitchConnectorHelper(first.get(), NodePosition.RIGHT);
+        SwitchConnectorHelper helpSecondLeft = new SwitchConnectorHelper(second.get(), NodePosition.LEFT);
+        SwitchConnectorHelper helpSecondRight = new SwitchConnectorHelper(second.get(), NodePosition.RIGHT);
         ///////////////////////////
         /// FIRST LEFT first-back second-forward,
         ///////////////////////////

@@ -2,8 +2,8 @@ package cz.upce.fei.muller.TwoDTree.animations.handlers;
 
 import cz.commons.animation.StepEventHandler;
 import cz.commons.layoutManager.ElementInfo;
+import cz.upce.fei.common.animations.SwitchConnectorHelper;
 import cz.upce.fei.muller.TwoDTree.animations.builders.DefaultSwapInformation;
-import cz.upce.fei.muller.TwoDTree.animations.builders.SwapHelper;
 import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 import javafx.event.ActionEvent;
 
@@ -15,10 +15,10 @@ import java.util.List;
 public class SwapElementEndEventHandler extends StepEventHandler {
 
 
-    private final List<SwapHelper> helperList;
+    private final List<SwitchConnectorHelper> helperList;
     private final DefaultSwapInformation swapInformation;
 
-    public SwapElementEndEventHandler(List<SwapHelper> helperList,DefaultSwapInformation swapInformation) {
+    public SwapElementEndEventHandler(List<SwitchConnectorHelper> helperList,DefaultSwapInformation swapInformation) {
         this.helperList = helperList;
         this.swapInformation = swapInformation;
     }
@@ -36,7 +36,7 @@ public class SwapElementEndEventHandler extends StepEventHandler {
     }
 
     private void buildHandle(boolean isForward){
-        for (SwapHelper helper:helperList){
+        for (SwitchConnectorHelper helper:helperList){
              if (isForward){
                 helper.setForward();
              }else {

@@ -159,7 +159,7 @@ public class AnimationsHandlersCore {
     }
 
     @Subscribe
-    public void handleEndRemoving(RemoveElement event) {
+    public void handleEndRemoving(RemoveElementEvent event) {
         isRemovingEnd = true;
         removePreparation = new RemovePreparation(event.getRemovedElement().getId(), manager);
         manager.removeElement(event.getRemovedElement().getId(), false);

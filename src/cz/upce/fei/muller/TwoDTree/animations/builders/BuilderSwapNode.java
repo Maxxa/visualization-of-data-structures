@@ -3,6 +3,7 @@ package cz.upce.fei.muller.TwoDTree.animations.builders;
 import cz.commons.graphics.LineElement;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.commons.utils.transitions.RelativeTranslateTransition;
+import cz.upce.fei.common.animations.SwitchConnectorHelper;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.muller.TwoDTree.animations.handlers.FadesTransitionHandler;
 import cz.upce.fei.muller.TwoDTree.animations.handlers.SwapElementEndEventHandler;
@@ -22,9 +23,9 @@ import java.util.List;
 public class BuilderSwapNode implements IAnimationBuilder {
 
     protected final DefaultSwapInformation information;
-    private final List<SwapHelper> helpers;
+    private final List<SwitchConnectorHelper> helpers;
 
-    public BuilderSwapNode(DefaultSwapInformation information, List<SwapHelper> helpers) {
+    public BuilderSwapNode(DefaultSwapInformation information, List<SwitchConnectorHelper> helpers) {
         this.information = information;
         this.helpers = helpers;
     }
@@ -44,7 +45,7 @@ public class BuilderSwapNode implements IAnimationBuilder {
     private ParallelTransition getLinesFades(boolean visibility) {
         ParallelTransition pt = new ParallelTransition();
 
-        for (SwapHelper element : helpers) {
+        for (SwitchConnectorHelper element : helpers) {
             addFadeToTransition(pt, element.getLine(), visibility);
         }
 
