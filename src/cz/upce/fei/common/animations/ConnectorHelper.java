@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.treap.animations.builders;
+package cz.upce.fei.common.animations;
 
 import cz.commons.graphics.ConnectibleElement;
 

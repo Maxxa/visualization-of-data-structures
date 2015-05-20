@@ -1,14 +1,14 @@
-package cz.upce.fei.muller.TwoDTree.animations.builders;
+package cz.upce.fei.common.animations;
 
+import cz.commons.graphics.BinaryNodeWithLine;
 import cz.commons.graphics.LineElement;
 import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.ElementInfo;
-import cz.upce.fei.muller.TwoDTree.graphics.TwoDGraphicsNode;
 
 /**
  * @author Vojtěch Müller
  */
-public class SwapHelper {
+public class SwitchConnectorHelper {
 
     protected final ElementInfo currentElement;
     private final NodePosition position;
@@ -18,20 +18,20 @@ public class SwapHelper {
     private boolean isBackVisible = true;
     private boolean isForwardVisible = true;
 
-    public SwapHelper(ElementInfo currentElement, NodePosition position) {
+    public SwitchConnectorHelper(ElementInfo currentElement, NodePosition position) {
         this.currentElement = currentElement;
         this.position = position;
         connectors = new ConnectorHelper();
     }
 
-    public SwapHelper(ElementInfo currentElement,NodePosition position, ConnectorHelper connectors) {
+    public SwitchConnectorHelper(ElementInfo currentElement, NodePosition position, ConnectorHelper connectors) {
         this.currentElement = currentElement;
         this.position = position;
         this.connectors = connectors;
     }
 
     public LineElement getLine(){
-        return ((TwoDGraphicsNode)currentElement.getElement()).getChildLine(position);
+        return ((BinaryNodeWithLine)currentElement.getElement()).getChildLine(position);
     }
 
     public void setForward(){
