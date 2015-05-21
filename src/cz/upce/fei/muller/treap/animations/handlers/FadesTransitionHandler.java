@@ -2,7 +2,7 @@ package cz.upce.fei.muller.treap.animations.handlers;
 
 import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.LineElement;
-import cz.upce.fei.muller.treap.animations.builders.SwapHelper;
+import cz.upce.fei.common.animations.SwitchConnectorHelper;
 import javafx.event.ActionEvent;
 
 import java.util.List;
@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class FadesTransitionHandler extends StepEventHandler{
 
-    private final List<SwapHelper> helpers;
+    private final List<SwitchConnectorHelper> helpers;
     private final boolean isBeforeSwap;
 
-    public FadesTransitionHandler(List<SwapHelper> helpers,boolean isBeforeSwap) {
+    public FadesTransitionHandler(List<SwitchConnectorHelper> helpers,boolean isBeforeSwap) {
         this.helpers = helpers;
         this.isBeforeSwap = isBeforeSwap;
     }
@@ -36,7 +36,7 @@ public class FadesTransitionHandler extends StepEventHandler{
     }
 
     private void buildFadesAfterEnd(boolean isForward){
-        for (SwapHelper helper : helpers){
+        for (SwitchConnectorHelper helper : helpers){
             if(!isForward&&!helper.isForwardVisible()
                     ||
                isForward && !helper.isBackVisible()

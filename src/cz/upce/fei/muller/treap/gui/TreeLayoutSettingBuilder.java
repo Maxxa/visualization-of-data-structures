@@ -7,7 +7,7 @@ import cz.upce.fei.muller.treap.graphics.ITreapBinaryNodesElements;
 /**
  * @author Vojtěch Müller
  */
-final class TreeLayoutSettingBuilder {
+public final class TreeLayoutSettingBuilder {
 
     static final Integer PADDING_TOP = (int) (25* IGraphics.PLATFORM_SCALE);
 
@@ -15,7 +15,7 @@ final class TreeLayoutSettingBuilder {
 
     static final Integer VERTICAL_SPACE = (int) (10* IGraphics.PLATFORM_SCALE);
 
-    static TreeLayoutSettings getSetting(){
+    public static TreeLayoutSettings getSetting(){
         return new TreeLayoutSettings(PADDING_TOP,HORIZONTAL_SPACE,VERTICAL_SPACE, ITreapBinaryNodesElements.WIDTH, ITreapBinaryNodesElements.HEIGHT);
     }
 

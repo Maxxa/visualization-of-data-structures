@@ -15,6 +15,7 @@ import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.common.gui.FlashMessageViewer;
 import cz.upce.fei.muller.treap.animations.FindPlacePreparation;
 import cz.upce.fei.muller.treap.animations.InsertPreparation;
+import cz.upce.fei.muller.treap.animations.RotationPreparation;
 import cz.upce.fei.muller.treap.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.treap.animations.builders.BuilderShowFindElement;
 import cz.upce.fei.muller.treap.events.*;
@@ -84,6 +85,22 @@ public class AnimationsEventsHandlersCore {
         manager.addElement(newNode, null, false);
         manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
         insertTransition(new BuilderAddElement(manager.getNodePosition(event.getNode().getId()), creatingPoint, getNode(event.getNode().getId())));
+    }
+
+    @Subscribe
+    public void handleRotationEvent(RotationEvent event) {
+        System.out.println("____ HANDLE BUILD ROTATION");
+        manager.printDebug();
+
+        try {
+            RotationPreparation preparation = new RotationPreparation(event, manager,this.moveParentsElements);
+            insertTransition(preparation.getBuilder());
+            moveParentsElements.clear();
+        } catch (Exception ex) {
+            for (int i = 0; i < ex.getStackTrace().length; i++) {
+                System.err.println(ex.getStackTrace()[i]);
+            }
+        }
     }
 
     @Subscribe

@@ -61,7 +61,7 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
         label.setMaxWidth(WIDTH);
         label.setAlignment(Pos.CENTER);
         label.setStyle("-fx-font-weight: bold;");
-        this.tooltip = new Tooltip(text);
+        this.tooltip = new Tooltip(node.getId().toString());
         Tooltip.install(this,tooltip);
     }
 

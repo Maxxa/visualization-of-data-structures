@@ -44,4 +44,8 @@ public class ReferenceHelper {
         return isLeftNodePosition;
     }
 
+    @Override
+    public String toString() {
+        return String.format("NODE [ %s ] isLeft [ %s ] OLD [ %s ] NEW [ %s ]",node,isLeftNodePosition,oldReference,newReference);
+    }
 }

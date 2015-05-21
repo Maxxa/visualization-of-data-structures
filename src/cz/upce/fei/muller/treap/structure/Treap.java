@@ -140,69 +140,6 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             alignBottom(pom);
         }
 
-//        if (pom.hasLeft()) {
-//            if (!pom.left.hasRight()) {
-//                if (!pom.isRoot()) if (pom.parent.left == pom) {
-//                    pom.parent.left = pom.left;
-//                } else {
-//                    pom.parent.right = pom.left;
-//                }
-//                pom.left.right = pom.right;
-//                pom.left.parent = pom.parent;
-//                if (pom.left.hasRight()) pom.left.right.parent = pom.left;
-//                pom = pom.left;
-//            } else {
-//                pom = pom.left;
-//                while (pom.hasRight()) {
-//                    pom = pom.right;
-//                }
-//                pom.parent.right = pom.left;
-//                if (pom.hasLeft()) pom.left.parent = pom.parent;
-//                if (!naOdebrani.isRoot()) {
-//                    if (naOdebrani.parent.left == naOdebrani) {
-//                        naOdebrani.parent.left = pom;
-//                    } else {
-//                        naOdebrani.parent.right = pom;
-//                    }
-//                }
-//                pom.right = naOdebrani.right;
-//                pom.left = naOdebrani.left;
-//                pom.parent = naOdebrani.parent;
-//                if (pom.hasLeft()) pom.left.parent = pom;
-//                if (pom.hasRight()) pom.right.parent = pom;
-//            }
-//        } else {
-//            if (pom.right.hasLeft()) {
-//                if (!pom.isRoot()) if (pom.parent.left == pom) {
-//                    pom.parent.left = pom.right;
-//                } else {
-//                    pom.parent.right = pom.right;
-//                }
-//                pom.right.left = pom.left;
-//                pom.right.parent = pom.parent;
-//                if (pom.right.hasLeft()) pom.right.left.parent = pom.right;
-//                pom = pom.right;
-//            } else {
-//                pom = pom.right;
-//                while (pom.hasLeft()) {
-//                    pom = pom.left;
-//                }
-//                pom.parent.left = pom.right;
-//                if (pom.hasRight()) pom.right.parent = pom.parent;
-//                if (!naOdebrani.isRoot()) {
-//                    if (naOdebrani.parent.left == naOdebrani) {
-//                        naOdebrani.parent.left = pom;
-//                    } else {
-//                        naOdebrani.parent.right = pom;
-//                    }
-//                }
-//                pom.left = naOdebrani.left;
-//                pom.right = naOdebrani.right;
-//                pom.parent = naOdebrani.parent;
-//                if (pom.hasLeft()) pom.left.parent = pom;
-//                if (pom.hasRight()) pom.right.parent = pom;
-//            }
-//        }
         count--;
         actual = root;
         alignBottom(pom);
@@ -237,21 +174,20 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
     }
 
     private void alignTop() {
-        //TODO testing after control is corect structure for rebuild...
-//        while (true) {
-//            if (actual.isRoot()) {
-//                break;
-//            }
-//            if (actual.key.getPriority().compareTo(actual.parent.key.getPriority()) > 0) {
-//                if (actual.parent.hasLeft() && actual.parent.left.equals(actual)) {
-//                   rotationRight(actual);
-//                } else {
-//                    rotationLeft(actual);
-//                }
-//                continue;
-//            }
-//            break;
-//        }
+        while (true) {
+            if (actual.isRoot()) {
+                break;
+            }
+            if (actual.key.getPriority().compareTo(actual.parent.key.getPriority()) > 0) {
+                if (actual.parent.hasLeft() && actual.parent.left.equals(actual)) {
+                   rotationRight(actual);
+                } else {
+                    rotationLeft(actual);
+                }
+                continue;
+            }
+            break;
+        }
     }
 
     private void alignBottom(TreapNode<K, T> p) {
@@ -297,7 +233,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         TreapNode<K, T> parentRotatedNode = rotatedNode.parent;
         //change parent for rotated element
         rotatedNode.parent = parentRotatedNode.parent;
-        boolean isLeftChild = true;
+        boolean isLeft = true; // root is always left, when have parent is controling...
         if (!rotatedNode.isRoot()) {
             ReferenceHelper parentReference = new ReferenceHelper(rotatedNode.parent.key.getId());
             if (rotatedNode.parent.hasLeft() && rotatedNode.parent.left.equals(parentRotatedNode)) {
@@ -305,25 +241,27 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
                 rotatedNode.parent.left = rotatedNode;
                 parentReference.setLeftNodePosition(true);
             } else {
-                isLeftChild = false;
+                isLeft=false;
                 parentReference.setOldReference(rotatedNode.parent.right.key.getId());
                 rotatedNode.parent.right = rotatedNode;
             }
             parentReference.setNewReference(rotatedNode.key.getId());
             event.addReferenceHelper(parentReference);
         }
-        ReferenceHelper left = new ReferenceHelper(parentRotatedNode.key.getId());
-        ReferenceHelper right = new ReferenceHelper(rotatedNode.key.getId());
+        ReferenceHelper left = new ReferenceHelper(rotatedNode.key.getId());
+        ReferenceHelper right = new ReferenceHelper(parentRotatedNode.key.getId());
+
         right.setOldReference(parentRotatedNode.hasRight() ? parentRotatedNode.right.key.getId() : null);
         left.setOldReference(rotatedNode.hasLeft() ? rotatedNode.left.key.getId() : null);
+        left.setLeftNodePosition(true);
 
         //default change
         parentRotatedNode.right = rotatedNode.left;
         rotatedNode.left = parentRotatedNode;
         parentRotatedNode.parent = rotatedNode;
 
-        right.setNewReference(parentRotatedNode.hasRight() ? parentRotatedNode.right.key.getId() : null);
         left.setNewReference(rotatedNode.hasLeft() ? rotatedNode.left.key.getId() : null);
+        right.setNewReference(parentRotatedNode.hasRight() ? parentRotatedNode.right.key.getId() : null);
 
         event.addReferenceHelper(left);
         event.addReferenceHelper(right);
@@ -334,11 +272,11 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             root = rotatedNode;
         }
         System.out.println("\n\n TEST ");
-        for (ITreeStructure structure:new TreeStructureBuilder<>(rotatedNode, isLeftChild).getRoot()){
+        for (ITreeStructure structure:new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()){
             System.out.println(structure);
         }
 
-        event.setTreeRestructure(new TreeStructureBuilder<>(rotatedNode, isLeftChild).getRoot());
+        event.setTreeRestructure(new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot());
         eventBus.post(event);
     }
 
@@ -348,7 +286,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
 
         TreapNode<K, T> parentRotatedNode = rotatedNode.parent;
         rotatedNode.parent = rotatedNode.parent.parent;
-        boolean isLeftChild = true;
+        boolean isLeft = true; // root is always left, when have parent is controling...
         if (!rotatedNode.isRoot()) {
             ReferenceHelper parentReference = new ReferenceHelper(rotatedNode.parent.key.getId());
             if (rotatedNode.parent.hasLeft() && rotatedNode.parent.left.equals(parentRotatedNode)) {
@@ -356,7 +294,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
                 rotatedNode.parent.left = rotatedNode;
                 parentReference.setLeftNodePosition(true);
             } else {
-                isLeftChild = false;
+                isLeft=false;
                 parentReference.setOldReference(rotatedNode.parent.right.key.getId());
                 rotatedNode.parent.right = rotatedNode;
             }
@@ -366,6 +304,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
 
         ReferenceHelper left = new ReferenceHelper(parentRotatedNode.key.getId());
         ReferenceHelper right = new ReferenceHelper(rotatedNode.key.getId());
+        left.setLeftNodePosition(true);
 
         left.setOldReference(parentRotatedNode.hasLeft() ? parentRotatedNode.left.key.getId() : null);
         right.setOldReference(rotatedNode.hasRight() ? rotatedNode.right.key.getId() : null);
@@ -388,11 +327,11 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             root = rotatedNode;
         }
         System.out.println("\n\n TEST ");
-        for (ITreeStructure structure:new TreeStructureBuilder<>(rotatedNode, isLeftChild).getRoot()){
+        for (ITreeStructure structure:new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()){
             System.out.println(structure);
         }
 
-        event.setTreeRestructure(new TreeStructureBuilder<>(rotatedNode, isLeftChild).getRoot());
+        event.setTreeRestructure(new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot());
         eventBus.post(event);
     }
 
@@ -401,7 +340,6 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         count++;
         return node;
     }
-
 
     /** DEBUG METHOD */
     public void printTree() {
@@ -414,6 +352,10 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         }
     }
 
+
+    public void setAcutalRoot(){
+        actual=root;
+    }
     /** DEBUG METHOD */
     public boolean isLeft() {
         if (actual.isRoot()) return true;
