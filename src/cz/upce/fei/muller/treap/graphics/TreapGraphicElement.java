@@ -3,8 +3,11 @@ package cz.upce.fei.muller.treap.graphics;
 import cz.commons.graphics.BinaryNodeWithLine;
 import cz.upce.fei.muller.treap.structure.TreapNodeImpl;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -19,7 +22,8 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
 
     private final TreapNodeImpl node;
     private Rectangle backgroundRectangle;
-    private Label label = new Label();
+    private Label labelKey = new Label();
+    private Label labelPriority = new Label();
 
     private Tooltip tooltip;
 
@@ -33,9 +37,9 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
         setTranslateX(x);
         setTranslateY(y);
         initBackground(isSearchBlock);
-        initLabel();
+
         VBox labelsBox = new VBox();
-        labelsBox.getChildren().addAll(label);
+        labelsBox.getChildren().addAll(initLabel());
         StackPane sp = new StackPane();
         sp.getChildren().addAll(backgroundRectangle, labelsBox);
         doParentBindings();
@@ -55,13 +59,32 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
         backgroundRectangle.setFill(isSearchBlock?BG_SEARCH_COLOR:BG_COLOR);
     }
 
-    private void initLabel() {
-        String text = String.valueOf(node.getKey());
-        label.setText(text);
-        label.setMaxWidth(WIDTH);
-        label.setAlignment(Pos.CENTER);
-        label.setStyle("-fx-font-weight: bold;");
-        this.tooltip = new Tooltip(node.getId().toString());
+    private Node initLabel() {
+        String textKey = String.valueOf(node.getKey());
+        String textPriority = String.valueOf(node.getPriority());
+        installTooltip(textKey, textPriority);
+        labelKey.setText(textKey);
+        labelPriority.setText(textPriority);
+
+        Double size = Double.valueOf((WIDTH / 2));
+        labelKey.setMinWidth(size);
+        labelPriority.setMinWidth(size);
+
+        VBox hBox = new VBox();
+        hBox.setAlignment(Pos.CENTER);
+        labelKey.setAlignment(Pos.CENTER);
+        labelPriority.setAlignment(Pos.CENTER);
+        hBox.setMaxWidth(WIDTH);
+        labelKey.setStyle("-fx-font-weight: bold;");
+
+        hBox.getChildren().addAll(
+                labelKey, new Separator(Orientation.HORIZONTAL), labelPriority
+        );
+        return hBox;
+    }
+
+    private void installTooltip(String textKey, String textPriority) {
+        this.tooltip = new Tooltip("Klíč: "+textKey+"\nPriorita: "+textPriority);
         Tooltip.install(this,tooltip);
     }
 

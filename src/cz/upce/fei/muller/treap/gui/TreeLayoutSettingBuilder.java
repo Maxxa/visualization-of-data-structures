@@ -9,9 +9,9 @@ import cz.upce.fei.muller.treap.graphics.ITreapBinaryNodesElements;
  */
 public final class TreeLayoutSettingBuilder {
 
-    static final Integer PADDING_TOP = (int) (25* IGraphics.PLATFORM_SCALE);
+    static final Integer PADDING_TOP = (int) (50* IGraphics.PLATFORM_SCALE);
 
-    static final Integer HORIZONTAL_SPACE =(int) (10* IGraphics.PLATFORM_SCALE);
+    static final Integer HORIZONTAL_SPACE =(int) (40* IGraphics.PLATFORM_SCALE);
 
     static final Integer VERTICAL_SPACE = (int) (10* IGraphics.PLATFORM_SCALE);
 
