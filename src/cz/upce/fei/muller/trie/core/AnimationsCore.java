@@ -109,6 +109,36 @@ public class AnimationsCore {
     }
 
     @Subscribe
+    public void handleRemoveTerminalSymbol(ClearTerminalSymbol event) {
+        TrieKeysBlock block = layoutManager.get(event.getRemovedTerminalSymbol().getId()).getGraphicsBlock();
+        final TrieKey key = block.getKey(event.getCharacter());
+        ParallelTransition pt = new ParallelTransition();
+        pt.setOnFinished(new StepEventHandler() {
+            @Override
+            protected void handleForward(ActionEvent actionEvent) {
+                key.getTextLabel().setStyle("-fx-font-weight: normal;");
+                key.getTextLabel().setTextFill(Color.BLACK);
+            }
+
+            @Override
+            protected void handleBack(ActionEvent actionEvent) {
+                key.getTextLabel().setStyle("-fx-font-weight: bold;");
+                key.getTextLabel().setTextFill(Color.BLUE);
+            }
+        });
+        editLasTransition(pt);
+    }
+
+    private void editLasTransition(Transition transition) {
+        if (lastTransition != null) {
+            ParallelTransition pt = new ParallelTransition();
+            pt.getChildren().addAll(transition, lastTransition);
+        } else {
+            lastTransition = transition;
+        }
+    }
+
+    @Subscribe
     public void handleWordNotFound(WordNotFound event) {
         /** My be ??*/
     }
@@ -146,11 +176,11 @@ public class AnimationsCore {
         if (block.getSizeChild() == 1) {
             TrieKeysBlock parentBlock = layoutManager.get(event.getRemoved().getParent().getId()).getGraphicsBlock();
             TrieKey key = parentBlock.getKey(event.getParentKey());
-            lastTransition = new BuilderRemoveNode(positions, block, event.getCharacter(), key.getLine())
-                    .getTransition();
+            editLasTransition(new BuilderRemoveNode(positions, block, event.getCharacter(), key.getLine())
+                    .getTransition());
             removedHelper = new RemoveHelper(layoutManager.getCanvas(), block);
         } else {
-            lastTransition = new BuilderRemoveNodeKey(positions, block, event.getCharacter(), moveKeysTransitions).getTransition();
+            editLasTransition(new BuilderRemoveNodeKey(positions, block, event.getCharacter(), moveKeysTransitions).getTransition());
             removedHelper = new RemoveHelper(layoutManager.getCanvas(), block, event.getCharacter());
             moveKeysTransitions.clear();
         }

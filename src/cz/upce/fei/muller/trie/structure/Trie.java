@@ -62,8 +62,8 @@ public class Trie<T extends Description> implements ITrie<T> {
         for (int i = 0; i < key.getDescription().length(); i++)
         {
             Character current = key.getDescription().charAt(i);
-            eventBus.post(new GoToNode(current,temp));
             if(temp.next.containsKey(current)){
+                eventBus.post(new GoToNode(current,temp));
                 temp = (TrieNode) temp.next.get(current);
             }else{
                 eventBus.post(new EndAction(temp));
@@ -90,10 +90,11 @@ public class Trie<T extends Description> implements ITrie<T> {
     public T remove(T value) {
         eventBus.post(new BuildWord(value,false));
         TrieNode previous = root;
+        Character character = null;
         for (int i = 0; i < value.getDescription().length(); i++) {
-            Character character = value.getDescription().charAt(i);
-            eventBus.post(new GoToNode(character,previous));
+            character = value.getDescription().charAt(i);
             if (previous.next.containsKey(character)) {
+                eventBus.post(new GoToNode(character,previous));
                 previous = (TrieNode) previous.next.get(character);
             } else {
                 eventBus.post(new WordNotFound(value.getDescription()));
@@ -110,6 +111,7 @@ public class Trie<T extends Description> implements ITrie<T> {
             return (T) T.EMPTY;
         }
 
+        eventBus.post(new ClearTerminalSymbol(previous.getParent(),character));
         previous.object = T.EMPTY;
         int i = value.getDescription().length();
         while (previous != null) {
@@ -122,7 +124,7 @@ public class Trie<T extends Description> implements ITrie<T> {
             }
             if(i<0)break;
             previous = previous.parent;
-            Character character = value.getDescription().charAt(i);
+            character = value.getDescription().charAt(i);
             Character parentKey = i>0?value.getDescription().charAt(i-1):null;
             eventBus.post(new RemoveNodeKey(previous,character, parentKey));
             previous.next.remove(character);
