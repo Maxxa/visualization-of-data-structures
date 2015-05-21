@@ -23,7 +23,7 @@ public class StructureControls implements IStructureControls {
 
     Button add = new Button("Vložit");
 
-    Button removeRoot = new Button("Odebrat kořen");
+    Button removeRoot = new Button("Odeber max");
 
     public StructureControls() {
         text.setAlignment(Pos.CENTER);
