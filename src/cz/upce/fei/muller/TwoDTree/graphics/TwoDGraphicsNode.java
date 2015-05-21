@@ -56,7 +56,7 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
     private Node initLabel() {
         String x = String.valueOf(node.getX());
         String y = String.valueOf(node.getY());
-        instalTooltip(x, y);
+        installTooltip(x, y);
         labelX.setText(x);
         labelY.setText(y);
         Double size = Double.valueOf((WIDTH / 2));
@@ -76,7 +76,7 @@ public class TwoDGraphicsNode extends BinaryNodeWithLine implements ITwoDNodesEl
 
     }
 
-    private void instalTooltip(String x, String y) {
+    private void installTooltip(String x, String y) {
         this.tooltip = new Tooltip(String.format("[ %s ; %s ]", x, y));
         Tooltip.install(this, tooltip);
     }
