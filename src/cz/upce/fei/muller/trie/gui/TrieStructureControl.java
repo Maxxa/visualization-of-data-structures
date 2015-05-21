@@ -35,7 +35,7 @@ public final class TrieStructureControl implements IStructureControls {
     private void build() {
         text.setAlignment(Pos.CENTER);
         text.setMaxWidth(100);
-        text.addEventFilter(KeyEvent.KEY_TYPED, new LetterValidationHandler(10, LetterValidationHandler.CharacterSize.LOWER_CASE));
+        text.addEventFilter(KeyEvent.KEY_TYPED, new LetterValidationHandler(20, LetterValidationHandler.CharacterSize.LOWER_CASE));
 
         debug.setOnAction(new EventHandler<ActionEvent>() {
             @Override
