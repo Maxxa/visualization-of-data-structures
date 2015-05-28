@@ -5,7 +5,7 @@ import cz.upce.fei.common.core.AbstractStructureElement;
 /**
  * @author Vojtěch Müller
  */
-public class TreapNode<K extends Comparable<K>,T extends AbstractStructureElement & IPriorityKeyContainer<K>> {
+class TreapNode<K extends Comparable<K>,T extends AbstractStructureElement & IPriorityKeyContainer<K>> {
 
     protected T key;
 
@@ -13,7 +13,7 @@ public class TreapNode<K extends Comparable<K>,T extends AbstractStructureElemen
     protected TreapNode<K,T> left;
     protected TreapNode<K,T> right;
 
-    public TreapNode(T key,  TreapNode<K,T> parent) {
+    TreapNode(T key,  TreapNode<K,T> parent) {
         this.key = key;
         this.parent = parent;
     }
@@ -36,6 +36,10 @@ public class TreapNode<K extends Comparable<K>,T extends AbstractStructureElemen
 
     protected int comparePriority(TreapNode<K,T> node){
         return key.getPriority().compareTo(node.key.getPriority());
+    }
+
+    public boolean isLeaf(){
+        return left==null && right==null;
     }
 
     @Override

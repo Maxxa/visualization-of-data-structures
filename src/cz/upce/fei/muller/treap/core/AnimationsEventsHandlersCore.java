@@ -6,6 +6,7 @@ import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
+import cz.commons.layoutManager.WorkBinaryNodeInfoBuilder;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.animations.RemovePreparation;
 import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
@@ -16,6 +17,7 @@ import cz.upce.fei.common.gui.FlashMessageViewer;
 import cz.upce.fei.muller.treap.animations.FindPlacePreparation;
 import cz.upce.fei.muller.treap.animations.InsertPreparation;
 import cz.upce.fei.muller.treap.animations.RotationPreparation;
+import cz.upce.fei.muller.treap.animations.SwapPreparation;
 import cz.upce.fei.muller.treap.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.treap.animations.builders.BuilderShowFindElement;
 import cz.upce.fei.muller.treap.events.*;
@@ -210,6 +212,17 @@ public class AnimationsEventsHandlersCore {
         initMovingTransition();
     }
 
+    @Subscribe
+    public void handleSwapElement(SwapNodeEvent event) {
+        if (!event.getFirstNode().getId().equals(event.getSecondNode().getId())) {
+            SwapPreparation handler = new SwapPreparation(manager,
+                    WorkBinaryNodeInfoBuilder.getWorkInfo(event.getFirstNode().getId(), manager),
+                    WorkBinaryNodeInfoBuilder.getWorkInfo(event.getSecondNode().getId(), manager));
+            IAnimationBuilder creator = handler.getBuilder();
+            manager.swapElement(event.getFirstNode().getId(), event.getSecondNode().getId());
+            insertTransition(creator);
+        }
+    }
 
     @Subscribe
     public void handleMoveElementNodeEvent(MoveElementEvent event) {

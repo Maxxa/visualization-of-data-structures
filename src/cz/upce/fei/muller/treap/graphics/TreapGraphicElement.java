@@ -28,7 +28,7 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
     private Tooltip tooltip;
 
     public TreapGraphicElement(TreapNodeImpl node, int x, int y) {
-        this(node,x,y,false);
+        this(node, x, y, false);
     }
 
     public TreapGraphicElement(TreapNodeImpl node, int x, int y, boolean isSearchBlock) {
@@ -39,7 +39,7 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
         initBackground(isSearchBlock);
 
         VBox labelsBox = new VBox();
-        labelsBox.getChildren().addAll(initLabel());
+        labelsBox.getChildren().addAll(initLabel(isSearchBlock));
         StackPane sp = new StackPane();
         sp.getChildren().addAll(backgroundRectangle, labelsBox);
         doParentBindings();
@@ -53,16 +53,19 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
     }
 
     private void initBackground(boolean isSearchBlock) {
-        backgroundRectangle = new Rectangle(WIDTH, HEIGHT);
+        backgroundRectangle = new Rectangle(WIDTH, isSearchBlock ? SEARCH_HEIGHT : HEIGHT);
         backgroundRectangle.setStrokeType(StrokeType.INSIDE);
         backgroundRectangle.setStroke(BG_STROKE);
-        backgroundRectangle.setFill(isSearchBlock?BG_SEARCH_COLOR:BG_COLOR);
+        if(isSearchBlock){
+            backgroundRectangle.setTranslateY(HEIGHT-SEARCH_HEIGHT);
+        }
+        backgroundRectangle.setFill(isSearchBlock ? BG_SEARCH_COLOR : BG_COLOR);
     }
 
-    private Node initLabel() {
+    private Node initLabel(boolean isSearchBlock) {
         String textKey = String.valueOf(node.getKey());
         String textPriority = String.valueOf(node.getPriority());
-        installTooltip(textKey, textPriority);
+        installTooltip(textKey, textPriority, node.getId(), isSearchBlock);
         labelKey.setText(textKey);
         labelPriority.setText(textPriority);
 
@@ -76,16 +79,21 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
         labelPriority.setAlignment(Pos.CENTER);
         hBox.setMaxWidth(WIDTH);
         labelKey.setStyle("-fx-font-weight: bold;");
-
-        hBox.getChildren().addAll(
-                labelKey, new Separator(Orientation.HORIZONTAL), labelPriority
-        );
+        if(isSearchBlock){
+            labelKey.setTranslateY(HEIGHT-SEARCH_HEIGHT+1);
+        }
+        hBox.getChildren().addAll(labelKey);
+        if (!isSearchBlock) {
+            hBox.getChildren().addAll(new Separator(Orientation.HORIZONTAL), labelPriority);
+        }
         return hBox;
     }
 
-    private void installTooltip(String textKey, String textPriority) {
-        this.tooltip = new Tooltip("Klíč: "+textKey+"\nPriorita: "+textPriority);
-        Tooltip.install(this,tooltip);
+    private void installTooltip(String textKey, String textPriority, Integer id, boolean isSearchBlock) {
+        this.tooltip = new Tooltip("Klíč: " + textKey +
+                (isSearchBlock ? "" : "\nPriorita: " + textPriority) +
+                "\nID: " + id);
+        Tooltip.install(this, tooltip);
     }
 
     public Shape getRect() {

@@ -127,31 +127,52 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             return null;
         }
 
-        TreapNode<K, T> naOdebrani = actual;
+        TreapNode<K, T> toRemove = actual;
 
-        TreapNode<K, T> pom = actual;
-        if (!pom.hasLeft() && !pom.hasRight()) { //is leaf
-            removeLeaf(pom);
+        RemoveHelper removeHelper = alignBottom(actual);
 
-            generateLastEvent();
-            return pom.key;
-        } else {
-
-            alignBottom(pom);
+        if (RemoveHelper.SWAP_RIGHT_TO_LEAF.equals(removeHelper)) {
+            swapToLeaf(toRemove, false);
+        } else if (RemoveHelper.SWAP_LEFT_TO_LEAF.equals(removeHelper)) {
+            swapToLeaf(toRemove, true);
         }
 
+        removeLeaf(toRemove);
         count--;
         actual = root;
-        alignBottom(pom);
+
         eventBus.post(new RemoveElementEvent(returnValue));
         generateLastEvent();
         return returnValue;
 
     }
 
+    private void swapToLeaf(TreapNode<K, T> removed, boolean isLeft) {
+        TreapNode<K, T> temp = isLeft ? removed.left : removed.right;
+        eventBus.post(new SwapNodeEvent(removed.key, temp.key));
+        if (!removed.isRoot()) {
+            if (removed.parent.hasRight() && removed.parent.right.equals(removed)) {
+                removed.parent.right = temp;
+            } else {
+                removed.parent.left = temp;
+            }
+        }
+        temp.parent = removed.parent;
+        if (isLeft) {
+            temp.right = removed.right;
+            temp.left = removed;
+        } else {
+            temp.left = removed.left;
+            temp.right = removed;
+        }
+        removed.parent = temp;
+        removed.left = null;
+        removed.right = null;
+    }
+
     private void removeLeaf(TreapNode<K, T> tempNode) {
         if (!tempNode.isRoot()) {
-            if (tempNode.parent.left == tempNode) {
+            if (tempNode.parent.hasLeft() && tempNode.parent.left.equals(tempNode)) {
                 tempNode.parent.left = null;
             } else {
                 tempNode.parent.right = null;
@@ -180,7 +201,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             }
             if (actual.key.getPriority().compareTo(actual.parent.key.getPriority()) > 0) {
                 if (actual.parent.hasLeft() && actual.parent.left.equals(actual)) {
-                   rotationRight(actual);
+                    rotationRight(actual);
                 } else {
                     rotationLeft(actual);
                 }
@@ -190,39 +211,46 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         }
     }
 
-    private void alignBottom(TreapNode<K, T> p) {
+    private RemoveHelper alignBottom(TreapNode<K, T> p) {
         while (true) {
-            if (!p.hasLeft() && !p.hasRight()) {
-                return;
+
+            if (p.isLeaf()) {
+                return RemoveHelper.REMOVE_LEAF;
             }
+
+            //childs is leaf
+            if (p.hasLeft() && p.left.isLeaf() && p.hasRight() && p.right.isLeaf()) {
+                // jestli prohodim s vetsi prioritou ...
+                if (p.left.comparePriority(p.right) > 0) {
+                    return RemoveHelper.SWAP_LEFT_TO_LEAF;
+                } else {
+                    return RemoveHelper.SWAP_RIGHT_TO_LEAF;
+                }
+            }
+
+            if (!p.hasLeft() && p.hasRight() && p.right.isLeaf()) { // is only right child and is leaf
+                return RemoveHelper.SWAP_RIGHT_TO_LEAF;
+            }
+
+            if (!p.hasRight() && p.hasLeft() && p.left.isLeaf()) {// its only left child and is leaf
+                return RemoveHelper.SWAP_LEFT_TO_LEAF;
+            }
+
             if (!p.hasLeft()) {
-//                if (p.priorita.CompareTo(p.right.priorita) < 0) {
-//                    rotationLeft(p.right);
-//                    continue;
-//                } else {
-//                    return;
-//                }
+                rotationLeft(p.right);
+                continue;
             }
+
             if (!p.hasRight()) {
-//                if (p.priorita.CompareTo(p.left.priorita) < 0) {
-//                    rotationRight(p.left);
-//                    continue;
-//                } else {
-//                    return;
-//                }
+                rotationRight(p.left);
+                continue;
             }
-//            if (p.left.priorita.CompareTo(p.right.priorita) > 0) {
-//                if (p.priorita.CompareTo(p.left.priorita) < 0) {
-//                    rotationRight(p.left);
-//                    continue;
-//                }
-//            } else {
-//                if (p.priorita.CompareTo(p.right.priorita) < 0) {
-//                    rotationLeft(p.right);
-//                    continue;
-//                }
-//            }
-            return;
+
+            if (p.left.comparePriority(p.right) > 0) {
+                rotationRight(p.left);
+            } else {
+                rotationLeft(p.right);
+            }
         }
     }
 
@@ -241,7 +269,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
                 rotatedNode.parent.left = rotatedNode;
                 parentReference.setLeftNodePosition(true);
             } else {
-                isLeft=false;
+                isLeft = false;
                 parentReference.setOldReference(rotatedNode.parent.right.key.getId());
                 rotatedNode.parent.right = rotatedNode;
             }
@@ -272,7 +300,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             root = rotatedNode;
         }
         System.out.println("\n\n TEST ");
-        for (ITreeStructure structure:new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()){
+        for (ITreeStructure structure : new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()) {
             System.out.println(structure);
         }
 
@@ -294,7 +322,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
                 rotatedNode.parent.left = rotatedNode;
                 parentReference.setLeftNodePosition(true);
             } else {
-                isLeft=false;
+                isLeft = false;
                 parentReference.setOldReference(rotatedNode.parent.right.key.getId());
                 rotatedNode.parent.right = rotatedNode;
             }
@@ -327,7 +355,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             root = rotatedNode;
         }
         System.out.println("\n\n TEST ");
-        for (ITreeStructure structure:new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()){
+        for (ITreeStructure structure : new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()) {
             System.out.println(structure);
         }
 
@@ -341,7 +369,9 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         return node;
     }
 
-    /** DEBUG METHOD */
+    /**
+     * DEBUG METHOD
+     */
     public void printTree() {
         //Debuging printing
         WidthIterator iterator = new WidthIterator(root, false);
@@ -353,30 +383,43 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
     }
 
 
-    public void setAcutalRoot(){
-        actual=root;
+    public void setAcutalRoot() {
+        actual = root;
     }
-    /** DEBUG METHOD */
+
+    /**
+     * DEBUG METHOD
+     */
     public boolean isLeft() {
         if (actual.isRoot()) return true;
         return actual == actual.left;
     }
-    /** DEBUG METHOD */
-    public void rotateLeft(){
+
+    /**
+     * DEBUG METHOD
+     */
+    public void rotateLeft() {
         rotationLeft(actual);
     }
 
-    /** DEBUG METHOD */
+    /**
+     * DEBUG METHOD
+     */
     public ITreeStructure getFromActual() {
         //build tree structu re...
         System.out.println("Actual node is: " + actual.key.getId());
         return new TreeStructureBuilder<>(actual, isLeft()).getRoot();
     }
 
-    /** DEBUG METHOD */
-    public void rotateRight(){
+    /**
+     * DEBUG METHOD
+     */
+    public void rotateRight() {
         rotationRight(actual);
     }
 
+    private enum RemoveHelper {
+        REMOVE_LEAF, SWAP_LEFT_TO_LEAF, SWAP_RIGHT_TO_LEAF
+    }
 }
 
