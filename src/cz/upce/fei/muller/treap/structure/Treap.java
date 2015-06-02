@@ -138,7 +138,6 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         }
 
         removeLeaf(toRemove);
-        count--;
         actual = root;
 
         eventBus.post(new RemoveElementEvent(returnValue));
@@ -177,6 +176,8 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             } else {
                 tempNode.parent.right = null;
             }
+        }else{
+            root=tempNode;
         }
         actual = tempNode.parent;
         count--;

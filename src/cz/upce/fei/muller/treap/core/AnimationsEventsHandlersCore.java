@@ -95,7 +95,7 @@ public class AnimationsEventsHandlersCore {
         manager.printDebug();
 
         try {
-            RotationPreparation preparation = new RotationPreparation(event, manager,this.moveParentsElements);
+            RotationPreparation preparation = new RotationPreparation(event, manager, this.moveParentsElements);
             insertTransition(preparation.getBuilder());
             moveParentsElements.clear();
         } catch (Exception ex) {
@@ -168,14 +168,19 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleFindChilds(FindEvent event) {
-        if (findPlacePreparator == null) {
-            manager.getCanvas().getChildren().addAll(findingNode);
-            findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
+        try {
+            if (findPlacePreparator == null) {
+                manager.getCanvas().getChildren().addAll(findingNode);
+                findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
+            }
+
+            findPlacePreparator.addMove(
+                    manager.getNodePosition(event.getComparedNodeId()));
+        } catch (Exception ex) {
+            for (int i = 0; i < ex.getStackTrace().length; i++) {
+                System.err.println(ex.getStackTrace()[i]);
+            }
         }
-
-        findPlacePreparator.addMove(
-                manager.getNodePosition(event.getComparedNodeId()));
-
     }
 
     @Subscribe
@@ -205,11 +210,18 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleRemoveElement(RemoveElementEvent event) {
-        isRemovingEnd = true;
-        removePreparation = new RemovePreparation(event.getRemoved().getId(), manager);
-        manager.removeElement(event.getRemoved().getId(), false);
-        insertTransition(new BuilderRemoveRoot(removePreparation));
-        initMovingTransition();
+        try {
+
+            isRemovingEnd = true;
+            removePreparation = new RemovePreparation(event.getRemoved().getId(), manager);
+            manager.removeElement(event.getRemoved().getId(), false);
+            insertTransition(new BuilderRemoveRoot(removePreparation));
+            initMovingTransition();
+        } catch (Exception ex) {
+            for (int i = 0; i < ex.getStackTrace().length; i++) {
+                System.err.println(ex.getStackTrace()[i]);
+            }
+        }
     }
 
     @Subscribe
