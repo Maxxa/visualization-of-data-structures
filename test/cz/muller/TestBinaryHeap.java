@@ -1,12 +1,9 @@
 package cz.muller;
 
 import com.google.common.eventbus.EventBus;
-import cz.upce.fei.common.core.AbstractStructureElement;
-import cz.upce.fei.common.structures.BinaryTreeToArray;
-import cz.upce.fei.common.structures.IBinaryTreeToArray;
 import cz.upce.fei.muller.binaryHeap.structure.BinaryHeap;
+import cz.upce.fei.muller.binaryHeap.structure.HeapNode;
 import cz.upce.fei.muller.binaryHeap.structure.HeapType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,21 +25,19 @@ public class TestBinaryHeap {
     @Test
     public void createAndInserMax(){
         heap = new BinaryHeap(bus, HeapType.MAX);
-
         initParamHeap();
-
     }
 
     private void initParamHeap() {
-        heap.insert(15);
-        heap.insert(6);
-        heap.insert(36);
-        heap.insert(9);
-        heap.insert(7);
-        heap.insert(7);
-        heap.insert(47);
-        heap.insert(52);
-        heap.insert(3);
+        heap.insert(new HeapNode(15));
+        heap.insert(new HeapNode(6));
+        heap.insert(new HeapNode(36));
+        heap.insert(new HeapNode(9));
+        heap.insert(new HeapNode(7));
+        heap.insert(new HeapNode(7));
+        heap.insert(new HeapNode(47));
+        heap.insert(new HeapNode(52));
+        heap.insert(new HeapNode(30));
     }
 
     @Test
@@ -54,13 +49,10 @@ public class TestBinaryHeap {
 
     @Test
     public void removeFromMin(){
-        createAndInserMin();
-
+       createAndInserMin();
        heap.removeRoot();
        heap.removeRoot();
        heap.removeRoot();
-
-
     }
 
     @Test
