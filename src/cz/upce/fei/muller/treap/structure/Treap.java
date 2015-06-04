@@ -3,6 +3,8 @@ package cz.upce.fei.muller.treap.structure;
 import com.google.common.eventbus.EventBus;
 import cz.commons.layoutManager.helpers.ITreeStructure;
 import cz.upce.fei.common.core.AbstractStructureElement;
+import cz.upce.fei.common.events.ReferenceHelper;
+import cz.upce.fei.common.events.RotationEvent;
 import cz.upce.fei.muller.treap.events.*;
 
 /**
@@ -176,8 +178,8 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             } else {
                 tempNode.parent.right = null;
             }
-        }else{
-            root=tempNode;
+        } else {
+            root = tempNode;
         }
         actual = tempNode.parent;
         count--;
@@ -375,8 +377,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
      */
     public void printTree() {
         //Debuging printing
-        WidthIterator iterator = new WidthIterator(root, false);
-        boolean first = true;
+        WidthIterator<K, T> iterator = new WidthIterator<>(root, false);
         for (; iterator.hasNext(); ) {
             ExtendData<K, T> data = iterator.next();
             System.out.println(String.format("id: %s , parent: %s , isLeft: %s", data.node.key.getId(), data.node.isRoot() ? null : data.node.parent.key.getId(), data.isLeft));
@@ -384,7 +385,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
     }
 
 
-    public void setAcutalRoot() {
+    public void setActualRoot() {
         actual = root;
     }
 
@@ -392,8 +393,7 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
      * DEBUG METHOD
      */
     public boolean isLeft() {
-        if (actual.isRoot()) return true;
-        return actual == actual.left;
+        return actual.isRoot() || actual == actual.left;
     }
 
     /**

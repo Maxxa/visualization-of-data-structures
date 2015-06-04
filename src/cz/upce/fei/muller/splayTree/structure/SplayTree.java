@@ -2,9 +2,9 @@ package cz.upce.fei.muller.splayTree.structure;
 
 import com.google.common.eventbus.EventBus;
 import cz.upce.fei.common.core.AbstractStructureElement;
+import cz.upce.fei.common.events.ReferenceHelper;
+import cz.upce.fei.common.events.RotationEvent;
 import cz.upce.fei.muller.splayTree.events.*;
-import cz.upce.fei.muller.treap.events.ReferenceHelper;
-import cz.upce.fei.muller.treap.events.RotationEvent;
 
 /**
  * @author Vojtěch Müller

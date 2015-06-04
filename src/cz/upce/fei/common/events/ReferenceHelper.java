@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.treap.events;
+package cz.upce.fei.common.events;
 
 /**
 * @author Vojtěch Müller

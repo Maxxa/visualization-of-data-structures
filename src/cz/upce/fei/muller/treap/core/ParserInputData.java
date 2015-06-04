@@ -23,7 +23,7 @@ public class ParserInputData {
             return null;
         }
         if (result < 0 ) {
-            Dialog.showError("Chyba", "Neplatný rozsah hodnot! Povolené hodnoty 1-200.");
+            Dialog.showError("Chyba", "Neplatný rozsah hodnot!");
             return null;
         }
 

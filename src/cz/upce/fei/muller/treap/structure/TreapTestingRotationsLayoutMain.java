@@ -6,9 +6,9 @@ import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
 import cz.commons.layoutManager.RepairmanLayoutManager;
 import cz.commons.layoutManager.helpers.ITreeStructure;
+import cz.upce.fei.common.events.RotationEvent;
 import cz.upce.fei.muller.treap.TreapPresetItem;
 import cz.upce.fei.muller.treap.TreapPresets;
-import cz.upce.fei.muller.treap.events.RotationEvent;
 import cz.upce.fei.muller.treap.graphics.TreapGraphicElement;
 import cz.upce.fei.muller.treap.gui.TreeLayoutSettingBuilder;
 import javafx.scene.layout.Pane;
@@ -54,7 +54,7 @@ public class TreapTestingRotationsLayoutMain {
 
         treap.find(21);
         System.out.println("\n ____________________________________________________ \n");
-        treap.setAcutalRoot();
+        treap.setActualRoot();
         for (ITreeStructure structure : treap.getFromActual()) {
             TreapGraphicElement element = new TreapGraphicElement(nodes.get(structure.getId()), 0, 0);
             manager.addElement(element, structure.getIdParent(), structure.isLeftChild());

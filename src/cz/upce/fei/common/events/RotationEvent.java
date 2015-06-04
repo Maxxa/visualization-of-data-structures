@@ -1,4 +1,4 @@
-package cz.upce.fei.muller.treap.events;
+package cz.upce.fei.common.events;
 
 import cz.commons.layoutManager.helpers.ITreeStructure;
 
