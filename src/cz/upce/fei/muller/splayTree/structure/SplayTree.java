@@ -28,7 +28,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
             eventBus.post(new CreateRootEvent(content));
         } else {
             //finding node
-            Match m = findMatch(content);
+            Match<K,T> m = findMatch(content);
             splay(m.node);      // splay node to root.
             if (m.matchFound) { // The element already exists in the tree.
                 m.node.contents = content;
@@ -68,43 +68,50 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         return root == null;
     }
 
-    private void splay(SplayNode toTop) {
+    private void splay(SplayNode<K,T> toTop) {
         if (toTop == null) {
             return;
         }
         while (!toTop.isRoot()) {
-            SplayNode parent = toTop.parent();
+            SplayNode<K,T> parent = toTop.parent();
 
+            SplayOperationEvent.SplayOperation splayOperation;
             if (parent.isRoot()) {
-                if (parent.isLeft(toTop)) { //cik
+                if (parent.isLeft(toTop)) {
+                    splayOperation= SplayOperationEvent.SplayOperation.ZIG_LEFT;
                     rotationRight(toTop);
-                } else { //cak
+                } else {
+                    splayOperation= SplayOperationEvent.SplayOperation.ZIG_RIGHT;
                     rotationLeft(toTop);
                 }
             } else {
-                SplayNode grandparent = parent.parent();
+                SplayNode<K,T> grandparent = parent.parent();
                 boolean isCikCikLeft = grandparent.isLeft(parent) && parent.isLeft(toTop);
                 boolean isCikCikRight = grandparent.isRight(parent) && parent.isRight(toTop);
-                if (isCikCikRight || isCikCikRight) {
+                if (isCikCikLeft || isCikCikRight) {
                     if (isCikCikLeft) {
+                        splayOperation= SplayOperationEvent.SplayOperation.ZIG_ZIG_LEFT;
                         rotationRight(parent);
                         rotationRight(toTop);
                     } else {
+                        splayOperation= SplayOperationEvent.SplayOperation.ZIG_ZIG_RIGHT;
                         rotationLeft(parent);
                         rotationLeft(toTop);
                     }
                 } else {
-                    //cik-cak
                     if (parent.isLeft(toTop)) {
+                        splayOperation= SplayOperationEvent.SplayOperation.ZIG_ZAG_LEFT;
                         rotationRight(toTop);
                         rotationLeft(toTop);
 
                     } else {
+                        splayOperation= SplayOperationEvent.SplayOperation.ZIG_ZAG_RIGTH;
                         rotationLeft(toTop);
                         rotationRight(toTop);
                     }
                 }
             }
+            eventBus.post(new SplayOperationEvent(splayOperation));
         }
     }
 
@@ -116,9 +123,9 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         //TODO
     }
 
-    private Match findMatch(T a) {
+    private Match<K,T> findMatch(T a) {
         if (isEmpty()) {
-            return new Match(false, root, true);
+            return new Match<>(false, root, true);
         }
 
         SplayNode<K, T> n = root;
@@ -147,7 +154,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         }
 
         eventBus.post(new MatchFindEvent(n.contents));
-        return new Match(matchFound, n, smallerThanNode);
+        return new Match<>(matchFound, n, smallerThanNode);
 
     }
 
