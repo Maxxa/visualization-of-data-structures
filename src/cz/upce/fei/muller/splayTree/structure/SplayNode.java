@@ -57,4 +57,21 @@ class SplayNode<K extends Comparable<K>,T extends AbstractStructureElement & ISp
         return right != null;
     }
 
+    public boolean isLeft(SplayNode<K,T> toTop) {
+        if(hasLeft()){
+           if(left.contents.getKey().compareTo(toTop.contents.getKey())==0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isRight(SplayNode<K,T> toTop) {
+        if(hasRight()){
+            if(right.contents.getKey().compareTo(toTop.contents.getKey())==0){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -2,10 +2,7 @@ package cz.upce.fei.muller.splayTree.structure;
 
 import com.google.common.eventbus.EventBus;
 import cz.upce.fei.common.core.AbstractStructureElement;
-import cz.upce.fei.muller.splayTree.events.CreateRootEvent;
-import cz.upce.fei.muller.splayTree.events.ElementKeyExistEvent;
-import cz.upce.fei.muller.splayTree.events.InsertNodeEvent;
-import cz.upce.fei.muller.splayTree.events.LastActionEvent;
+import cz.upce.fei.muller.splayTree.events.*;
 
 /**
  * @author Vojtěch Müller
@@ -30,12 +27,12 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
             root = newNode;
             eventBus.post(new CreateRootEvent(content));
         } else {
+            //finding node
             Match m = findMatch(content);
-
+            splay(m.node);      // splay node to root.
             if (m.matchFound) { // The element already exists in the tree.
                 m.node.contents = content;
                 eventBus.post(new ElementKeyExistEvent(m.node.contents));
-                splay(m.node);
             } else {
                 SplayNode parent = m.node;
 
@@ -45,7 +42,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
                     parent.setRight(newNode);
                 }
                 eventBus.post(new InsertNodeEvent(newNode.contents, parent.contents, m.smallerThanNode));
-                splay(newNode);
+
             }
         }
         generateLastEvent();
@@ -75,60 +72,83 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         if (toTop == null) {
             return;
         }
-
         while (!toTop.isRoot()) {
             SplayNode parent = toTop.parent();
 
             if (parent.isRoot()) {
-                // Zig or zag.
-//                rotateUp(toTop);
+                if (parent.isLeft(toTop)) { //cik
+                    rotationRight(toTop);
+                } else { //cak
+                    rotationLeft(toTop);
+                }
             } else {
                 SplayNode grandparent = parent.parent();
-                if (grandparent.left() == parent && parent.left() == toTop
-                        ||
-                    grandparent.right() == parent && parent.right() == toTop) {
-                    // Zig-zig or zag-zag.
-//                    rotateUp(parent);
-//                    rotateUp(toTop);
+                boolean isCikCikLeft = grandparent.isLeft(parent) && parent.isLeft(toTop);
+                boolean isCikCikRight = grandparent.isRight(parent) && parent.isRight(toTop);
+                if (isCikCikRight || isCikCikRight) {
+                    if (isCikCikLeft) {
+                        rotationRight(parent);
+                        rotationRight(toTop);
+                    } else {
+                        rotationLeft(parent);
+                        rotationLeft(toTop);
+                    }
                 } else {
-                    // Zig-zag or zag-zig.
-//                    rotateUp(toTop);
-//                    rotateUp(toTop);
+                    //cik-cak
+                    if (parent.isLeft(toTop)) {
+                        rotationRight(toTop);
+                        rotationLeft(toTop);
+
+                    } else {
+                        rotationLeft(toTop);
+                        rotationRight(toTop);
+                    }
                 }
             }
         }
     }
 
-    /**
-     * Finds the SplayNode containing the given element, if any. <i>Does
-     * not splay the tree.</i>
-     */
-    private Match findMatch(T a) {
-        // The search starts in the root, not the sentinel.
-        SplayNode<K, T> n = root;
+    private void rotationLeft(SplayNode toTop) {
+        //TODO
+    }
 
-        if (n == null) {
+    private void rotationRight(SplayNode toTop) {
+        //TODO
+    }
+
+    private Match findMatch(T a) {
+        if (isEmpty()) {
             return new Match(false, root, true);
         }
 
+        SplayNode<K, T> n = root;
+        boolean matchFound = false;
+        boolean smallerThanNode = false;
         while (true) {
+            eventBus.post(new MoveToChildEvent(a, n.contents));
             int c = a.getKey().compareTo(n.contents.getKey());
             if (c == 0) {
-                return new Match(true, n, false);
+                matchFound = true;
+                break;
             } else if (c < 0) {
                 if (!n.hasLeft()) {
-                    return new Match(false, n, true);
+                    smallerThanNode = true;
+                    break;
                 } else {
                     n = n.left();
                 }
             } else {
                 if (!n.hasRight()) {
-                    return new Match(false, n, false);
+                    break; //default is false for variable...
                 } else {
                     n = n.right();
                 }
             }
         }
+
+        eventBus.post(new MatchFindEvent(n.contents));
+        return new Match(matchFound, n, smallerThanNode);
+
     }
 
     void generateLastEvent() {
