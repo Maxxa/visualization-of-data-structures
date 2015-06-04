@@ -5,7 +5,7 @@ import cz.upce.fei.common.core.AbstractStructureElement;
 /**
  * @author Vojtěch Müller
  */
-public class SplayNodeImpl extends AbstractStructureElement  implements ISplayData<Integer> {
+public class SplayNodeImpl extends AbstractStructureElement implements ISplayData<Integer> {
 
     private Integer key;
 
@@ -16,5 +16,10 @@ public class SplayNodeImpl extends AbstractStructureElement  implements ISplayDa
     @Override
     public Integer getKey() {
         return key;
+    }
+
+    @Override
+    public String toString() {
+        return key.toString();
     }
 }

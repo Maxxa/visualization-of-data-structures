@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 /**
  * @author Vojtěch Müller
  */
-public class StructureControls implements IStructureControls {
+public class SplayStructureControls implements IStructureControls {
 
     Label nodeLabel = new Label("Prvek:");
     TextField text = new TextField();
@@ -21,7 +21,7 @@ public class StructureControls implements IStructureControls {
     Button find = new Button("Najít");
     Button remove = new Button("Odebrat");
 
-    public StructureControls() {
+    public SplayStructureControls() {
         text.setAlignment(Pos.CENTER);
         text.setMaxWidth(50);
     }

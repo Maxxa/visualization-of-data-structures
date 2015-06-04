@@ -3,13 +3,12 @@ package cz.upce.fei.muller.splayTree.core;
 import cz.commons.animation.AnimationControl;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
-import cz.upce.fei.muller.splayTree.graphics.SplayNodeElement;
+import cz.upce.fei.common.animations.RemovePreparation;
+import cz.upce.fei.common.core.IAnimationBuilder;
+import cz.upce.fei.common.core.IEndInitAnimation;
 import cz.upce.fei.muller.splayTree.graphics.IBinaryNodesElements;
-import javafx.animation.TranslateTransition;
+import cz.upce.fei.muller.splayTree.graphics.SplayGraphicsNodeElement;
 import javafx.geometry.Point2D;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Vojtěch Müller
@@ -18,12 +17,10 @@ public class AnimationsEventsHandlersCore {
 
     private final AnimationControl animationControl;
     private final BinaryTreeLayoutManager manager;
-    private IEndAnimation endHandler;
+    private IEndInitAnimation endHandler;
 
     private Point2D creatingPoint;
-    private Integer removeElementId;
-
-    private List<TranslateTransition> moveParentsElements = new ArrayList<>();
+    private RemovePreparation removePreparation;
 
     public AnimationsEventsHandlersCore(AnimationControl animationControl, ITreeLayoutManager manager) {
         this.animationControl = animationControl;
@@ -40,15 +37,31 @@ public class AnimationsEventsHandlersCore {
     }
 
 
-    private SplayNodeElement getNode(Integer elementId){
-        return (SplayNodeElement) manager.getElementInfo(elementId).getElement();
+
+
+
+
+
+
+
+
+    private SplayGraphicsNodeElement getNode(Integer elementId){
+        return (SplayGraphicsNodeElement) manager.getElementInfo(elementId).getElement();
     }
 
-    private void insertTransition(IAnimationCreator creator){
+    private void insertTransition(IAnimationBuilder creator){
         animationControl.getTransitions().add(creator.getAnimation());
     }
 
-    public void setEndAnimationHandler(IEndAnimation handler) {
-        this.endHandler = handler;
+    public void setEndAnimationHandler(IEndInitAnimation endAnimationHandler) {
+        this.endHandler =endAnimationHandler;
+    }
+
+    public RemovePreparation getRemovePreparation() {
+        return removePreparation;
+    }
+
+    public void clear() {
+        //TODO clearing
     }
 }

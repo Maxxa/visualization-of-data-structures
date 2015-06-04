@@ -18,7 +18,7 @@ public class SplayTreeGUI extends AbstractApplication<SplayTreeController> {
     public static final int CANVAS_WIDTH = (int) (8400* IGraphics.PLATFORM_SCALE);
     public static final int CANVAS_HEIGHT = (int) (450* IGraphics.PLATFORM_SCALE);
 
-    private ToolBarControlsContainer containerControls = new ToolBarControlsContainer(new StructureControls());
+    private ToolBarControlsContainer containerControls = new ToolBarControlsContainer(new SplayStructureControls());
 
     private BinaryTreeLayoutManager binaryTreeLayoutManager;
 

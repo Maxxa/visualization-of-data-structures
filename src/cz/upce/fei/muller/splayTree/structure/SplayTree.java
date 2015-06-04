@@ -2,9 +2,9 @@ package cz.upce.fei.muller.splayTree.structure;
 
 import com.google.common.eventbus.EventBus;
 import cz.upce.fei.common.core.AbstractStructureElement;
-import cz.upce.fei.common.events.ReferenceHelper;
-import cz.upce.fei.common.events.RotationEvent;
 import cz.upce.fei.muller.splayTree.events.*;
+import cz.upce.fei.muller.treap.events.ReferenceHelper;
+import cz.upce.fei.muller.treap.events.RotationEvent;
 
 /**
  * @author Vojtěch Müller
@@ -39,6 +39,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
             } else {
                 SplayNode parent = m.node;
 
+                //TODO this is not final...
                 if (m.smallerThanNode) {
                     parent.setLeft(newNode);
                 } else {
@@ -118,7 +119,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
     private SplayNode<K, T> findMax(SplayNode<K, T> left) {
         SplayNode<K,T> n =left;
         if (n == null) {
-            return n;
+            return null;
         }
         while (n.hasRight()) {
             n = n.right();
