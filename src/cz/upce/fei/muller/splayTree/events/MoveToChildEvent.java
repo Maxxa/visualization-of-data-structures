@@ -9,19 +9,19 @@ import cz.upce.fei.muller.splayTree.structure.SplayNodeImpl;
  */
 public class MoveToChildEvent extends AbstractEvent{
 
-    private final SplayNodeImpl comparingNode;
+    private final Object findingKey;
 
-    public MoveToChildEvent(AbstractStructureElement newNode, AbstractStructureElement comparingNode) {
-        super(newNode);
-        this.comparingNode = (SplayNodeImpl) comparingNode;
+    public MoveToChildEvent(Object findingKey, AbstractStructureElement comparingNode) {
+        super(comparingNode);
+        this.findingKey = findingKey;
     }
 
-    public SplayNodeImpl getNewNode() {
-        return (SplayNodeImpl) element;
+    public Object getNewNode() {
+        return element;
     }
 
     public SplayNodeImpl getComparingNode() {
-        return comparingNode;
+        return (SplayNodeImpl) element;
     }
 
 }
