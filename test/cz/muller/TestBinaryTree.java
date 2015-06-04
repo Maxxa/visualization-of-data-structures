@@ -84,7 +84,7 @@ public class TestBinaryTree {
 }
 
 
-class Ele extends AbstractStructureElement {
+class Ele extends AbstractStructureElement implements Comparable {
 
     public final Integer value;
 

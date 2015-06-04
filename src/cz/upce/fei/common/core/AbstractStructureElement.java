@@ -5,7 +5,7 @@ import cz.commons.utils.GeneratorElementsNumbers;
 /**
  * @author Vojtěch Müller
  */
-public class AbstractStructureElement implements Comparable {
+public class AbstractStructureElement {
 
     private final Integer id = GeneratorElementsNumbers.getNextId();
 
@@ -13,8 +13,4 @@ public class AbstractStructureElement implements Comparable {
         return id;
     }
 
-    @Override
-    public int compareTo(Object o){
-        return this.compareTo(o);
-    }
 }

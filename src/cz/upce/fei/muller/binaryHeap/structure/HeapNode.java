@@ -5,7 +5,7 @@ import cz.upce.fei.common.core.AbstractStructureElement;
 /**
  * @author Vojtěch Müller
  */
-public class HeapNode extends AbstractStructureElement {
+public class HeapNode extends AbstractStructureElement implements Comparable {
 
     private Integer value;
 
