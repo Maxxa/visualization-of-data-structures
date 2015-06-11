@@ -1,10 +1,14 @@
 package cz.upce.fei.muller.splayTree.structure;
 
 import com.google.common.eventbus.EventBus;
+import cz.commons.layoutManager.helpers.ITreeStructure;
 import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.common.events.ReferenceHelper;
 import cz.upce.fei.common.events.RotationEvent;
 import cz.upce.fei.muller.splayTree.events.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Vojtěch Müller
@@ -33,20 +37,56 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
             eventBus.post(new StartInserting(content));
             Match<K, T> m = findMatch(content.getKey());
             splay(m.node);      // splay node to root.
+
             if (m.matchFound) { // The element already exists in the tree.
-                m.node.contents = content;
                 eventBus.post(new ElementKeyExistEvent(m.node.contents));
             } else {
-                SplayNode parent = m.node;
+                SplayNode oldRoot = m.node;
+                List<ReferenceHelper> referenceHelperList = new LinkedList<>();
+                ReferenceHelper newLeft = new ReferenceHelper(newNode.contents.getId());
+                ReferenceHelper newRight = new ReferenceHelper(newNode.contents.getId());
 
-                //TODO this is not final...
+                ReferenceHelper old = new ReferenceHelper(oldRoot.contents.getId());
+
                 if (m.smallerThanNode) {
-                    parent.setLeft(newNode);
-                } else {
-                    parent.setRight(newNode);
-                }
-                eventBus.post(new InsertNodeEvent(newNode.contents, parent.contents, m.smallerThanNode));
+                    newLeft.setNewReference(oldRoot.contents.getId());
+                    referenceHelperList.add(newLeft);
+                    newLeft.setLeftNodePosition(true);
 
+                    if(oldRoot.hasRight()){
+                        referenceHelperList.add(old);
+                        referenceHelperList.add(newRight);
+                        newRight.setNewReference(oldRoot.right.contents.getId());
+                        old.setOldReference(oldRoot.left.contents.getId());
+                    }
+                    newNode.setLeft(oldRoot);
+                    newNode.setRight(oldRoot.right);
+                    oldRoot.setRight(null);
+                } else {
+                    newRight.setNewReference(oldRoot.contents.getId());
+                    referenceHelperList.add(newRight);
+
+                    if(oldRoot.hasLeft()){
+                        referenceHelperList.add(newLeft);
+                        referenceHelperList.add(old);
+                        old.setLeftNodePosition(true);
+                        newLeft.setNewReference(oldRoot.left.contents.getId());
+                        old.setOldReference(oldRoot.left.contents.getId());
+                    }
+                    newNode.setLeft(oldRoot.left);
+                    newNode.setRight(m.node);
+                    oldRoot.setLeft(null);
+                }
+
+                root = newNode;
+                TreeStructureBuilder<K, T> builder = new TreeStructureBuilder<>(root, true);
+
+                //affter all debuging remove this
+                for (ITreeStructure structure:builder.getRoot()) {
+                    System.out.println(structure);
+                }
+
+                eventBus.post(new InsertNodeEvent(builder.getRoot(),referenceHelperList));
             }
         }
         generateLastEvent();
@@ -70,12 +110,12 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         if (key == null) return null;
 
         T returnValue = null;
-        eventBus.post(new StartRemoving());
+        eventBus.post(new StartRemoving(key));
         find(key); //TODO this is not finaly
         if (root.contents.getKey().compareTo(key) == 0) {
-            returnValue=root.contents;
-            SplayNode<K,T> left = root.left;
-            SplayNode<K,T> right = root.right;
+            returnValue = root.contents;
+            SplayNode<K, T> left = root.left;
+            SplayNode<K, T> right = root.right;
             removeRoot();
             unificationSubTree(left, right);
         }
@@ -86,38 +126,38 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
 
     // remove links from root
     private void removeRoot() {
-        if(root.hasLeft()){
-            root.left.parent=null;
+        if (root.hasLeft()) {
+            root.left.parent = null;
         }
 
-        if(root.hasRight()){
-            root.right.parent=null;
+        if (root.hasRight()) {
+            root.right.parent = null;
         }
 
-        root.right=null;
-        root.left=null;
+        root.right = null;
+        root.left = null;
     }
 
     private void unificationSubTree(SplayNode<K, T> left, SplayNode<K, T> right) {
-        if(left ==null && right ==null){
+        if (left == null && right == null) {
             eventBus.post(new RemoveLastElementEvent());
-            root=null;
+            root = null;
             return;
         }
 
-        if(left==null){
+        if (left == null) {
             //root is right root
-            root= right;
-        }else{
-            SplayNode<K,T> newRoot= findMax(left);
-            root=newRoot;
-            newRoot.right=right;
+            root = right;
+        } else {
+            SplayNode<K, T> newRoot = findMax(left);
+            root = newRoot;
+            newRoot.right = right;
         }
 
     }
 
     private SplayNode<K, T> findMax(SplayNode<K, T> left) {
-        SplayNode<K,T> n =left;
+        SplayNode<K, T> n = left;
         if (n == null) {
             return null;
         }
@@ -142,16 +182,17 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         if (toTop == null) {
             return;
         }
+
         while (!toTop.isRoot()) {
             SplayNode<K, T> parent = toTop.parent();
 
             SplayOperationEvent.SplayOperation splayOperation;
             if (parent.isRoot()) {
                 if (parent.isLeft(toTop)) {
-                    splayOperation = SplayOperationEvent.SplayOperation.ZIG_LEFT;
+                    splayOperation = SplayOperationEvent.SplayOperation.ZIG_RIGHT;
                     rotationRight(toTop);
                 } else {
-                    splayOperation = SplayOperationEvent.SplayOperation.ZIG_RIGHT;
+                    splayOperation = SplayOperationEvent.SplayOperation.ZIG_LEFT;
                     rotationLeft(toTop);
                 }
             } else {
@@ -175,7 +216,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
                         rotationLeft(toTop);
 
                     } else {
-                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZAG_RIGTH;
+                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZAG_RIGHT;
                         rotationLeft(toTop);
                         rotationRight(toTop);
                     }
@@ -196,7 +237,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         boolean smallerThanNode = false;
         while (true) {
             eventBus.post(new MoveToChildEvent(a, n.contents));
-            int c = a.compareTo(n.contents.getKey());
+            int c = n.contents.getKey().compareTo(a);
             if (c == 0) {
                 matchFound = true;
                 break;
@@ -216,7 +257,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
             }
         }
 
-        eventBus.post(new MatchFindEvent(n.contents));
+        eventBus.post(new MatchFindEvent(a, n.contents));
         return new Match<>(matchFound, n, smallerThanNode);
 
     }

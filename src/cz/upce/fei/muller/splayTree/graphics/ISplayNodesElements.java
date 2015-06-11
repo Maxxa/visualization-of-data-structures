@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Vojtěch Müller
  */
-public interface IBinaryNodesElements {
+public interface ISplayNodesElements {
 
     public static final Integer WIDTH = (int) (30 * IGraphics.PLATFORM_SCALE);
 

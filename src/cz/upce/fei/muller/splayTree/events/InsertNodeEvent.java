@@ -1,32 +1,28 @@
 package cz.upce.fei.muller.splayTree.events;
 
-import cz.upce.fei.common.core.AbstractStructureElement;
-import cz.upce.fei.common.events.AbstractEvent;
-import cz.upce.fei.muller.splayTree.structure.SplayNodeImpl;
+import cz.commons.layoutManager.helpers.ITreeStructure;
+import cz.upce.fei.common.events.ReferenceHelper;
+
+import java.util.List;
 
 /**
  * @author Vojtěch Müller
  */
-public class InsertNodeEvent extends AbstractEvent {
+public class InsertNodeEvent {
 
-    private final boolean isLeftChild;
-    private final SplayNodeImpl parentNode;
+    private final ITreeStructure root;
+    private final List<ReferenceHelper> referenceHelperList;
 
-    public InsertNodeEvent(AbstractStructureElement element, AbstractStructureElement parentNode, boolean isLeftChild) {
-        super(element);
-        this.parentNode = (SplayNodeImpl)parentNode;
-        this.isLeftChild = isLeftChild;
+    public InsertNodeEvent(ITreeStructure root, List<ReferenceHelper> referenceHelperList) {
+        this.root = root;
+        this.referenceHelperList = referenceHelperList;
     }
 
-    public SplayNodeImpl getParentNode(){
-        return parentNode;
+    public ITreeStructure getRoot() {
+        return root;
     }
 
-    public SplayNodeImpl getNewNode(){
-        return (SplayNodeImpl) element;
-    }
-
-    public boolean isLeftChild() {
-        return isLeftChild;
+    public List<ReferenceHelper> getReferenceHelperList() {
+        return referenceHelperList;
     }
 }

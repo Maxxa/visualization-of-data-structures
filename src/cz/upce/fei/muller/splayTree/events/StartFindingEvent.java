@@ -7,19 +7,12 @@ import cz.upce.fei.muller.splayTree.structure.SplayNodeImpl;
 /**
  * @author Vojtěch Müller
  */
-public class MatchFindEvent extends AbstractEvent {
-    private final Object key;
-
-    public MatchFindEvent(Object key, AbstractStructureElement contents) {
-        super(contents);
-        this.key = key;
+public class StartFindingEvent extends AbstractEvent{
+    public StartFindingEvent(AbstractStructureElement content) {
+        super(content);
     }
 
     public SplayNodeImpl getFindingNode(){
-        return (SplayNodeImpl)element;
-    }
-
-    public Object getKey() {
-        return key;
+        return (SplayNodeImpl) element;
     }
 }

@@ -14,7 +14,7 @@ import javafx.scene.shape.StrokeType;
 /**
  * @author Vojtěch Müller
  */
-public class SplayGraphicsNodeElement extends BinaryNodeWithLine implements IBinaryNodesElements {
+public class SplayGraphicsNodeElement extends BinaryNodeWithLine implements ISplayNodesElements {
 
     private final SplayNodeImpl node;
     private Rectangle backgroundRectangle;

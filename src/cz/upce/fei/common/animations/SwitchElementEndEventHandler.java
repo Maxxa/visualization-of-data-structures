@@ -1,7 +1,6 @@
-package cz.upce.fei.muller.treap.animations.handlers;
+package cz.upce.fei.common.animations;
 
 import cz.commons.animation.StepEventHandler;
-import cz.upce.fei.common.animations.SwitchConnectorHelper;
 import javafx.event.ActionEvent;
 
 import java.util.List;

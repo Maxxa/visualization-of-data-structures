@@ -9,6 +9,7 @@ import cz.commons.layoutManager.MoveElementEvent;
 import cz.commons.layoutManager.WorkBinaryNodeInfoBuilder;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.animations.RemovePreparation;
+import cz.upce.fei.common.animations.RotationPreparation;
 import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
 import cz.upce.fei.common.animations.builders.BuilderRemoveRoot;
 import cz.upce.fei.common.core.IAnimationBuilder;
@@ -17,7 +18,6 @@ import cz.upce.fei.common.events.RotationEvent;
 import cz.upce.fei.common.gui.FlashMessageViewer;
 import cz.upce.fei.muller.treap.animations.FindPlacePreparation;
 import cz.upce.fei.muller.treap.animations.InsertPreparation;
-import cz.upce.fei.muller.treap.animations.RotationPreparation;
 import cz.upce.fei.muller.treap.animations.SwapPreparation;
 import cz.upce.fei.muller.treap.animations.builders.BuilderAddElement;
 import cz.upce.fei.muller.treap.animations.builders.BuilderShowFindElement;
@@ -42,15 +42,16 @@ public class AnimationsEventsHandlersCore {
     private final AnimationControl animationControl;
     private final BinaryTreeLayoutManager manager;
     private IEndInitAnimation endInitAnimation;
-
     private Point2D creatingPoint;
-    private FindPlacePreparation findPlacePreparator;
-    private TreapGraphicElement findingNode;
+
     private final Point2D flashMessagePosition;
     private List<FlashMessageViewer> viewers = new LinkedList<>();
     private boolean isRemovingEnd = false;
-    private List<TranslateTransition> moveParentsElements = new ArrayList<>();
     private RemovePreparation removePreparation;
+
+    private FindPlacePreparation findPlacePreparator;
+    private TreapGraphicElement findingNode;
+    private List<Transition> moveParentsElements = new ArrayList<>();
     private List<TreapGraphicElement> elementsNotFound = new ArrayList<>();
 
     public AnimationsEventsHandlersCore(AnimationControl animationControl, ITreeLayoutManager manager) {
@@ -239,6 +240,7 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleMoveElementNodeEvent(MoveElementEvent event) {
+        System.out.println("move");
         this.moveParentsElements.add(new BuilderAnimMoveNode(event.getOldPoint(), event.getNewPoint(), getNode(event.getElementId())).getTranslateTransition());
     }
 

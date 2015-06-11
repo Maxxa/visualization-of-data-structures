@@ -16,8 +16,8 @@ public class MoveToChildEvent extends AbstractEvent{
         this.findingKey = findingKey;
     }
 
-    public Object getNewNode() {
-        return element;
+    public Object getFindingKey() {
+        return findingKey;
     }
 
     public SplayNodeImpl getComparingNode() {

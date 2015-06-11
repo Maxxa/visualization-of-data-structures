@@ -1,21 +1,19 @@
-package cz.upce.fei.muller.treap.animations;
+package cz.upce.fei.common.animations;
 
+import cz.commons.graphics.BinaryNodeWithLine;
 import cz.commons.graphics.NodePosition;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ElementInfo;
 import cz.commons.layoutManager.MoveElementEvent;
 import cz.commons.layoutManager.RepairmanLayoutManager;
-import cz.upce.fei.common.animations.ConnectorHelper;
-import cz.upce.fei.common.animations.SwitchConnectorHelper;
 import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
+import cz.upce.fei.common.animations.builders.BuilderRotationElement;
 import cz.upce.fei.common.core.IAnimationBuilder;
 import cz.upce.fei.common.core.IPreparation;
 import cz.upce.fei.common.events.ReferenceHelper;
 import cz.upce.fei.common.events.RotationEvent;
-import cz.upce.fei.muller.treap.animations.builders.BuilderRotationElement;
-import cz.upce.fei.muller.treap.graphics.TreapGraphicElement;
 import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.Transition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +25,18 @@ public class RotationPreparation implements IPreparation {
 
     private final RotationEvent event;
     private final BinaryTreeLayoutManager manager;
-    private final List<TranslateTransition> moveParentsElements;
+    private final List<Transition> moveParentsElements;
     private ParallelTransition reconstructionMoves;
 
     private final List<SwitchConnectorHelper> helpers = new ArrayList<>();
 
-    public RotationPreparation(RotationEvent event, BinaryTreeLayoutManager manager, List<TranslateTransition> moveParentsElements) {
+    public RotationPreparation(RotationEvent event, BinaryTreeLayoutManager manager, List<Transition> moveParentsElements) {
         this.event = event;
         this.manager = manager;
         this.moveParentsElements = moveParentsElements;
         prepare();
     }
+
 
     private void prepare() {
         //repair tree layout structure...
@@ -50,7 +49,7 @@ public class RotationPreparation implements IPreparation {
         for (ReferenceHelper referenceHelper : event.getReferenceHelperList()) {
             System.out.println(referenceHelper);
             ElementInfo info = manager.getElementInfo(referenceHelper.getNode());
-            TreapGraphicElement graphicsElement = info.getElement();
+            BinaryNodeWithLine graphicsElement = info.getElement();
             SwitchConnectorHelper helper = new SwitchConnectorHelper(info,
                     referenceHelper.isLeftNodePosition() ? NodePosition.LEFT : NodePosition.RIGHT);
 
@@ -64,7 +63,7 @@ public class RotationPreparation implements IPreparation {
                 connectors.back = !referenceHelper.isLeftNodePosition() ?
                         graphicsElement.getLeftChildConnector() : graphicsElement.getRightChildConnector();
             } else {
-                TreapGraphicElement oldRefGraphics = manager.getElementInfo(oldRefId).getElement();
+                BinaryNodeWithLine oldRefGraphics = manager.getElementInfo(oldRefId).getElement();
                 connectors.back =oldRefGraphics;
             }
 
@@ -73,7 +72,7 @@ public class RotationPreparation implements IPreparation {
                 connectors.forward = !referenceHelper.isLeftNodePosition() ?
                         graphicsElement.getLeftChildConnector() : graphicsElement.getRightChildConnector();
             } else {
-                TreapGraphicElement newRefGraphics = manager.getElementInfo(newRefId).getElement();
+                BinaryNodeWithLine newRefGraphics = manager.getElementInfo(newRefId).getElement();
                 connectors.forward = newRefGraphics;
             }
             helpers.add(helper);

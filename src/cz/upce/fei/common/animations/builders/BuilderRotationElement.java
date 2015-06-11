@@ -1,12 +1,15 @@
-package cz.upce.fei.muller.treap.animations.builders;
+package cz.upce.fei.common.animations.builders;
 
 import cz.commons.graphics.LineElement;
 import cz.commons.utils.FadesTransitionBuilder;
+import cz.upce.fei.common.animations.FadesTransitionHandler;
 import cz.upce.fei.common.animations.SwitchConnectorHelper;
+import cz.upce.fei.common.animations.SwitchElementEndEventHandler;
 import cz.upce.fei.common.core.IAnimationBuilder;
-import cz.upce.fei.muller.treap.animations.handlers.FadesTransitionHandler;
-import cz.upce.fei.muller.treap.animations.handlers.SwitchElementEndEventHandler;
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
@@ -20,9 +23,9 @@ public class BuilderRotationElement implements IAnimationBuilder {
 
     private final ParallelTransition reconstructionMoves;
     private final List<SwitchConnectorHelper> helpers;
-    private final List<TranslateTransition> moveParentsElements;
+    private final List<Transition> moveParentsElements;
 
-    public BuilderRotationElement(ParallelTransition reconstructionMoves, List<SwitchConnectorHelper> helpers, List<TranslateTransition> moveParentsElements) {
+    public BuilderRotationElement(ParallelTransition reconstructionMoves, List<SwitchConnectorHelper> helpers, List<Transition> moveParentsElements) {
         this.reconstructionMoves = reconstructionMoves;
         this.helpers = helpers;
         this.moveParentsElements = moveParentsElements;

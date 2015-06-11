@@ -7,7 +7,7 @@ import javafx.scene.shape.StrokeType;
 /**
  * @author Vojtěch Müller
  */
-public class SplaySearchNode extends Element implements IBinaryNodesElements {
+public class SplaySearchNode extends Element implements ISplayNodesElements {
 
     private Circle backgroundCircle;
 
