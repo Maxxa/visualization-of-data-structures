@@ -24,15 +24,17 @@ public class BuilderAddElement extends BuilderAnimMoveNode {
 
     private final WorkBinaryNodeInfo currentInformation;
     private final List<SwitchConnectorHelper> helpers;
+    private final List<Transition> movesTransition;
     private final ParallelTransition elementMovings;
 
     public BuilderAddElement(Point2D to, Point2D creatingPoint,
                              SplayGraphicsNodeElement element, WorkBinaryNodeInfo info,
-                             ParallelTransition elementMovings, List<SwitchConnectorHelper> helpers) {
+                             ParallelTransition elementMovings, List<SwitchConnectorHelper> helpers, List<Transition> movesTransition) {
         super(creatingPoint, to, element);
         this.elementMovings = elementMovings;
         currentInformation = info;
         this.helpers = helpers;
+        this.movesTransition = movesTransition;
     }
 
 
@@ -41,10 +43,10 @@ public class BuilderAddElement extends BuilderAnimMoveNode {
         ParallelTransition movingsTransitions = new ParallelTransition();
         movingsTransitions.getChildren().addAll(
                 elementMovings,
-                //TODO moving for adding atp...
                 super.getAnimation()
 
         );
+        movingsTransitions.getChildren().addAll(this.movesTransition);
         movingsTransitions.setOnFinished(new SwitchElementEndEventHandler(helpers));
         return new SequentialTransition(
                 lineFades(true),

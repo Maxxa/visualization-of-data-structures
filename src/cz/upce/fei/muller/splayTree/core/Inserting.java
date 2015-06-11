@@ -55,8 +55,11 @@ public class Inserting extends AbstractEventPreparation {
                         data.manager.getNodePosition(element.getElementId()),
                         data.creatingPoint, data.getNode(element.getElementId()),
                         WorkBinaryNodeInfoBuilder.getWorkInfo(element.getElementId(), data.manager),
-                        getElementMovings(moveElementEvents), builder.getHelpers())
+                        getElementMovings(moveElementEvents), builder.getHelpers(),
+                        this.moveParentsElements
+                )
         );
+        moveElementEvents.clear();
     }
 
 }

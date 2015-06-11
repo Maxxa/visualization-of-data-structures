@@ -67,6 +67,7 @@ public abstract class AbstractEventPreparation {
         SequentialTransition st = new SequentialTransition();
         st.getChildren().add(FlashMessageViewerHelper.showViewer(flashMessageViewer));
         st.getChildren().addAll(rotations);
+        rotations.clear();
         data.animationControl.getTransitions().add(st);
         viewers.add(flashMessageViewer);
     }

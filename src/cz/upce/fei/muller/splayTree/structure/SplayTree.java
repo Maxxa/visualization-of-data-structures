@@ -47,17 +47,17 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
                 ReferenceHelper newRight = new ReferenceHelper(newNode.contents.getId());
 
                 ReferenceHelper old = new ReferenceHelper(oldRoot.contents.getId());
+                newLeft.setLeftNodePosition(true);
 
-                if (m.smallerThanNode) {
+                if (!m.smallerThanNode) {
                     newLeft.setNewReference(oldRoot.contents.getId());
                     referenceHelperList.add(newLeft);
-                    newLeft.setLeftNodePosition(true);
 
                     if(oldRoot.hasRight()){
                         referenceHelperList.add(old);
                         referenceHelperList.add(newRight);
                         newRight.setNewReference(oldRoot.right.contents.getId());
-                        old.setOldReference(oldRoot.left.contents.getId());
+                        old.setOldReference(oldRoot.right.contents.getId());
                     }
                     newNode.setLeft(oldRoot);
                     newNode.setRight(oldRoot.right);
@@ -201,22 +201,22 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
                 boolean isCikCikRight = grandparent.isRight(parent) && parent.isRight(toTop);
                 if (isCikCikLeft || isCikCikRight) {
                     if (isCikCikLeft) {
-                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZIG_LEFT;
+                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZIG_RIGHT;
                         rotationRight(parent);
                         rotationRight(toTop);
                     } else {
-                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZIG_RIGHT;
+                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZIG_LEFT;
                         rotationLeft(parent);
                         rotationLeft(toTop);
                     }
                 } else {
                     if (parent.isLeft(toTop)) {
-                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZAG_LEFT;
+                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZAG_RIGHT;
                         rotationRight(toTop);
                         rotationLeft(toTop);
 
                     } else {
-                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZAG_RIGHT;
+                        splayOperation = SplayOperationEvent.SplayOperation.ZIG_ZAG_LEFT;
                         rotationLeft(toTop);
                         rotationRight(toTop);
                     }
@@ -237,7 +237,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         boolean smallerThanNode = false;
         while (true) {
             eventBus.post(new MoveToChildEvent(a, n.contents));
-            int c = n.contents.getKey().compareTo(a);
+            int c = a.compareTo(n.contents.getKey());
             if (c == 0) {
                 matchFound = true;
                 break;
