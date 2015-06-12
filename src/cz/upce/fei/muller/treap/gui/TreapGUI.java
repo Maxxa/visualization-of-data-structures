@@ -30,7 +30,7 @@ public class TreapGUI extends AbstractApplication<TreapController> {
 
     @Override
     protected TreapController getController() {
-        binaryTreeLayoutManager = new BinaryTreeLayoutManager(TreeLayoutSettingBuilder.getSetting(),getCanvas());
+        binaryTreeLayoutManager = new BinaryTreeLayoutManager(TreeLayoutSettingBuilder.getSetting(),getCanvas(), BinaryTreeLayoutManager.PositionsChange.CALC_ONLY_INSERTED_NODES);
         return new TreapController(containerControls, binaryTreeLayoutManager);
     }
 
