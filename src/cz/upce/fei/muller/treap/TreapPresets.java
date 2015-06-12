@@ -22,7 +22,8 @@ public class TreapPresets implements Preset<TreapNodeImpl, TreapPresetItem> {
     public ArrayList<TreapPresetItem> getAll() {
         ArrayList<TreapPresetItem> presets = new ArrayList<>();
         
-        presets.add(new TreapPresetItem("Sada 1", new Integer[]{24,4,9,23,69,45,21,94,6,2}));
+        presets.add(new TreapPresetItem("Sada 1", new Integer[]{24,4,9,23,69,45,21,94,6,2},
+                                        new Integer[]{961,932,788,26,536,878,471,688,59,500}));
         presets.add(new TreapPresetItem("Sada 2", new Integer[]{40,11,9,35,2,30,18,34,17,15,7}));
         presets.add(new TreapPresetItem("Sada 3", new Integer[]{12,7,6,10,8,20,23,46,11,9,13,28,49,13,15}));
         presets.add(new TreapPresetItem("Sada 4", new Integer[]{19,13,3,1,4,36,5,9,19,25,42,17,47,9}));

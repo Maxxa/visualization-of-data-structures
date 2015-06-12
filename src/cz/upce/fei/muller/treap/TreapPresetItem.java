@@ -18,7 +18,14 @@ public class TreapPresetItem implements PresetItem<TreapNodeImpl> {
         for (int i = 0; i <items.length; i++) {
             this.items[i] = new TreapNodeImpl(items[i]);
         }
+    }
 
+    public TreapPresetItem(String name, Integer[] items, Integer[] priority) {
+        this.name = name;
+        this.items = new TreapNodeImpl[items.length];
+        for (int i = 0; i <items.length; i++) {
+            this.items[i] = new TreapNodeImpl(items[i],priority[i]);
+        }
     }
 
     @Override
