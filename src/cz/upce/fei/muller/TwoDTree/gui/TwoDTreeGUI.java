@@ -36,7 +36,7 @@ public class TwoDTreeGUI extends AbstractApplication<TwoDTreeController> {
 
     @Override
     protected TwoDTreeController getController() {
-        binaryTreeLayoutManager = new BinaryTreeLayoutManager(TwoDTreeLayoutSetting.getSetting(),getCanvas());
+        binaryTreeLayoutManager = new BinaryTreeLayoutManager(TwoDTreeLayoutSetting.getSetting(),getCanvas(), BinaryTreeLayoutManager.PositionsChange.CALC_ONLY_INSERTED_NODES);
         return new TwoDTreeController(controlsContainer,binaryTreeLayoutManager,new CanvasChangeImpl(getScrollPane(),gridView,getStackPane()));
     }
 
