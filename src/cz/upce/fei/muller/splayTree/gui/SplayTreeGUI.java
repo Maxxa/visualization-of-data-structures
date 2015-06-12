@@ -30,7 +30,7 @@ public class SplayTreeGUI extends AbstractApplication<SplayTreeController> {
 
     @Override
     protected SplayTreeController getController() {
-        binaryTreeLayoutManager = new BinaryTreeLayoutManager(TreeLayoutSettingBuilder.getSetting(),getCanvas());
+        binaryTreeLayoutManager = new BinaryTreeLayoutManager(TreeLayoutSettingBuilder.getSetting(),getCanvas(), BinaryTreeLayoutManager.PositionsChange.CALC_ONLY_INSERTED_NODES);
         return new SplayTreeController(containerControls, binaryTreeLayoutManager);
     }
 
