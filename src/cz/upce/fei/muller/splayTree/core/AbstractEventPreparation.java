@@ -28,7 +28,7 @@ import java.util.*;
 public abstract class AbstractEventPreparation {
 
     protected final List<FlashMessageViewer> viewers = new LinkedList<>();
-    private Map<Integer, FindPlacePreparation> searching = new HashMap<>();
+    protected Map<Integer, FindPlacePreparation> searching = new HashMap<>();
     RemovePreparation removePreparation;
     protected final Data data;
     protected List<Transition> moveParentsElements = new ArrayList<>();
@@ -43,7 +43,6 @@ public abstract class AbstractEventPreparation {
             if (entry.getValue().getSearchingNode() != null) {
                 data.manager.getCanvas().getChildren().remove(entry.getValue().getSearchingNode());
             }
-
         }
         moveParentsElements.clear();
         rotations.clear();
@@ -91,7 +90,7 @@ public abstract class AbstractEventPreparation {
         preparator.addMove(point);
     }
 
-    public void matchFind(Object key, SplayNodeImpl findingNode) {
+    public void matchFind(Object key) {
         FindPlacePreparation preparator = searching.get(key);
         if (preparator != null) {
             preparator.addTransition(getFadeTransition(preparator.getSearchingNode()));

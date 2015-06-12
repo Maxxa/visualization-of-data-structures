@@ -9,6 +9,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeType;
 
 /**
@@ -64,4 +65,7 @@ public class SplayGraphicsNodeElement extends BinaryNodeWithLine implements ISpl
         Tooltip.install(this, tooltip);
     }
 
+    public Shape getRect() {
+        return backgroundRectangle;
+    }
 }

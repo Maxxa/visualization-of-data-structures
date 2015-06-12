@@ -50,9 +50,9 @@ public class AnimationsEventsHandlersCore {
     }
 
     @Subscribe
-    public void handleStartFinding(StartFindingEvent event) {
+    public void handleStartFinding(StartFindEvent event) {
         System.out.println("_________ START FINDING");
-        preparation = new Finding(data, event.getFindingNode());
+        preparation = new Finding(data,(Integer)event.getKey());
     }
 
     @Subscribe
@@ -167,7 +167,7 @@ public class AnimationsEventsHandlersCore {
         System.out.println("Move to child match finding...");
         if (preparation != null) {
             try {
-                preparation.matchFind(event.getKey(), event.getFindingNode());
+                preparation.matchFind(event.getKey());
             } catch (Exception ex) {
                 for (int i = 0; i < ex.getStackTrace().length; i++) {
                     System.err.println(ex.getStackTrace()[i]);

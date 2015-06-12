@@ -48,8 +48,6 @@ public class Inserting extends AbstractEventPreparation {
 
         SwitchConnectorHelperBuilder builder = new SwitchConnectorHelperBuilder(data.manager, referenceHelperList);
 
-        //TODO moving events next ??
-
         data.insertTransition(
                 new BuilderAddElement(
                         data.manager.getNodePosition(element.getElementId()),

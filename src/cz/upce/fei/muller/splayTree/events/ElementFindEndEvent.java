@@ -2,6 +2,7 @@ package cz.upce.fei.muller.splayTree.events;
 
 import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.common.events.AbstractEvent;
+import cz.upce.fei.muller.splayTree.structure.SplayNodeImpl;
 
 /**
  * @author Vojtěch Müller
@@ -15,8 +16,8 @@ public class ElementFindEndEvent extends AbstractEvent{
         this.isFind=isFind;
     }
 
-    public AbstractStructureElement getFindNode(){
-        return element;
+    public SplayNodeImpl getFindNode(){
+        return (SplayNodeImpl) element;
     }
 
     public boolean isFind() {

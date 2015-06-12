@@ -1,7 +1,6 @@
 package cz.upce.fei.muller.splayTree.structure;
 
 import com.google.common.eventbus.EventBus;
-import cz.commons.layoutManager.helpers.ITreeStructure;
 import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.common.events.ReferenceHelper;
 import cz.upce.fei.common.events.RotationEvent;
@@ -80,12 +79,6 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
 
                 root = newNode;
                 TreeStructureBuilder<K, T> builder = new TreeStructureBuilder<>(root, true);
-
-                //affter all debuging remove this
-                for (ITreeStructure structure:builder.getRoot()) {
-                    System.out.println(structure);
-                }
-
                 eventBus.post(new InsertNodeEvent(builder.getRoot(),referenceHelperList));
             }
         }
@@ -98,7 +91,6 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
 
         eventBus.post(new StartFindEvent(key));
         Match<K, T> m = findMatch(key);
-
         eventBus.post(new ElementFindEndEvent(m.node.contents, m.matchFound));
         splay(m.node);
         generateLastEvent();
