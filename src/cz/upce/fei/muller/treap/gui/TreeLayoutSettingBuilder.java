@@ -13,7 +13,7 @@ public final class TreeLayoutSettingBuilder {
 
     static final Integer HORIZONTAL_SPACE =(int) (40* IGraphics.PLATFORM_SCALE);
 
-    static final Integer VERTICAL_SPACE = (int) (10* IGraphics.PLATFORM_SCALE);
+    static final Integer VERTICAL_SPACE = (int) (6* IGraphics.PLATFORM_SCALE);
 
     public static TreeLayoutSettings getSetting(){
         return new TreeLayoutSettings(PADDING_TOP,HORIZONTAL_SPACE,VERTICAL_SPACE, ITreapBinaryNodesElements.WIDTH, ITreapBinaryNodesElements.HEIGHT);
