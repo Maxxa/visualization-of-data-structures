@@ -3,13 +3,11 @@ package cz.upce.fei.muller.splayTree.core;
 import cz.commons.animation.StepEventHandler;
 import cz.commons.graphics.LineElement;
 import cz.commons.graphics.NodePosition;
-import cz.commons.layoutManager.BinaryTreeLayoutManager;
-import cz.commons.layoutManager.RepairmanLayoutManager;
-import cz.commons.layoutManager.WorkBinaryNodeInfo;
-import cz.commons.layoutManager.WorkBinaryNodeInfoBuilder;
+import cz.commons.layoutManager.*;
 import cz.commons.layoutManager.helpers.ITreeStructure;
 import cz.commons.utils.FadesTransitionBuilder;
 import cz.upce.fei.common.animations.RemovePreparation;
+import cz.upce.fei.common.events.RotationEvent;
 import cz.upce.fei.common.gui.FlashMessageViewer;
 import cz.upce.fei.muller.splayTree.animations.FlashMessageViewerHelper;
 import cz.upce.fei.muller.splayTree.animations.builders.BuilderRemoveRoot;
@@ -27,6 +25,8 @@ import javafx.util.Duration;
 public class Removing extends Finding {
 
     RemovePreparation removePreparation;
+    boolean showMax = false;
+    int idRoot = 0;
 
     public Removing(Data data, Integer key) {
         super(data,key);
@@ -34,6 +34,13 @@ public class Removing extends Finding {
 
     @Override
     protected void clear() {
+        if(idRoot!=0){
+            RemoverFromLayoutManager remover = new RemoverFromLayoutManager((BinaryTreeLayoutManager) data.manager,idRoot);
+            remover.executeRemove();
+
+        }
+        showMax=false;
+        idRoot=0;
         removePreparation=null;
     }
 
@@ -42,10 +49,11 @@ public class Removing extends Finding {
         WorkBinaryNodeInfo rootInfo = WorkBinaryNodeInfoBuilder.getWorkInfo(idElement,data.manager);
         BuilderRemoveRoot builderRemoveRoot = new BuilderRemoveRoot(rootInfo);
         data.insertTransition(builderRemoveRoot);
-        ((BinaryTreeLayoutManager)data.manager).remEle(idElement);
+        idRoot=idElement;
     }
 
     public void showFindingMax() {
+        showMax=true;
         FlashMessageViewer flashMessageViewer = FlashMessageViewerHelper.buildViewer("Hledání maxima v levém podstromě.", data.flashMessagePosition, data.manager.getCanvas());
         data.animationControl.getTransitions().add(FlashMessageViewerHelper.showViewer(flashMessageViewer));
     }
@@ -89,5 +97,13 @@ public class Removing extends Finding {
             }
         });
         return pt;
+    }
+
+    @Override
+    protected RotationEvent controlEvent(RotationEvent event) {
+        if(showMax){
+            event.getTreeRestructure().setIdParent(idRoot);
+        }
+        return event;
     }
 }

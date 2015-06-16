@@ -144,7 +144,6 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
             root = right;
         } else {
             SplayNode<K, T> newRoot = findMax(left);
-            System.out.println("start splaying at subtree...");
             splay(newRoot);
             root = newRoot;
             newRoot.setRight(right);
@@ -224,7 +223,6 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
                     }
                 }
             }
-            System.out.println(toTop.contents);
             root = toTop;
             eventBus.post(new SplayOperationEvent(splayOperation));
         }
@@ -309,10 +307,6 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         if (rotatedNode.isRoot()) {
             root = rotatedNode;
         }
-
-//        for (ITreeStructure node :new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()){
-//            System.out.println(node);
-//        }
 
         event.setTreeRestructure(new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot());
         eventBus.post(event);

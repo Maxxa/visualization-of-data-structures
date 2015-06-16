@@ -110,8 +110,12 @@ public abstract class AbstractEventPreparation {
     }
 
     public void rotation(RotationEvent event) {
-        RotationPreparation preparation = new RotationPreparation(event,(BinaryTreeLayoutManager) data.manager, this.moveParentsElements);
+        RotationPreparation preparation = new RotationPreparation(controlEvent(event),(BinaryTreeLayoutManager) data.manager, this.moveParentsElements);
         moveParentsElements.clear();
         rotations.add(new ParallelTransition(preparation.getBuilder().getAnimation()));
+    }
+
+    protected RotationEvent controlEvent(RotationEvent event) {
+        return event;
     }
 }
