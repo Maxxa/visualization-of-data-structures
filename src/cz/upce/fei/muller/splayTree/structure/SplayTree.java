@@ -141,19 +141,20 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         }
         UnificationSubTreeEvent event = new UnificationSubTreeEvent();
         if (left == null) {
-            //root is right root
             root = right;
-            event.setNewTreeStructure(new TreeStructureBuilder<>(root, true).getRoot());
         } else {
             SplayNode<K, T> newRoot = findMax(left);
+            System.out.println("start splaying at subtree...");
             splay(newRoot);
             root = newRoot;
-            newRoot.right = right;
+            newRoot.setRight(right);
             if (right != null) {
                 event.setNewRoot(root.contents.getId());
                 event.setNewRightConnect(right.contents.getId());
             }
         }
+        event.setNewTreeStructure(new TreeStructureBuilder<>(root, true).getRoot());
+        root.parent=null;
         eventBus.post(event);
     }
 
@@ -166,7 +167,6 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
         while (n.hasRight()) {
             n = n.right();
         }
-        splay(n);
         return n;
     }
 
@@ -224,6 +224,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
                     }
                 }
             }
+            System.out.println(toTop.contents);
             root = toTop;
             eventBus.post(new SplayOperationEvent(splayOperation));
         }
@@ -265,7 +266,6 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
     }
 
     private void rotationLeft(SplayNode<K, T> rotatedNode) {
-        System.out.println("ROTACE LEVA");
         RotationEvent event = new RotationEvent(true);
 
         SplayNode<K, T> parentRotatedNode = rotatedNode.parent;
@@ -310,12 +310,15 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
             root = rotatedNode;
         }
 
+//        for (ITreeStructure node :new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()){
+//            System.out.println(node);
+//        }
+
         event.setTreeRestructure(new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot());
         eventBus.post(event);
     }
 
     private void rotationRight(SplayNode<K, T> rotatedNode) {
-        System.out.println("ROTACE PRAVA");
         RotationEvent event = new RotationEvent(false);
 
         SplayNode<K, T> parentRotatedNode = rotatedNode.parent;

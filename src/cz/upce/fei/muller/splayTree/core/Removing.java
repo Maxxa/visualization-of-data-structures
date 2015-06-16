@@ -42,6 +42,7 @@ public class Removing extends Finding {
         WorkBinaryNodeInfo rootInfo = WorkBinaryNodeInfoBuilder.getWorkInfo(idElement,data.manager);
         BuilderRemoveRoot builderRemoveRoot = new BuilderRemoveRoot(rootInfo);
         data.insertTransition(builderRemoveRoot);
+        ((BinaryTreeLayoutManager)data.manager).remEle(idElement);
     }
 
     public void showFindingMax() {
@@ -51,19 +52,19 @@ public class Removing extends Finding {
 
     public void unificationSubTree(UnificationSubTreeEvent event) {
         ITreeStructure newStructure =event.getNewTreeStructure();
+        SequentialTransition st = new SequentialTransition();
 
         if(newStructure!=null){
             RepairmanLayoutManager repairman = new RepairmanLayoutManager((BinaryTreeLayoutManager) data.manager, newStructure);
             data.animationControl.getTransitions().add(getElementMovings(repairman.reconstruction()));
-        }else if(event.getNewRightConnect()!=null){
+        }
+        if(event.getNewRightConnect()!=null){
             SplayGraphicsNodeElement node = data.manager.getElementInfo(event.getNewRoot()).getElement();
             SplayGraphicsNodeElement right = data.manager.getElementInfo(event.getNewRightConnect()).getElement();
-
-            SequentialTransition st = new SequentialTransition();
             st.getChildren().addAll(reconnect(node, right),fadeLine(node));
-            data.animationControl.getTransitions().add(st);
         }
 
+        data.animationControl.getTransitions().add(st);
     }
 
     private Transition fadeLine(final SplayGraphicsNodeElement node) {

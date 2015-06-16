@@ -26,27 +26,27 @@ import java.util.*;
  */
 public abstract class AbstractEventPreparation {
 
-    protected final List<FlashMessageViewer> viewers = new LinkedList<>();
     protected Map<Integer, FindPlacePreparation> searching = new HashMap<>();
     protected final Data data;
     protected List<Transition> moveParentsElements = new ArrayList<>();
     protected List<Transition> rotations = new LinkedList<>();
+
+    private static final List<SplayGraphicsNodeElement> searchingElement = new ArrayList<>();
+    protected static final List<FlashMessageViewer> viewers = new LinkedList<>();
 
     protected AbstractEventPreparation(Data data) {
         this.data = data;
     }
 
     public void clearBeforeNewAction() {
-        for (Map.Entry<Integer, FindPlacePreparation> entry : searching.entrySet()) {
-            if (entry.getValue().getSearchingNode() != null) {
-                data.manager.getCanvas().getChildren().remove(entry.getValue().getSearchingNode());
-            }
-        }
+        data.manager.getCanvas().getChildren().removeAll(searchingElement);
+        data.manager.getCanvas().getChildren().removeAll(viewers);
+        searching.clear();
+        viewers.clear();
+
         moveParentsElements.clear();
         rotations.clear();
         data.animationControl.clear();
-        data.manager.getCanvas().getChildren().removeAll(viewers);
-        viewers.clear();
         searching.clear();
         clear();
     }
@@ -65,27 +65,28 @@ public abstract class AbstractEventPreparation {
 
     public void moveToChild(Object findingKey, SplayNodeImpl comparingNode) {
         Integer key = (Integer) findingKey;
-        FindPlacePreparation preparator;
+        FindPlacePreparation preparation;
         if (!searching.containsKey(key)) {
             SplayNodeImpl search = new SplayNodeImpl(key);
             SplayGraphicsNodeElement searchNode = new SplayGraphicsNodeElement(search, 0, 0, true);
             searchNode.setOpacity(0);
             searchNode.setVisible(false);
             data.manager.getCanvas().getChildren().addAll(searchNode);
-            preparator = new FindPlacePreparation(searchNode, data.creatingPoint);
-            searching.put(key, preparator);
+            preparation = new FindPlacePreparation(searchNode, data.creatingPoint);
+            searching.put(key, preparation);
+            searchingElement.add(searchNode);
         } else {
-            preparator = searching.get(key);
+            preparation = searching.get(key);
         }
         Point2D point = data.manager.getNodePosition(comparingNode.getId());
-        preparator.addMove(point);
+        preparation.addMove(point);
     }
 
     public void matchFind(Object key) {
-        FindPlacePreparation preparator = searching.get(key);
-        if (preparator != null) {
-            preparator.addTransition(getFadeTransition(preparator.getSearchingNode()));
-            data.animationControl.getTransitions().addAll(preparator.getMovings());
+        FindPlacePreparation preparation = searching.get(key);
+        if (preparation != null) {
+            preparation.addTransition(getFadeTransition(preparation.getSearchingNode()));
+            data.animationControl.getTransitions().addAll(preparation.getMovings());
         } else {
             System.err.println("Preparator je null neco je spatne...");
         }

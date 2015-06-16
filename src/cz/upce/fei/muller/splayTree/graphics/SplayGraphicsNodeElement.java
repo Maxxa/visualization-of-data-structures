@@ -61,7 +61,9 @@ public class SplayGraphicsNodeElement extends BinaryNodeWithLine implements ISpl
     }
 
     private void installTooltip(String textKey, Integer id) {
-        this.tooltip = new Tooltip("Klíč: " + textKey + "\nID: " + id);
+        this.tooltip = new Tooltip("Klíč: " + textKey
+                + "\nID: " + id
+        );
         Tooltip.install(this, tooltip);
     }
 

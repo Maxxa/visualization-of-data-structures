@@ -20,14 +20,13 @@ public class Finding extends AbstractEventPreparation {
     }
 
     public void findEnd(SplayNodeImpl findNode, boolean isFind) {
-        System.out.println("FIND END "+isFind);
-        FindPlacePreparation preparator = searching.get(key);
+        FindPlacePreparation preparation = searching.get(key);
         if(isFind){
             SplayGraphicsNodeElement node = data.manager.getElementInfo(findNode.getId()).getElement();
-            preparator.addTransition(new BuilderShowFindElement(node).getAnimation());
+            preparation.addTransition(new BuilderShowFindElement(node).getAnimation());
         }else{
             FlashMessageViewer flashMessageViewer = FlashMessageViewerHelper.buildViewer("Zadaný klíč nenalezen.", data.flashMessagePosition, data.manager.getCanvas());
-            preparator.addTransition(FlashMessageViewerHelper.showViewer(flashMessageViewer));
+            preparation.addTransition(FlashMessageViewerHelper.showViewer(flashMessageViewer));
         }
         super.matchFind(key);
     }

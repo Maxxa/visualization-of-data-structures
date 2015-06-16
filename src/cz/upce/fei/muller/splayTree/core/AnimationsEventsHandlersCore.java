@@ -38,192 +38,106 @@ public class AnimationsEventsHandlersCore {
         if (!data.animationControl.isMarkedAsStepping()) {
             data.animationControl.playForward();
         }
-        System.out.println("_________ LAST EVENT");
     }
 
     @Subscribe
     public void handleStartInserting(StartInserting event) {
-        System.out.println("_________ START INSERTING");
         preparation = new Inserting(data, event.getInsertingNode());
     }
 
     @Subscribe
     public void handleStartFinding(StartFindEvent event) {
-        System.out.println("_________ START FINDING");
-        if(preparation==null){
-            preparation = new Finding(data,(Integer)event.getKey());
+        if (preparation == null) {
+            preparation = new Finding(data, (Integer) event.getKey());
         }
     }
 
     @Subscribe
     public void handleStartRemoving(StartRemoving event) {
-        System.out.println("_________ START REMOVING");
         preparation = new Removing(data, event.getKey());
     }
 
     @Subscribe
     public void handleStartRemoving(InsertNodeEvent event) {
-        System.out.println("Inserting element and rebuild tree... ");
         if (preparation != null) {
-            try {
-                ((Inserting) preparation).insert(event.getRoot(),event.getReferenceHelperList());
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            ((Inserting) preparation).insert(event.getRoot(), event.getReferenceHelperList());
         }
     }
 
     @Subscribe
     public void handleElementFindEnd(ElementFindEndEvent event) {
-        System.out.println("Element find event, Is find? " + event.isFind());
         if (preparation != null) {
-            try {
-                ((Finding) preparation).findEnd(event.getFindNode(), event.isFind());
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            ((Finding) preparation).findEnd(event.getFindNode(), event.isFind());
         }
     }
 
     @Subscribe
     public void handleElementKeyExist(ElementKeyExistEvent event) {
-        System.out.println("Element key exist.");
         if (preparation != null) {
-            try {
-                ((Inserting) preparation).elementKeyExist();
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            ((Inserting) preparation).elementKeyExist();
         }
     }
 
     @Subscribe
     public void handleRemoveRoot(RemoveRootEvent event) {
-        System.out.println("Remove root.");
         if (preparation != null) {
-            try {
-                ((Removing) preparation).removeRoot(event.getIdElement());
-            } catch (Exception ex) {
-                System.err.println(ex.getMessage());
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            ((Removing) preparation).removeRoot(event.getIdElement());
         }
     }
 
     @Subscribe
     public void handleSplayOperation(SplayOperationEvent event) {
-        System.out.println("Splay operation.");
         if (preparation != null) {
-            try {
-                preparation.splayOperation(event.getType());
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            preparation.splayOperation(event.getType());
         }
 
     }
 
     @Subscribe
-    public void handleRotationEvent(RotationEvent event){
-        System.out.println("Rotation operation.");
+    public void handleRotationEvent(RotationEvent event) {
         if (preparation != null) {
-            try {
-                preparation.rotation(event);
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            preparation.rotation(event);
         }
     }
 
     @Subscribe
     public void handleMoveToChildFind(MoveToChildEvent event) {
-        System.out.println("Move to child match ...");
         if (preparation != null) {
-            try {
-                preparation.moveToChild(event.getFindingKey(), event.getComparingNode());
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            preparation.moveToChild(event.getFindingKey(), event.getComparingNode());
         }
-
     }
 
     @Subscribe
     public void handleMove(MoveElementEvent event) {
-        System.out.println("Move node at moving ... match ...");
         if (preparation != null) {
-            try {
-                preparation.moveElementAtLayout(event.getElementId(), event.getOldPoint(), event.getNewPoint());
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            preparation.moveElementAtLayout(event.getElementId(), event.getOldPoint(), event.getNewPoint());
         }
-
     }
 
     @Subscribe
     public void handleMatchFindEvent(MatchFindEvent event) {
-        System.out.println("Move to child match finding...");
         if (preparation != null) {
-            try {
-                preparation.matchFind(event.getKey());
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            preparation.matchFind(event.getKey());
         }
     }
 
     @Subscribe
     public void handleFindingMax(FindingMaxEvent event) {
         if (preparation != null) {
-            try {
-                ((Removing)preparation).showFindingMax();
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            ((Removing) preparation).showFindingMax();
         }
     }
 
     @Subscribe
     public void handleFindingMax(UnificationSubTreeEvent event) {
-        System.out.println("Move to child match finding...");
         if (preparation != null) {
-            try {
-                ((Removing)preparation).unificationSubTree(event);
-            } catch (Exception ex) {
-                for (int i = 0; i < ex.getStackTrace().length; i++) {
-                    System.err.println(ex.getStackTrace()[i]);
-                }
-            }
+            ((Removing) preparation).unificationSubTree(event);
         }
     }
 
 
-
-
     @Subscribe
     public void handleCreateRootEvent(CreateRootEvent event) {
-        System.out.println("___HANDLE CREATE ROOT__");
         SplayGraphicsNodeElement newNode = new SplayGraphicsNodeElement(event.getNode(), 0, 0);
         newNode.setOpacity(0);
         data.manager.addElement(newNode, null, false);

@@ -162,6 +162,7 @@ public class SplayTreeController extends Controller {
     }
 
     private void clear() {
+        clearBeforeNewAction();
         splay.clear();
         manager.clear();
         animationControl.clear();
