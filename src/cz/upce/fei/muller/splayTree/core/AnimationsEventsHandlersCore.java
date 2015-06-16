@@ -12,6 +12,7 @@ import cz.upce.fei.common.events.RotationEvent;
 import cz.upce.fei.muller.splayTree.events.*;
 import cz.upce.fei.muller.splayTree.graphics.ISplayNodesElements;
 import cz.upce.fei.muller.splayTree.graphics.SplayGraphicsNodeElement;
+import cz.upce.fei.muller.splayTree.structure.UnificationSubTreeEvent;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 
@@ -33,9 +34,6 @@ public class AnimationsEventsHandlersCore {
     /*-------------- HANDLERS ------------------------*/
     @Subscribe
     public void handleEndEvent(LastActionEvent event) {
-        if (preparation != null) {
-            preparation.endEvent();
-        }
         endInitAnimation.endAnimation(data.animationControl.isMarkedAsStepping());
         if (!data.animationControl.isMarkedAsStepping()) {
             data.animationControl.playForward();
@@ -52,7 +50,9 @@ public class AnimationsEventsHandlersCore {
     @Subscribe
     public void handleStartFinding(StartFindEvent event) {
         System.out.println("_________ START FINDING");
-        preparation = new Finding(data,(Integer)event.getKey());
+        if(preparation==null){
+            preparation = new Finding(data,(Integer)event.getKey());
+        }
     }
 
     @Subscribe
@@ -96,6 +96,21 @@ public class AnimationsEventsHandlersCore {
             try {
                 ((Inserting) preparation).elementKeyExist();
             } catch (Exception ex) {
+                for (int i = 0; i < ex.getStackTrace().length; i++) {
+                    System.err.println(ex.getStackTrace()[i]);
+                }
+            }
+        }
+    }
+
+    @Subscribe
+    public void handleRemoveRoot(RemoveRootEvent event) {
+        System.out.println("Remove root.");
+        if (preparation != null) {
+            try {
+                ((Removing) preparation).removeRoot(event.getIdElement());
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
                 for (int i = 0; i < ex.getStackTrace().length; i++) {
                     System.err.println(ex.getStackTrace()[i]);
                 }
@@ -176,6 +191,35 @@ public class AnimationsEventsHandlersCore {
         }
     }
 
+    @Subscribe
+    public void handleFindingMax(FindingMaxEvent event) {
+        if (preparation != null) {
+            try {
+                ((Removing)preparation).showFindingMax();
+            } catch (Exception ex) {
+                for (int i = 0; i < ex.getStackTrace().length; i++) {
+                    System.err.println(ex.getStackTrace()[i]);
+                }
+            }
+        }
+    }
+
+    @Subscribe
+    public void handleFindingMax(UnificationSubTreeEvent event) {
+        System.out.println("Move to child match finding...");
+        if (preparation != null) {
+            try {
+                ((Removing)preparation).unificationSubTree(event);
+            } catch (Exception ex) {
+                for (int i = 0; i < ex.getStackTrace().length; i++) {
+                    System.err.println(ex.getStackTrace()[i]);
+                }
+            }
+        }
+    }
+
+
+
 
     @Subscribe
     public void handleCreateRootEvent(CreateRootEvent event) {
@@ -196,7 +240,7 @@ public class AnimationsEventsHandlersCore {
     public RemovePreparation getRemovePreparation() {
         if (preparation != null) {
             if (preparation instanceof Removing) {
-                return preparation.removePreparation;
+                return ((Removing) preparation).removePreparation;
             }
         }
         return null;

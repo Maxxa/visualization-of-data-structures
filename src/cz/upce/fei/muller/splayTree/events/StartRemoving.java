@@ -11,7 +11,7 @@ public class StartRemoving {
         this.key=key;
     }
 
-    public Object getKey() {
-        return key;
+    public Integer getKey() {
+        return (Integer) key;
     }
 }

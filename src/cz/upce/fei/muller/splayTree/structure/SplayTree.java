@@ -52,7 +52,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
                     newLeft.setNewReference(oldRoot.contents.getId());
                     referenceHelperList.add(newLeft);
 
-                    if(oldRoot.hasRight()){
+                    if (oldRoot.hasRight()) {
                         referenceHelperList.add(old);
                         referenceHelperList.add(newRight);
                         newRight.setNewReference(oldRoot.right.contents.getId());
@@ -65,7 +65,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
                     newRight.setNewReference(oldRoot.contents.getId());
                     referenceHelperList.add(newRight);
 
-                    if(oldRoot.hasLeft()){
+                    if (oldRoot.hasLeft()) {
                         referenceHelperList.add(newLeft);
                         referenceHelperList.add(old);
                         old.setLeftNodePosition(true);
@@ -79,7 +79,7 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
 
                 root = newNode;
                 TreeStructureBuilder<K, T> builder = new TreeStructureBuilder<>(root, true);
-                eventBus.post(new InsertNodeEvent(builder.getRoot(),referenceHelperList));
+                eventBus.post(new InsertNodeEvent(builder.getRoot(), referenceHelperList));
             }
         }
         generateLastEvent();
@@ -103,11 +103,13 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
 
         T returnValue = null;
         eventBus.post(new StartRemoving(key));
-        find(key); //TODO this is not finaly
+        find(key);
         if (root.contents.getKey().compareTo(key) == 0) {
             returnValue = root.contents;
+
             SplayNode<K, T> left = root.left;
             SplayNode<K, T> right = root.right;
+
             removeRoot();
             unificationSubTree(left, right);
         }
@@ -128,28 +130,36 @@ public class SplayTree<K extends Comparable<K>, T extends AbstractStructureEleme
 
         root.right = null;
         root.left = null;
+        eventBus.post(new RemoveRootEvent(root.contents.getId()));
+        root = null;
     }
 
     private void unificationSubTree(SplayNode<K, T> left, SplayNode<K, T> right) {
         if (left == null && right == null) {
-            eventBus.post(new RemoveLastElementEvent());
             root = null;
             return;
         }
-
+        UnificationSubTreeEvent event = new UnificationSubTreeEvent();
         if (left == null) {
             //root is right root
             root = right;
+            event.setNewTreeStructure(new TreeStructureBuilder<>(root, true).getRoot());
         } else {
             SplayNode<K, T> newRoot = findMax(left);
+            splay(newRoot);
             root = newRoot;
             newRoot.right = right;
+            if (right != null) {
+                event.setNewRoot(root.contents.getId());
+                event.setNewRightConnect(right.contents.getId());
+            }
         }
-
+        eventBus.post(event);
     }
 
     private SplayNode<K, T> findMax(SplayNode<K, T> left) {
         SplayNode<K, T> n = left;
+        eventBus.post(new FindingMaxEvent());
         if (n == null) {
             return null;
         }

@@ -12,7 +12,7 @@ import cz.upce.fei.muller.splayTree.structure.SplayNodeImpl;
  */
 public class Finding extends AbstractEventPreparation {
 
-    private final Integer key;
+    protected final Integer key;
 
     public Finding(Data data,Integer key) {
         super(data);

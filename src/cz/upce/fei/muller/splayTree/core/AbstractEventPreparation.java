@@ -3,7 +3,6 @@ package cz.upce.fei.muller.splayTree.core;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
 import cz.commons.utils.FadesTransitionBuilder;
-import cz.upce.fei.common.animations.RemovePreparation;
 import cz.upce.fei.common.animations.RotationPreparation;
 import cz.upce.fei.common.animations.builders.BuilderAnimMoveNode;
 import cz.upce.fei.common.events.RotationEvent;
@@ -29,7 +28,6 @@ public abstract class AbstractEventPreparation {
 
     protected final List<FlashMessageViewer> viewers = new LinkedList<>();
     protected Map<Integer, FindPlacePreparation> searching = new HashMap<>();
-    RemovePreparation removePreparation;
     protected final Data data;
     protected List<Transition> moveParentsElements = new ArrayList<>();
     protected List<Transition> rotations = new LinkedList<>();
@@ -48,7 +46,6 @@ public abstract class AbstractEventPreparation {
         rotations.clear();
         data.animationControl.clear();
         data.manager.getCanvas().getChildren().removeAll(viewers);
-        removePreparation = null;
         viewers.clear();
         searching.clear();
         clear();
@@ -56,12 +53,7 @@ public abstract class AbstractEventPreparation {
 
     protected abstract void clear();
 
-    public void endEvent() {
-
-    }
-
     public void splayOperation(SplayOperationEvent.SplayOperation type) {
-        System.out.println("splay " + type.toString());
         FlashMessageViewer flashMessageViewer = FlashMessageViewerHelper.buildViewer(type.toString(), data.flashMessagePosition, data.manager.getCanvas());
         SequentialTransition st = new SequentialTransition();
         st.getChildren().add(FlashMessageViewerHelper.showViewer(flashMessageViewer));
@@ -72,7 +64,6 @@ public abstract class AbstractEventPreparation {
     }
 
     public void moveToChild(Object findingKey, SplayNodeImpl comparingNode) {
-        System.out.println("moving to child: " + comparingNode.getKey());
         Integer key = (Integer) findingKey;
         FindPlacePreparation preparator;
         if (!searching.containsKey(key)) {
@@ -98,7 +89,6 @@ public abstract class AbstractEventPreparation {
         } else {
             System.err.println("Preparator je null neco je spatne...");
         }
-
     }
 
     public FadeTransition getFadeTransition(SplayGraphicsNodeElement node) {
