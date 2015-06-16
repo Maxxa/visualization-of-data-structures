@@ -26,7 +26,6 @@ public class SwitchConnectorHelperBuilder {
 
     private void initSwitchHelpers() {
         for (ReferenceHelper referenceHelper : referenceHelperList) {
-            System.out.println(referenceHelper);
             ElementInfo info = manager.getElementInfo(referenceHelper.getNode());
             BinaryNodeWithLine graphicsElement = info.getElement();
             SwitchConnectorHelper helper = new SwitchConnectorHelper(info,

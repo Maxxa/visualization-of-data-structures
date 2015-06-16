@@ -47,7 +47,6 @@ public class RotationPreparation implements IPreparation {
 
     private void initHelpers() {
         for (ReferenceHelper referenceHelper : event.getReferenceHelperList()) {
-            System.out.println(referenceHelper);
             ElementInfo info = manager.getElementInfo(referenceHelper.getNode());
             BinaryNodeWithLine graphicsElement = info.getElement();
             SwitchConnectorHelper helper = new SwitchConnectorHelper(info,
