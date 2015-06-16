@@ -40,8 +40,8 @@ public class RotationPreparation implements IPreparation {
 
     private void prepare() {
         //repair tree layout structure...
-        RepairmanLayoutManager repairment = new RepairmanLayoutManager(manager, event.getTreeRestructure());
-        reconstructionMoves = getElementMovings(repairment.reconstruction());
+        RepairmanLayoutManager repairman = new RepairmanLayoutManager(manager, event.getTreeRestructure());
+        reconstructionMoves = getElementMovings(repairman.reconstruction());
         initHelpers();
     }
 
@@ -87,8 +87,8 @@ public class RotationPreparation implements IPreparation {
     private ParallelTransition getElementMovings(List<MoveElementEvent> moves) {
         ParallelTransition pt = new ParallelTransition();
         for (MoveElementEvent move : moves) {
-            BuilderAnimMoveNode buildeMove = new BuilderAnimMoveNode(move.getOldPoint(), move.getNewPoint(), manager.getElementInfo(move.getElementId()).getElement());
-            pt.getChildren().add(buildeMove.getTranslateTransition());
+            BuilderAnimMoveNode builderAnimMoveNode = new BuilderAnimMoveNode(move.getOldPoint(), move.getNewPoint(), manager.getElementInfo(move.getElementId()).getElement());
+            pt.getChildren().add(builderAnimMoveNode.getTranslateTransition());
         }
         return pt;
     }
