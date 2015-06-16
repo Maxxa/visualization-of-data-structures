@@ -1,7 +1,6 @@
 package cz.upce.fei.muller.treap.structure;
 
 import com.google.common.eventbus.EventBus;
-import cz.commons.layoutManager.helpers.ITreeStructure;
 import cz.upce.fei.common.core.AbstractStructureElement;
 import cz.upce.fei.common.events.ReferenceHelper;
 import cz.upce.fei.common.events.RotationEvent;
@@ -39,7 +38,6 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
             int compare = insertedNode.compareKey(actual);
             eventBus.post(new MoveToChildEvent(inserted, actual.key));
             if (compare == 0) {
-                System.out.println("ELEMENT EXIST NOT INSERTED");
                 eventBus.post(new ElementKeyExistEvent(inserted));
                 break;
             } else if (compare < 0) {
@@ -258,7 +256,6 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
     }
 
     private void rotationLeft(TreapNode<K, T> rotatedNode) {
-        System.out.println("ROTACE LEVA");
         RotationEvent event = new RotationEvent(true);
 
         TreapNode<K, T> parentRotatedNode = rotatedNode.parent;
@@ -302,17 +299,12 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         if (rotatedNode.isRoot()) {
             root = rotatedNode;
         }
-        System.out.println("\n\n TEST ");
-        for (ITreeStructure structure : new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()) {
-            System.out.println(structure);
-        }
 
         event.setTreeRestructure(new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot());
         eventBus.post(event);
     }
 
     private void rotationRight(TreapNode<K, T> rotatedNode) {
-        System.out.println("ROTACE PRAVA");
         RotationEvent event = new RotationEvent(false);
 
         TreapNode<K, T> parentRotatedNode = rotatedNode.parent;
@@ -357,10 +349,6 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         if (rotatedNode.isRoot()) {
             root = rotatedNode;
         }
-        System.out.println("\n\n TEST ");
-        for (ITreeStructure structure : new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot()) {
-            System.out.println(structure);
-        }
 
         event.setTreeRestructure(new TreeStructureBuilder<>(rotatedNode, isLeft).getRoot());
         eventBus.post(event);
@@ -370,53 +358,6 @@ public class Treap<K extends Comparable<K>, T extends AbstractStructureElement &
         TreapNode<K, T> node = new TreapNode<>(insertedValue, parent);
         count++;
         return node;
-    }
-
-    /**
-     * DEBUG METHOD
-     */
-    public void printTree() {
-        //Debuging printing
-        WidthIterator<K, T> iterator = new WidthIterator<>(root, false);
-        for (; iterator.hasNext(); ) {
-            ExtendData<K, T> data = iterator.next();
-            System.out.println(String.format("id: %s , parent: %s , isLeft: %s", data.node.key.getId(), data.node.isRoot() ? null : data.node.parent.key.getId(), data.isLeft));
-        }
-    }
-
-
-    public void setActualRoot() {
-        actual = root;
-    }
-
-    /**
-     * DEBUG METHOD
-     */
-    public boolean isLeft() {
-        return actual.isRoot() || actual == actual.left;
-    }
-
-    /**
-     * DEBUG METHOD
-     */
-    public void rotateLeft() {
-        rotationLeft(actual);
-    }
-
-    /**
-     * DEBUG METHOD
-     */
-    public ITreeStructure getFromActual() {
-        //build tree structu re...
-        System.out.println("Actual node is: " + actual.key.getId());
-        return new TreeStructureBuilder<>(actual, isLeft()).getRoot();
-    }
-
-    /**
-     * DEBUG METHOD
-     */
-    public void rotateRight() {
-        rotationRight(actual);
     }
 
     private enum RemoveHelper {

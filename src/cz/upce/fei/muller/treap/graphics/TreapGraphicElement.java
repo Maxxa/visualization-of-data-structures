@@ -91,8 +91,9 @@ public class TreapGraphicElement extends BinaryNodeWithLine implements ITreapBin
 
     private void installTooltip(String textKey, String textPriority, Integer id, boolean isSearchBlock) {
         this.tooltip = new Tooltip("Klíč: " + textKey +
-                (isSearchBlock ? "" : "\nPriorita: " + textPriority) +
-                "\nID: " + id);
+                (isSearchBlock ? "" : "\nPriorita: " + textPriority)
+//                +"\nID: " + id
+        );
         Tooltip.install(this, tooltip);
     }
 

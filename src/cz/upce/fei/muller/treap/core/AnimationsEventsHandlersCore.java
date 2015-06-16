@@ -73,7 +73,6 @@ public class AnimationsEventsHandlersCore {
         if (!animationControl.isMarkedAsStepping()) {
             animationControl.playForward();
         }
-        System.out.println("%%%%%%0000000_________END PREPARATION EVENT");
     }
 
     private void buildFindEnd() {
@@ -83,7 +82,6 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleCreateRootEvent(CreateRootEvent event) {
-        System.out.println("___HANDLE CREATE ROOT__");
         TreapGraphicElement newNode = new TreapGraphicElement(event.getNode(), 0, 0);
         newNode.setOpacity(0);
         manager.addElement(newNode, null, false);
@@ -93,23 +91,13 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleRotationEvent(RotationEvent event) {
-        System.out.println("____ HANDLE BUILD ROTATION");
-        manager.printDebug();
-
-        try {
-            RotationPreparation preparation = new RotationPreparation(event, manager, this.moveParentsElements);
-            insertTransition(preparation.getBuilder());
-            moveParentsElements.clear();
-        } catch (Exception ex) {
-            for (int i = 0; i < ex.getStackTrace().length; i++) {
-                System.err.println(ex.getStackTrace()[i]);
-            }
-        }
+        RotationPreparation preparation = new RotationPreparation(event, manager, this.moveParentsElements);
+        insertTransition(preparation.getBuilder());
+        moveParentsElements.clear();
     }
 
     @Subscribe
     public void handleElementKeyNotInserted(ElementKeyExistEvent event) {
-        System.out.println("___ HANDLE ELEMENT KEY EXIST___");
         if (findPlacePreparator != null) {
             findPlacePreparator.addTransition(showViewer(buildViewer("Klíč již existuje.")));
             findPlacePreparator.addTransition(getFadeTransition());
@@ -120,37 +108,28 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleInsertNodeEvent(InsertNodeEvent event) {
-        System.out.println("___HANDLE INSERT ELEMENT__");
         Point2D toPoint = creatingPoint;
         TreapGraphicElement newNode;
         boolean insertToCanvas = true;
-        try {
-            if (findPlacePreparator == null) {
-                newNode = new TreapGraphicElement(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
-            } else {
-                insertToCanvas = false;
-                toPoint = findPlacePreparator.getLastPosition();
-                newNode = findPlacePreparator.getInsertedNode();
-            }
-
-            manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
-            manager.addElement(newNode, event.getParentNode().getId(), event.isLeftChild(), insertToCanvas);
-            manager.getNodePosition(event.getNewNode().getId());
-            InsertPreparation preparation = new InsertPreparation(event, manager, toPoint, findPlacePreparator != null);
-            editFindingPlacePreparator();
-            insertTransition(preparation.getBuilder());
-            initMovingTransition();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-            for (int i = 0; i < ex.getStackTrace().length; i++) {
-                System.err.println(ex.getStackTrace()[i]);
-            }
+        if (findPlacePreparator == null) {
+            newNode = new TreapGraphicElement(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
+        } else {
+            insertToCanvas = false;
+            toPoint = findPlacePreparator.getLastPosition();
+            newNode = findPlacePreparator.getInsertedNode();
         }
+
+        manager.getCanvas().getChildren().addAll(newNode.getChildLine(NodePosition.LEFT), newNode.getChildLine(NodePosition.RIGHT));
+        manager.addElement(newNode, event.getParentNode().getId(), event.isLeftChild(), insertToCanvas);
+        manager.getNodePosition(event.getNewNode().getId());
+        InsertPreparation preparation = new InsertPreparation(event, manager, toPoint, findPlacePreparator != null);
+        editFindingPlacePreparator();
+        insertTransition(preparation.getBuilder());
+        initMovingTransition();
     }
 
     @Subscribe
     public void handleMovingChild(MoveToChildEvent event) {
-        System.out.println("Move to child..");
         if (this.findPlacePreparator == null) {
             TreapGraphicElement newNode = new TreapGraphicElement(event.getNewNode(), (int) creatingPoint.getX(), (int) creatingPoint.getY());
             newNode.setOpacity(0);
@@ -170,19 +149,13 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleFindChilds(FindEvent event) {
-        try {
-            if (findPlacePreparator == null) {
-                manager.getCanvas().getChildren().addAll(findingNode);
-                findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
-            }
-
-            findPlacePreparator.addMove(
-                    manager.getNodePosition(event.getComparedNodeId()));
-        } catch (Exception ex) {
-            for (int i = 0; i < ex.getStackTrace().length; i++) {
-                System.err.println(ex.getStackTrace()[i]);
-            }
+        if (findPlacePreparator == null) {
+            manager.getCanvas().getChildren().addAll(findingNode);
+            findPlacePreparator = new FindPlacePreparation(findingNode, creatingPoint);
         }
+
+        findPlacePreparator.addMove(
+                manager.getNodePosition(event.getComparedNodeId()));
     }
 
     @Subscribe
@@ -198,7 +171,6 @@ public class AnimationsEventsHandlersCore {
     private void editFindingPlacePreparator() {
         if (findPlacePreparator != null) {
             animationControl.getTransitions().addAll(findPlacePreparator.getMovings());
-            System.out.println(findPlacePreparator.getMovings().size());
             findPlacePreparator = null;
         }
     }
@@ -212,18 +184,11 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleRemoveElement(RemoveElementEvent event) {
-        try {
-
-            isRemovingEnd = true;
-            removePreparation = new RemovePreparation(event.getRemoved().getId(), manager);
-            manager.removeElement(event.getRemoved().getId(), false);
-            insertTransition(new BuilderRemoveRoot(removePreparation));
-            initMovingTransition();
-        } catch (Exception ex) {
-            for (int i = 0; i < ex.getStackTrace().length; i++) {
-                System.err.println(ex.getStackTrace()[i]);
-            }
-        }
+        isRemovingEnd = true;
+        removePreparation = new RemovePreparation(event.getRemoved().getId(), manager);
+        manager.removeElement(event.getRemoved().getId(), false);
+        insertTransition(new BuilderRemoveRoot(removePreparation));
+        initMovingTransition();
     }
 
     @Subscribe
@@ -240,7 +205,6 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleMoveElementNodeEvent(MoveElementEvent event) {
-        System.out.println("move");
         this.moveParentsElements.add(new BuilderAnimMoveNode(event.getOldPoint(), event.getNewPoint(), getNode(event.getElementId())).getTranslateTransition());
     }
 
