@@ -22,10 +22,9 @@ public class SplayPresets implements Preset<SplayNodeImpl, SplayPresetItem> {
     public ArrayList<SplayPresetItem> getAll() {
         ArrayList<SplayPresetItem> presets = new ArrayList<>();
         
-        presets.add(new SplayPresetItem("Sada 1", new Integer[]{24,4,9,23,69,45,21,94,6,2}));
-        presets.add(new SplayPresetItem("Sada 2", new Integer[]{40,11,9,35,2,30,18,34,17,15,7}));
-        presets.add(new SplayPresetItem("Sada 3", new Integer[]{12,7,6,10,8,20,23,46,11,9,13,28,49,13,15}));
-        presets.add(new SplayPresetItem("Sada 4", new Integer[]{19,13,3,1,4,36,5,9,19,25,42,17,47,9}));
+        presets.add(new SplayPresetItem("Sada 1", new Integer[]{40,11,9,35,2,30,18,34,17,15,7}));
+        presets.add(new SplayPresetItem("Sada 2", new Integer[]{12,7,6,10,8,20,23,46,11,9,13,28,49,13,15}));
+        presets.add(new SplayPresetItem("Sada 3", new Integer[]{19,13,3,1,4,36,5,9,19,25,42,17,47}));
         presets.add(generate());
         presets.add(generate());
 
