@@ -1,5 +1,6 @@
 package cz.upce.fei.muller.splayTree.core;
 
+import cz.commons.graphics.RotationDirectionElement;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
 import cz.commons.utils.FadesTransitionBuilder;
@@ -10,6 +11,7 @@ import cz.upce.fei.common.gui.FlashMessageViewer;
 import cz.upce.fei.muller.splayTree.animations.FindPlacePreparation;
 import cz.upce.fei.muller.splayTree.animations.FlashMessageViewerHelper;
 import cz.upce.fei.muller.splayTree.events.SplayOperationEvent;
+import cz.upce.fei.muller.splayTree.graphics.ISplayNodesElements;
 import cz.upce.fei.muller.splayTree.graphics.SplayGraphicsNodeElement;
 import cz.upce.fei.muller.splayTree.structure.SplayNodeImpl;
 import javafx.animation.FadeTransition;
@@ -32,6 +34,7 @@ public abstract class AbstractEventPreparation {
     protected List<Transition> rotations = new LinkedList<>();
 
     private static final List<SplayGraphicsNodeElement> searchingElement = new ArrayList<>();
+    private static final List<RotationDirectionElement> rotationDirectionElementList= new ArrayList<>();
     protected static final List<FlashMessageViewer> viewers = new LinkedList<>();
 
     protected AbstractEventPreparation(Data data) {
@@ -40,9 +43,11 @@ public abstract class AbstractEventPreparation {
 
     public void clearBeforeNewAction() {
         data.manager.getCanvas().getChildren().removeAll(searchingElement);
+        data.manager.getCanvas().getChildren().removeAll(rotationDirectionElementList);
         data.manager.getCanvas().getChildren().removeAll(viewers);
         searching.clear();
         viewers.clear();
+        rotationDirectionElementList.clear();
 
         moveParentsElements.clear();
         rotations.clear();
@@ -110,9 +115,22 @@ public abstract class AbstractEventPreparation {
     }
 
     public void rotation(RotationEvent event) {
-        RotationPreparation preparation = new RotationPreparation(controlEvent(event),(BinaryTreeLayoutManager) data.manager, this.moveParentsElements);
+        RotationPreparation preparation = new RotationPreparation(controlEvent(event),(BinaryTreeLayoutManager) data.manager, this.moveParentsElements,buildRotationDirectionElement(event));
         moveParentsElements.clear();
         rotations.add(new ParallelTransition(preparation.getBuilder().getAnimation()));
+    }
+
+    private RotationDirectionElement buildRotationDirectionElement(RotationEvent event) {
+        RotationDirectionElement element = new RotationDirectionElement(ISplayNodesElements.WIDTH,ISplayNodesElements.HEIGHT,event.isLeftRotation());
+        Point2D pointParent = data.manager.getNodePosition(data.manager.getElementInfo(event.getTreeRestructure().getId()).getIdParent());
+
+        Point2D newPoint = new Point2D(pointParent.getX(),pointParent.getY()+ISplayNodesElements.HEIGHT);
+        element.setPoint(newPoint);
+        rotationDirectionElementList.add(element);
+        element.setOpacity(0);
+        element.setVisible(false);
+        data.manager.getCanvas().getChildren().addAll(element);
+        return element;
     }
 
     protected RotationEvent controlEvent(RotationEvent event) {

@@ -2,6 +2,7 @@ package cz.upce.fei.common.animations;
 
 import cz.commons.graphics.BinaryNodeWithLine;
 import cz.commons.graphics.NodePosition;
+import cz.commons.graphics.RotationDirectionElement;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ElementInfo;
 import cz.commons.layoutManager.MoveElementEvent;
@@ -27,21 +28,22 @@ public class RotationPreparation implements IPreparation {
     private final BinaryTreeLayoutManager manager;
     private final List<Transition> moveParentsElements;
     private ParallelTransition reconstructionMoves;
-
+    private RotationDirectionElement rotationDirectionElement;
     private final List<SwitchConnectorHelper> helpers = new ArrayList<>();
 
-    public RotationPreparation(RotationEvent event, BinaryTreeLayoutManager manager, List<Transition> moveParentsElements) {
+    public RotationPreparation(RotationEvent event, BinaryTreeLayoutManager manager, List<Transition> moveParentsElements, RotationDirectionElement element) {
         this.event = event;
+        event.getTreeRestructure().getId();
         this.manager = manager;
+        this.rotationDirectionElement = element;
         this.moveParentsElements = moveParentsElements;
         prepare();
     }
 
-
     private void prepare() {
         //repair tree layout structure...
         RepairmanLayoutManager repairman = new RepairmanLayoutManager(manager, event.getTreeRestructure());
-        reconstructionMoves = getElementMovings(repairman.reconstruction());
+        reconstructionMoves = getElementMoves(repairman.reconstruction());
         initHelpers();
     }
 
@@ -63,7 +65,7 @@ public class RotationPreparation implements IPreparation {
                         graphicsElement.getLeftChildConnector() : graphicsElement.getRightChildConnector();
             } else {
                 BinaryNodeWithLine oldRefGraphics = manager.getElementInfo(oldRefId).getElement();
-                connectors.back =oldRefGraphics;
+                connectors.back = oldRefGraphics;
             }
 
             if (newRefId == null) {
@@ -81,10 +83,10 @@ public class RotationPreparation implements IPreparation {
 
     @Override
     public IAnimationBuilder getBuilder() {
-        return new BuilderRotationElement(reconstructionMoves, helpers,moveParentsElements);
+        return new BuilderRotationElement(reconstructionMoves, helpers, moveParentsElements, rotationDirectionElement);
     }
 
-    private ParallelTransition getElementMovings(List<MoveElementEvent> moves) {
+    private ParallelTransition getElementMoves(List<MoveElementEvent> moves) {
         ParallelTransition pt = new ParallelTransition();
         for (MoveElementEvent move : moves) {
             BuilderAnimMoveNode builderAnimMoveNode = new BuilderAnimMoveNode(move.getOldPoint(), move.getNewPoint(), manager.getElementInfo(move.getElementId()).getElement());

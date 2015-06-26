@@ -3,6 +3,7 @@ package cz.upce.fei.muller.treap.core;
 import com.google.common.eventbus.Subscribe;
 import cz.commons.animation.AnimationControl;
 import cz.commons.graphics.NodePosition;
+import cz.commons.graphics.RotationDirectionElement;
 import cz.commons.layoutManager.BinaryTreeLayoutManager;
 import cz.commons.layoutManager.ITreeLayoutManager;
 import cz.commons.layoutManager.MoveElementEvent;
@@ -53,6 +54,7 @@ public class AnimationsEventsHandlersCore {
     private TreapGraphicElement findingNode;
     private List<Transition> moveParentsElements = new ArrayList<>();
     private List<TreapGraphicElement> elementsNotFound = new ArrayList<>();
+    private List<RotationDirectionElement> rotationDirectionElementList = new ArrayList<>();
 
     public AnimationsEventsHandlersCore(AnimationControl animationControl, ITreeLayoutManager manager) {
         this.animationControl = animationControl;
@@ -91,7 +93,7 @@ public class AnimationsEventsHandlersCore {
 
     @Subscribe
     public void handleRotationEvent(RotationEvent event) {
-        RotationPreparation preparation = new RotationPreparation(event, manager, this.moveParentsElements);
+        RotationPreparation preparation = new RotationPreparation(event, manager, this.moveParentsElements,buildRotationDirectionElement(event));
         insertTransition(preparation.getBuilder());
         moveParentsElements.clear();
     }
@@ -247,7 +249,10 @@ public class AnimationsEventsHandlersCore {
         animationControl.clear();
         manager.getCanvas().getChildren().removeAll(viewers);
         manager.getCanvas().getChildren().removeAll(elementsNotFound);
+        manager.getCanvas().getChildren().removeAll(rotationDirectionElementList);
         viewers.clear();
+        elementsNotFound.clear();
+        rotationDirectionElementList.clear();
 
     }
 
@@ -273,5 +278,18 @@ public class AnimationsEventsHandlersCore {
                 FadesTransitionBuilder.getTransition(element, Duration.ONE, 1, 0)
         );
         return st;
+    }
+
+    private RotationDirectionElement buildRotationDirectionElement(RotationEvent event) {
+        RotationDirectionElement element = new RotationDirectionElement(ITreapBinaryNodesElements.WIDTH,ITreapBinaryNodesElements.HEIGHT/2,event.isLeftRotation());
+        Point2D pointParent = manager.getNodePosition(manager.getElementInfo(event.getTreeRestructure().getId()).getIdParent());
+
+        Point2D newPoint = new Point2D(pointParent.getX(),pointParent.getY()+ITreapBinaryNodesElements.HEIGHT);
+        element.setPoint(newPoint);
+        rotationDirectionElementList.add(element);
+        element.setOpacity(0);
+        element.setVisible(false);
+        manager.getCanvas().getChildren().addAll(element);
+        return element;
     }
 }

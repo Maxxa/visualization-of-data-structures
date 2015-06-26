@@ -133,7 +133,6 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     @Override
     public T remove(int x, int y) {
         eventBus.post(new StartRemoving());
-        System.out.println("Start removing");
         T returnValue = find(x, y); // finding removed element
         if (returnValue == null) {
             // removed element not found...`
@@ -148,7 +147,6 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     private void removeRecursive() {
         if(!actual.hasLeft() && !actual.hasRight()){ // is leaf
             // i must remove
-            System.out.println("LEAF REMOVE "+actual.value);
             clearReference();
             return;
         }
@@ -163,7 +161,6 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     private void clearReference() {
         WidthIterator<T> iterator = new WidthIterator<>(root,true);
         if(root.value.getId().equals(actual.value.getId())){
-            System.out.println("Mažu root");
             clear();
             return;
         }
@@ -173,13 +170,11 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
 
             if(data.hasLeft()){
                 if(data.left.value.getId().equals(actual.value.getId())){
-                    System.out.println("Mazu leveho syna");
                     data.left=null;
                 }
             }
             if(data.hasRight()){
                 if(data.right.value.getId().equals(actual.value.getId())){
-                    System.out.println("Mazu praveho syna");
                     data.right=null;
                 }
             }
@@ -189,13 +184,11 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
     // method find min or max at subtree
     private RemoveHelper find(boolean isMin){
         eventBus.post(new FindingMinMaxEvent(isMin,isXCoordinate));
-        System.out.println("Finding in subtree... "+(isMin?"RIGHT":"LEFT")+" coord "+(isXCoordinate?"X":"Y"));
         Node<T> temp = isMin?actual.right:actual.left;
         WidthIterator<T> iterator = new WidthIterator<>(temp,isXCoordinate);
         Boolean isX = isXCoordinate;
         while (iterator.hasNext()) {
             ExtendData<T> data = iterator.next();
-            System.out.println(data.getData());
             int current = isXCoordinate ? temp.value.getX() : temp.value.getY();
             int iterateValue = isXCoordinate ? data.getData().getX() : data.getData().getY();
             if (isMin && iterateValue <= current ||
@@ -204,8 +197,6 @@ public class TwoDTree<T extends AbstractStructureElement & ICoordinate> implemen
                 isX=data.getDimension().equals(ExtendData.Dimension.DIMENSION_X);
             }
         }
-
-        System.out.println((isMin?"MIN":"MAX")+" "+temp.value);
         return new RemoveHelper(temp,isX);
     }
 
