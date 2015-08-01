@@ -3,7 +3,7 @@ package cz.upce.fei.muller.binaryHeap.structure;
 /**
  * @author Vojtěch Müller
  */
-public class HeapCompare {
+public class HeapCompare<T extends Comparable<T>> {
 
     private final HeapType type;
 
@@ -11,7 +11,7 @@ public class HeapCompare {
         this.type = type;
     }
 
-    public boolean compare(HeapNode first,HeapNode second){
+    public boolean compare(HeapNode<T> first,HeapNode<T> second){
         if(first != null && second != null) {
             return type.equals(HeapType.MIN) && first.compareTo(second) == 1 ||
                    type.equals(HeapType.MAX) && first.compareTo(second) == -1;
@@ -19,7 +19,7 @@ public class HeapCompare {
         return false;
     }
 
-    public int compareTo(HeapNode first,HeapNode second){
+    public int compareTo(HeapNode<T> first,HeapNode<T> second){
         if(first != null && second!= null) {
 
             int res = first.compareTo(second);
@@ -40,10 +40,6 @@ public class HeapCompare {
             return 0;
         }
 
-    }
-
-    public int getCompareValue(){
-        return type.compareValue;
     }
 
 }

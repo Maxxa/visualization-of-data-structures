@@ -5,20 +5,20 @@ import cz.upce.fei.common.core.AbstractStructureElement;
 /**
  * @author Vojtěch Müller
  */
-public class HeapNode extends AbstractStructureElement implements Comparable {
+public class HeapNode<T extends Comparable<T>> extends AbstractStructureElement implements Comparable<HeapNode<T>> {
 
-    private Integer value;
+    private T value;
 
-    public HeapNode(Integer value) {
+    public HeapNode(T value) {
         this.value = value;
     }
 
     @Override
-    public int compareTo(Object o) {
-        return Integer.compare(value,((HeapNode)o).value);
+    public int compareTo(HeapNode<T> o) {
+        return value.compareTo(o.value);
     }
 
-    public Integer getValue() {
+    public T getValue() {
         return value;
     }
 

@@ -17,16 +17,16 @@ import java.util.Comparator;
  *
  * @author Max-xa
  */
-public class BinaryHeap implements IHeap<HeapNode> {
+public class BinaryHeap<T extends Comparable<T>> implements IHeap<HeapNode<T>> {
 
     private final EventBus eventBus;
-    private final HeapCompare comp;
+    private final HeapCompare<T> comp;
 
     private final IBinaryTreeToArray<HeapNode> binTree;
 
     public BinaryHeap(EventBus eventBus, HeapType type) {
         this.eventBus = eventBus;
-        this.comp = new HeapCompare(type);
+        this.comp = new HeapCompare<>(type);
         binTree = new BinaryTreeToArray<>();
     }
 
