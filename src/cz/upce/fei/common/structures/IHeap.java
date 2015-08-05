@@ -1,13 +1,13 @@
 package cz.upce.fei.common.structures;
 
-import cz.upce.fei.common.structures.BinaryNode;
+import cz.upce.fei.common.core.AbstractStructureElement;
 
 import java.util.Comparator;
 
 /**
  * @author Vojtěch Müller
  */
-public interface IHeap<T> {
+public interface IHeap<T extends AbstractStructureElement> {
 
     void clear();
 
